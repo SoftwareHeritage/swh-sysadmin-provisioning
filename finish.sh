@@ -2,7 +2,7 @@ OB#!/bin/bash
 
 set -e
 
-if ifconfig | grep -q eth1; then
+if ifconfig -a | grep -q eth1; then
     cat >> /etc/network/interfaces << EOF
 
 auto eth1
