@@ -38,7 +38,7 @@ d-i netcfg/choose_interface select eth0
 
 # If you prefer to configure the network manually, uncomment this line and
 # the static network configuration below.
-d-i netcfg/disable_autoconfig boolean true
+#d-i netcfg/disable_autoconfig boolean true
 
 # If you want the preconfiguration file to work on systems both with and
 # without a dhcp server, uncomment these lines and the static network
@@ -49,11 +49,14 @@ d-i netcfg/disable_autoconfig boolean true
 # Static network configuration.
 #
 # IPv4 example
-d-i netcfg/get_ipaddress string 128.93.193.22
-d-i netcfg/get_netmask string 255.255.255.0
-d-i netcfg/get_gateway string 128.93.193.254
-d-i netcfg/get_nameservers string 193.51.196.130
-d-i netcfg/confirm_static boolean true
+#d-i netcfg/get_ipaddress string 128.93.193.22
+#d-i netcfg/get_netmask string 255.255.255.0
+#d-i netcfg/get_gateway string 128.93.193.254
+#d-i netcfg/get_nameservers string 193.51.196.130
+#d-i netcfg/confirm_static boolean true
+
+%(network_configuration)s
+
 #
 # IPv6 example
 #d-i netcfg/get_ipaddress string fc00::2
@@ -65,13 +68,13 @@ d-i netcfg/confirm_static boolean true
 # Any hostname and domain names assigned from dhcp take precedence over
 # values set here. However, setting the values still prevents the questions
 # from being shown, even if values come from dhcp.
-d-i netcfg/get_hostname string {hostname}
+d-i netcfg/get_hostname string %(hostname)s
 d-i netcfg/get_domain string softwareheritage.org
 
 # If you want to force a hostname, regardless of what either the DHCP
 # server returns or what the reverse DNS entry for the IP is, uncomment
 # and adjust the following line.
-d-i netcfg/hostname string {hostname}.softwareheritage.org
+d-i netcfg/hostname string %(hostname)s.softwareheritage.org
 
 # Disable that annoying WEP key dialog.
 d-i netcfg/wireless_wep string
@@ -116,7 +119,7 @@ d-i passwd/make-user boolean false
 #d-i passwd/root-password password r00tme
 #d-i passwd/root-password-again password r00tme
 # or encrypted using an MD5 hash.
-d-i passwd/root-password-crypted password {crypted_password}
+d-i passwd/root-password-crypted password %(crypted_password)s
 
 # To create a normal user account.
 #d-i passwd/user-fullname string Debian User
@@ -202,9 +205,6 @@ d-i partman-auto/choose_recipe select atomic
 #                      use_filesystem{ } filesystem{ ext3 }    \
 #                      mountpoint{ / }                         \
 #              .                                               \
-#              64 512 300% linux-swap                          \
-#                      method{ swap } format{ }                \
-#              .
 
 d-i partman-auto/expert_recipe string                         \
       only-root ::                                            \
@@ -239,9 +239,6 @@ d-i partman/confirm_nooverwrite boolean true
 #      multiraid ::                                         \
 #              1000 5000 4000 raid                          \
 #                      $primary{ } method{ raid }           \
-#              .                                            \
-#              64 512 300% raid                             \
-#                      method{ raid }                       \
 #              .                                            \
 #              500 10000 1000000000 raid                    \
 #                      method{ raid }                       \
@@ -437,4 +434,4 @@ d-i finish-install/reboot_in_progress note
 # packages and run commands in the target system.
 #d-i preseed/late_command string apt-install zsh; in-target chsh -s /bin/zsh
 
-d-i preseed/late_command string wget {finish_url} -O  /target/tmp/finish.sh && in-target chmod +x /tmp/finish.sh && in-target /tmp/finish.sh && rm /target/tmp/finish.sh
+d-i preseed/late_command string wget %(finish_url)s -O  /target/tmp/finish.sh && in-target chmod +x /tmp/finish.sh && in-target /tmp/finish.sh && rm /target/tmp/finish.sh
