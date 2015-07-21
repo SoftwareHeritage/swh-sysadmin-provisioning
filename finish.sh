@@ -1,4 +1,4 @@
-#!/bin/bash
+OB#!/bin/bash
 
 set -e
 
@@ -28,5 +28,4 @@ EOF
 systemctl disable puppet.service
 
 /usr/bin/puppet agent --enable
-/usr/bin/puppet agent --test
-
+/usr/bin/puppet agent --test || test $? -eq 2
