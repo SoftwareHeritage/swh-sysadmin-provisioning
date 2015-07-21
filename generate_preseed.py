@@ -6,7 +6,7 @@ import argparse
 from passlib.hash import sha512_crypt
 import xkcdpass.xkcd_password as xp
 
-VIRT_INSTALL_CMD = "sudo virt-install --name {hostname} --ram {ram} --vcpus {vcpus} --os-type linux --os-variant generic {networks} --graphics vnc --console pty,target_type=serial --location 'http://httpredir.debian.org/debian/dists/jessie/main/installer-amd64/' --extra-args 'console=ttyS0,115200n8 serial auto' {disks} --initrd-inject={preseed_file}"
+VIRT_INSTALL_CMD = "cp {preseed_file} preseed.cfg && sudo virt-install --name {hostname} --ram {ram} --vcpus {vcpus} --os-type linux --os-variant generic {networks} --graphics vnc --console pty,target_type=serial --location 'http://httpredir.debian.org/debian/dists/jessie/main/installer-amd64/' --extra-args 'console=ttyS0,115200n8 serial auto' {disks} --initrd-inject=preseed.cfg"
 
 NETWORK_CFG = "--network network={network},model=virtio,mac={mac}"
 DISK_CFG = "--disk path=/dev/vg-louvre/{hostname}-{disk},bus=virtio"
