@@ -84,7 +84,7 @@ if __name__ == "__main__":
     networks = []
     if args.public_ip:
         networks.append(('public', args.public_mac))
-    networks.append(('private', args.private_mac))
+    networks.append(('default', args.private_mac))
     virt_template_vars["networks"] = " ".join(NETWORK_CFG.format(network=network, mac=mac) for network, mac in networks)
 
     virt_command = VIRT_INSTALL_CMD.format(**virt_template_vars)
