@@ -25,7 +25,7 @@ def generate_password():
     wordfile = xp.locate_wordfile()
     wordlist = xp.generate_wordlist(wordfile=wordfile)
 
-    return xp.generate_xkcdpassword(wordlist, n_words=4, delim='-')
+    return xp.generate_xkcdpassword(wordlist, numwords=4, delimiter='-')
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
