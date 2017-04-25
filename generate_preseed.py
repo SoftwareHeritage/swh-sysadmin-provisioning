@@ -9,7 +9,7 @@ import xkcdpass.xkcd_password as xp
 
 QM_CREATE_CMD = (
     "qm create {vmid} "
-    "-bootdisk virtio0 "
+    "-bootdisk scsi0 "
     "-cores {cores} "
     "-hotplug disk,network,usb,cpu "
     "-ide2 none,media=cdrom "
