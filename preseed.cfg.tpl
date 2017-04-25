@@ -359,9 +359,9 @@ d-i grub-installer/with_other_os boolean true
 
 # Due notably to potential USB sticks, the location of the MBR can not be
 # determined safely in general, so this needs to be specified:
-d-i grub-installer/bootdev  string /dev/vda
+#d-i grub-installer/bootdev string /dev/sda
 # To install to the first device (assuming it is not a USB stick):
-#d-i grub-installer/bootdev  string default
+d-i grub-installer/bootdev  string default
 
 # Alternatively, if you want to install to a location other than the mbr,
 # uncomment and edit these lines:
@@ -381,7 +381,7 @@ d-i grub-installer/bootdev  string /dev/vda
 # installed system (if supported by the bootloader installer).
 # Note: options passed to the installer will be added automatically.
 #d-i debian-installer/add-kernel-opts string nousb
-d-i debian-installer/add-kernel-opts string console=ttyS0
+#d-i debian-installer/add-kernel-opts string console=ttyS0
 
 ### Finishing up the installation
 # During installations from serial console, the regular virtual consoles
@@ -434,4 +434,4 @@ d-i finish-install/reboot_in_progress note
 # packages and run commands in the target system.
 #d-i preseed/late_command string apt-install zsh; in-target chsh -s /bin/zsh
 
-d-i preseed/late_command string wget %(finish_url)s -O  /target/tmp/finish.sh && in-target chmod +x /tmp/finish.sh && in-target /tmp/finish.sh && rm /target/tmp/finish.sh
+d-i preseed/late_command string wget %(finish_url)s -O /target/tmp/finish.sh && in-target chmod +x /tmp/finish.sh && in-target /tmp/finish.sh && rm /target/tmp/finish.sh
