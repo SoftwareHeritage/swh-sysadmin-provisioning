@@ -329,7 +329,7 @@ tasksel tasksel/first multiselect standard
 
 # Individual additional packages to install
 #d-i pkgsel/include string openssh-server build-essential
-d-i pkgsel/include string puppet openssh-server
+d-i pkgsel/include string puppet openssh-server augeas-tools
 # Whether to upgrade packages after debootstrap.
 # Allowed values: none, safe-upgrade, full-upgrade
 d-i pkgsel/upgrade select full-upgrade
