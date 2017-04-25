@@ -179,5 +179,9 @@ if __name__ == "__main__":
     for command in disk_commands:
         print(command)
 
-    qm_start_command = "qm start {vmid}".format(**virt_template_vars)
+    qm_start_command = """\
+qm start {vmid}
+while qm status {vmid} | grep -q running; do sleep 10; done
+qm set {vmid} -delete args
+qm start {vmid}""".format(**virt_template_vars)
     print(qm_start_command)
