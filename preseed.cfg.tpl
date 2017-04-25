@@ -55,7 +55,7 @@ d-i netcfg/choose_interface select eth0
 #d-i netcfg/get_nameservers string 193.51.196.130
 #d-i netcfg/confirm_static boolean true
 
-%(network_configuration)s
+%(netconfig)s
 
 #
 # IPv6 example
@@ -69,12 +69,12 @@ d-i netcfg/choose_interface select eth0
 # values set here. However, setting the values still prevents the questions
 # from being shown, even if values come from dhcp.
 d-i netcfg/get_hostname string %(hostname)s
-d-i netcfg/get_domain string softwareheritage.org
+d-i netcfg/get_domain string %(domain)s
 
 # If you want to force a hostname, regardless of what either the DHCP
 # server returns or what the reverse DNS entry for the IP is, uncomment
 # and adjust the following line.
-d-i netcfg/hostname string %(hostname)s.softwareheritage.org
+d-i netcfg/hostname string %(hostname)s.%(domain)s
 
 # Disable that annoying WEP key dialog.
 d-i netcfg/wireless_wep string
@@ -99,7 +99,7 @@ d-i netcfg/wireless_wep string
 # If you select ftp, the mirror/country string does not need to be set.
 #d-i mirror/protocol string ftp
 d-i mirror/country string manual
-d-i mirror/http/hostname string httpredir.debian.org
+d-i mirror/http/hostname string deb.debian.org
 d-i mirror/http/directory string /debian
 d-i mirror/http/proxy string
 
@@ -153,20 +153,20 @@ d-i clock-setup/ntp-server string sesi-ntp1.inria.fr
 ## Partitioning example
 # If the system has free space you can choose to only partition that space.
 # This is only honoured if partman-auto/method (below) is not set.
-#d-i partman-auto/init_automatically_partition select biggest_free
+d-i partman-auto/init_automatically_partition select biggest_free
 
 # Alternatively, you may specify a disk to partition. If the system has only
 # one disk the installer will default to using that, but otherwise the device
 # name must be given in traditional, non-devfs format (so e.g. /dev/sda
 # and not e.g. /dev/discs/disc0/disc).
 # For example, to use the first SCSI/SATA hard disk:
-d-i partman-auto/disk string /dev/vda
+d-i partman-auto/disk string /dev/sda
 # In addition, you'll need to specify the method to use.
 # The presently available methods are:
 # - regular: use the usual partition types for your architecture
 # - lvm:     use LVM to partition the disk
 # - crypto:  use LVM within an encrypted partition
-d-i partman-auto/method string regular
+d-i partman-auto/method string lvm
 
 # If one of the disks that are going to be automatically partitioned
 # contains an old LVM configuration, the user will normally receive a
@@ -206,13 +206,13 @@ d-i partman-auto/choose_recipe select atomic
 #                      mountpoint{ / }                         \
 #              .                                               \
 
-d-i partman-auto/expert_recipe string                         \
-      only-root ::                                            \
-              500 10000 1000000000 ext4                       \
-                      method{ format } format{ }              \
-                      use_filesystem{ } filesystem{ ext4 }    \
-                      mountpoint{ / }                         \
-              .
+# d-i partman-auto/expert_recipe string                         \
+#       only-root ::                                            \
+#               500 10000 1000000000 ext4                       \
+#                       method{ format } format{ }              \
+#                       use_filesystem{ } filesystem{ ext4 }    \
+#                       mountpoint{ / }                         \
+#               .
 
 # The full recipe format is documented in the file partman-auto-recipe.txt
 # included in the 'debian-installer' package or available from D-I source
