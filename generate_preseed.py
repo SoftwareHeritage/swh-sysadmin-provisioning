@@ -67,7 +67,6 @@ if __name__ == "__main__":
     parser.add_argument("--public-dns", help="DNS server of the public interface")
     parser.add_argument("--private-mac", help="MAC of the private interface", required=True)
     parser.add_argument("--private-ip", help="IP of the private interface", required=True)
-    parser.add_argument("--finish-url", help="Finish URL", required=True)
     parser.add_argument("--preseed-template", help="Preseeding file template", required=True)
     parser.add_argument("--ram", help="RAM amount", type=int, default=2048)
     parser.add_argument("--cores", help="Number of virtual CPU cores", type=int, default=1)
@@ -88,7 +87,6 @@ if __name__ == "__main__":
     preseed_template_vars = {}
     preseed_template_vars["hostname"] = args.hostname
     preseed_template_vars["domain"] = domain
-    preseed_template_vars["finish_url"] = args.finish_url
     preseed_file = "preseed_{hostname}.cfg".format(hostname=args.hostname)
 
     network_vars = args.__dict__
