@@ -12,5 +12,9 @@ EOF
 
 systemctl disable puppet.service
 
+mkdir -p /etc/facter/facts.d
+echo location=sesi_rocquencourt > /etc/facter/facts.d/location.txt
+
 /usr/bin/puppet agent --enable
 /usr/bin/puppet agent --test || test $? -eq 2
+
