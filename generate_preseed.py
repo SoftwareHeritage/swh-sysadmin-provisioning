@@ -34,15 +34,8 @@ DISK_CREATE_CMD = 'pvesm alloc {volume} {vmid} vm-{vmid}-disk-{volumeindex} {siz
 
 PASS_INSTALL_CMD = "echo {password} | pass insert --force --multiline infra/{hostname}/root"
 
-STATIC_PUBLIC_NETWORK_CFG_TEMPLATE = """
-d-i netcfg/disable_autoconfig boolean true
-d-i netcfg/get_ipaddress string {public_ip}
-d-i netcfg/get_netmask string {public_netmask}
-d-i netcfg/get_gateway string {public_gateway}
-d-i netcfg/get_nameservers string {public_dns}
-d-i netcfg/confirm_static boolean true"""
-
 STATIC_PRIVATE_NETWORK_CFG_TEMPLATE = """
+d-i netcfg/choose_interface select {private_iface}
 d-i netcfg/disable_autoconfig boolean true
 d-i netcfg/get_ipaddress string {private_ip}
 d-i netcfg/get_netmask string {private_netmask}
@@ -77,11 +70,12 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    network_tpl = STATIC_PRIVATE_NETWORK_CFG_TEMPLATE
     if args.public_ip:
-        network_tpl = STATIC_PUBLIC_NETWORK_CFG_TEMPLATE
+        private_iface = 'eth1'
         domain = 'softwareheritage.org'
     else:
-        network_tpl = STATIC_PRIVATE_NETWORK_CFG_TEMPLATE
+        private_iface = 'eth0'
         domain = 'internal.softwareheritage.org'
 
     preseed_template_vars = {}
@@ -94,6 +88,7 @@ if __name__ == "__main__":
         'private_netmask': '255.255.255.0',
         'private_gateway': '192.168.100.1',
         'private_dns': '192.168.100.29',
+        'private_iface': private_iface,
     })
 
     preseed_template_vars["netconfig"] = network_tpl.format(**network_vars)
