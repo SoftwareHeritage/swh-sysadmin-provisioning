@@ -22,7 +22,7 @@ QM_CREATE_CMD = (
     "-sockets {sockets} "
     "-startup {startup} "
     "{disks} "
-    "-args '-kernel /tmp/linux -initrd /tmp/initrd_{vmid}.gz'"
+    "-args '-kernel /tmp/linux -initrd /tmp/initrd_{vmid}.gz -append net.ifnames=0'"
 )
 
 CPIO_CMDS = "cd /tmp; cp preseed_{hostname}.cfg preseed.cfg; (cat initrd.gz; echo preseed.cfg | cpio -Hnewc --quiet -o | gzip -c) > initrd_{vmid}.gz"
