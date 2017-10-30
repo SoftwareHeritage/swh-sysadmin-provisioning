@@ -142,7 +142,7 @@ d-i clock-setup/utc boolean true
 
 # You may set this to any valid setting for $TZ; see the contents of
 # /usr/share/zoneinfo/ for valid values.
-d-i time/zone string Europe/Paris
+d-i time/zone string Etc/UTC
 
 # Controls whether to use NTP to set the clock during the install
 d-i clock-setup/ntp boolean true
@@ -160,7 +160,7 @@ d-i partman-auto/init_automatically_partition select biggest_free
 # name must be given in traditional, non-devfs format (so e.g. /dev/sda
 # and not e.g. /dev/discs/disc0/disc).
 # For example, to use the first SCSI/SATA hard disk:
-d-i partman-auto/disk string /dev/vda
+#d-i partman-auto/disk string /dev/vda
 # In addition, you'll need to specify the method to use.
 # The presently available methods are:
 # - regular: use the usual partition types for your architecture
@@ -177,12 +177,13 @@ d-i partman-md/device_remove_md boolean true
 # And the same goes for the confirmation to write the lvm partitions.
 d-i partman-lvm/confirm boolean true
 d-i partman-lvm/confirm_nooverwrite boolean true
+d-i partman-auto-lvm/no_boot boolean true
 
 # You can choose one of the three predefined partitioning recipes:
 # - atomic: all files in one partition
 # - home:   separate /home partition
 # - multi:  separate /home, /var, and /tmp partitions
-d-i partman-auto/choose_recipe select atomic
+d-i partman-auto/choose_recipe select root-and-swap
 
 # Or provide a recipe of your own...
 # If you have a way to get a recipe file into the d-i environment, you can
@@ -206,13 +207,21 @@ d-i partman-auto/choose_recipe select atomic
 #                      mountpoint{ / }                         \
 #              .                                               \
 
-# d-i partman-auto/expert_recipe string                         \
-#       only-root ::                                            \
-#               500 10000 1000000000 ext4                       \
-#                       method{ format } format{ }              \
-#                       use_filesystem{ } filesystem{ ext4 }    \
-#                       mountpoint{ / }                         \
-#               .
+d-i partman-auto/expert_recipe string                         \
+      root-and-swap ::                                        \
+              500 10000 -1 $default_filesystem                \
+                      $lvmok{ }                               \
+                      method{ format } format{ }              \
+                      use_filesystem{ }                       \
+                      $default_filesystem{ }                  \
+                      mountpoint{ / }                         \
+              .                                               \
+              4096 512 4096 linux-swap                        \
+                      $lvmok{ }                               \
+                      $reusemethod{ }                         \
+                      method{ swap }                          \
+                      format{ }                               \
+              .
 
 # The full recipe format is documented in the file partman-auto-recipe.txt
 # included in the 'debian-installer' package or available from D-I source

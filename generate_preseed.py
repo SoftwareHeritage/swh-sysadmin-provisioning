@@ -3,6 +3,7 @@
 
 import argparse
 from collections import defaultdict
+import subprocess
 
 from passlib.hash import sha512_crypt
 import xkcdpass.xkcd_password as xp
@@ -22,17 +23,24 @@ QM_CREATE_CMD = (
     "-sockets {sockets} "
     "-startup {startup} "
     "{disks} "
-    "-args '-kernel /tmp/linux -initrd /tmp/initrd_{vmid}.gz -append net.ifnames=0'"
+    "-args '-kernel /tmp/linux -initrd /tmp/initrd_{vmid}.gz'"
 )
 
 CPIO_CMDS = "cd /tmp; cp preseed_{hostname}.cfg preseed.cfg; (cat initrd.gz; echo preseed.cfg | cpio -Hnewc --quiet -o | gzip -c) > initrd_{vmid}.gz"
 
 NETWORK_CFG = "-net{netindex} virtio={mac},bridge={bridge}"
 
-DISK_CFG = "-{type}{typeindex} {volume}:vm-{vmid}-disk-{volumeindex},size={size}"
-DISK_CREATE_CMD = 'pvesm alloc {volume} {vmid} vm-{vmid}-disk-{volumeindex} {size} --format raw'
+DISK_CFG = (
+    '-{type}{typeindex} '
+    '{volume}:vm-{vmid}-disk-{volumeindex},size={size}'
+)
+DISK_CREATE_CMD = (
+    'pvesm alloc {volume} {vmid} '
+    'vm-{vmid}-disk-{volumeindex} {size} --format raw'
+)
 
-PASS_INSTALL_CMD = "echo {password} | pass insert --force --multiline infra/{hostname}/root"
+PASS_ENTRY = 'infra/{hostname}/root'
+PASS_INSTALL_CMD = "echo {password} | pass insert --force --multiline %s" % PASS_ENTRY
 
 STATIC_PRIVATE_NETWORK_CFG_TEMPLATE = """
 d-i netcfg/choose_interface select {private_iface}
@@ -43,16 +51,35 @@ d-i netcfg/get_gateway string {private_gateway}
 d-i netcfg/get_nameservers string {private_dns}
 d-i netcfg/confirm_static boolean true"""
 
+
 def generate_password():
     wordfile = xp.locate_wordfile()
     wordlist = xp.generate_wordlist(wordfile=wordfile)
 
     return xp.generate_xkcdpassword(wordlist, numwords=4, delimiter='-')
 
+
+def get_or_generate_password(*, hostname, force_generate=False):
+    if force_generate:
+        return generate_password(), True
+
+    try:
+        cmd = subprocess.run(
+            ['pass', 'show', PASS_ENTRY.format(hostname=hostname)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    except subprocess.CalledProcessError:
+        return generate_password(), True
+    else:
+        return cmd.stdout.strip(), False
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-n", "--hostname", help="Name of the new host", required=True)
+    parser.add_argument("--reset-password", help="Reset password", default=False)
     parser.add_argument("--public-mac", help="MAC of the public interface")
     parser.add_argument("--public-ip", help="IP of the public interface")
     parser.add_argument("--public-netmask", help="Netmask of the public interface")
@@ -72,10 +99,10 @@ if __name__ == "__main__":
 
     network_tpl = STATIC_PRIVATE_NETWORK_CFG_TEMPLATE
     if args.public_ip:
-        private_iface = 'eth1'
+        private_iface = 'ens19'
         domain = 'softwareheritage.org'
     else:
-        private_iface = 'eth0'
+        private_iface = 'ens18'
         domain = 'internal.softwareheritage.org'
 
     preseed_template_vars = {}
@@ -94,7 +121,9 @@ if __name__ == "__main__":
     preseed_template_vars["netconfig"] = network_tpl.format(**network_vars)
 
     # Password Generation and hashing
-    password = generate_password()
+    password, generated_password = get_or_generate_password(
+        hostname=args.hostname, force_generate=args.reset_password
+    )
     preseed_template_vars["crypted_password"] = sha512_crypt.encrypt(password)
 
     # Generate the output preseed file
@@ -156,8 +185,10 @@ if __name__ == "__main__":
     )
 
     print("# >>>>> Local")
-    pass_command = PASS_INSTALL_CMD.format(password=password, hostname=args.hostname)
-    print(pass_command)
+    if generated_password:
+        pass_command = PASS_INSTALL_CMD.format(password=password,
+                                               hostname=args.hostname)
+        print(pass_command)
     scp_command = "scp preseed_{hostname}.cfg {hypervisor}.internal.softwareheritage.org:/tmp"
 
     for hypervisor in ["louvre", "beaubourg"]:
