@@ -23,12 +23,15 @@ disk_group="${resource_prefix}workersdisks"
 diagnostics_resource=swhresourcediag966
 
 azure vm create \
-      -g "${resource_group}" \
-      -n "${worker}-${resource_prefix}" \
-      -l "${zone}" \
-      -y Linux -Q "${image}" \
-      -S "${subnet}" -f "${worker}-${resource_prefix}-if" \
-      -u testadmin -M "${pub_key}" \
-      -o "${disk_group}" \
-      -z "${size}" \
+      --resource-group "${resource_group}" \
+      --name "${worker}-${resource_prefix}" \
+      --location "${zone}" \
+      --os-type Linux \
+      --image-urn "${image}" \
+      --subnet-id "${subnet}" \
+      --nic-name "${worker}-${resource_prefix}-if" \
+      --user testadmin \
+      --ssh-publickey-file "${pub_key}" \
+      --storage-account-name "${disk_group}" \
+      --vm-size "${size}" \
       --boot-diagnostics-storage-uri "http://${diagnostics_resource}.blob.core.windows.net/"
