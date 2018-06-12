@@ -22,8 +22,7 @@ $APT install apt-transport-https
 # Update the nodes to the latest packages
 apt-get update; $APT dist-upgrade
 
-# We need to override the default hostname provided by azure when the
-# node is provisioned
+# Override default hostname provided by azure at creation time
 ORIG_HOSTNAME="$(hostname)"
 if [ $PRIVATE = "private" ]; then
     # private ip have a fqdn with the azure location
