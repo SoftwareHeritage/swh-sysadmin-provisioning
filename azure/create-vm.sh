@@ -10,21 +10,18 @@ type=${2-"worker"}
 
 # where to install this (not expected to change though)
 resource_prefix=${3-"euwest"}
-
-# Per type, we can decide to override the resource_group
-if [ $type = 'worker' ]; then
-    resource_suffix='workers'
-else
-    resource_suffix=$nodename
-fi
+location=westeurope
 
 # Depending on the types, we compute the resource group
-# for workers, it's a shared resource
-# for other nodes, that is specifically tailored for
-# feel free to adapt the policy though
-resource_group="${resource_prefix}-${resource_suffix}"
-
-location=westeurope
+if [ $type = 'worker' ]; then
+    # for workers, it's a shared resource
+    resource_group="${resource_prefix}-workers"
+else
+    # for other nodes, that is specifically tailored for
+    resource_group="${resource_prefix}-${nodename}"
+    # create the resource group specific
+    az group create --name "${resource_group}" --location "${location}"
+fi
 
 # Image we create the node from
 image=credativ:Debian:9:latest
