@@ -3,7 +3,6 @@
 set -ex
 
 PUPPET_MASTER=pergamon.internal.softwareheritage.org
-APT='apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"'
 
 cd /
 
@@ -17,10 +16,11 @@ fi
 
 # we need that package that somehow fails to be installed correctly
 # with puppet
-$APT install apt-transport-https
+apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install apt-transport-https
 
 # Update the nodes to the latest packages
-apt-get update; $APT dist-upgrade
+apt-get update
+apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" dist-upgrade
 
 # Override default hostname provided by azure at creation time
 ORIG_HOSTNAME="$(hostname)"
@@ -46,7 +46,7 @@ IP=$(ip a | grep 192 | awk '{print $2}' | awk -F/ '{print $1}')
 echo "$IP $FQDN $HOSTNAME" >> /etc/hosts
 
 # install puppet dependencies
-$APT install puppet
+apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install puppet
 
 # do not need the service live as we need to install some more setup first
 service puppet stop
