@@ -7,9 +7,6 @@ APT='apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force
 
 cd /
 
-# Update the nodes to the latest packages
-apt-get update; $APT dist-upgrade
-
 # default to private instance
 PRIVATE=${1-"private"}
 
@@ -17,6 +14,13 @@ if [ $PRIVATE != 'private' -a $PRIVATE != 'public' ]; then
     echo "First argument must be either 'public' or 'private', nothing else."
     exit 1
 fi
+
+# we need that package that somehow fails to be installed correctly
+# with puppet
+$APT install apt-transport-https
+
+# Update the nodes to the latest packages
+apt-get update; $APT dist-upgrade
 
 # We need to override the default hostname provided by azure when the
 # node is provisioned
@@ -59,9 +63,5 @@ echo location=azure_euwest > /etc/facter/facts.d/location.txt
 # - unfortunately, for now, this fails though, when not being able to
 #   install the apt-transport-https package
 puppet agent --server $PUPPET_MASTER --waitforcert 60 --test
-# so we install it
-$APT install apt-transport-https
-# now everything should be fine
-puppet agent --server $PUPPET_MASTER --test || true
 
 #reboot
