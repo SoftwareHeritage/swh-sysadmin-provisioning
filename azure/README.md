@@ -61,6 +61,12 @@ $ sudo /tmp/provision-vm.sh public
 $ sudo /tmp/provision-vm.sh private
 ```
 
+# update DNS server
+
+Trigger a record refresh on the dns server (pergamon)
+
+``` sh
+$ sudo puppet agent --test
 ```
 
 # More documentation
