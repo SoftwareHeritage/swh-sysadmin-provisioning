@@ -51,7 +51,16 @@ scp ./provision-vm.sh $ADMIN_USER@<name>:/tmp/
 # check the ip and access the vm
 ssh $ADMIN_USER@<ip>
 $ chmod +x /tmp/provision-vm.sh
-$ /tmp/provision-vm.sh <public-or-private-nature>
+$ sudo /tmp/provision-vm.sh (public|private)
+# ...
+# Use Example:
+# machine destined to be publicly accessible
+$ sudo /tmp/provision-vm.sh public
+# ...
+# machine destined to be only seen through our vpn
+$ sudo /tmp/provision-vm.sh private
+```
+
 ```
 
 # More documentation
