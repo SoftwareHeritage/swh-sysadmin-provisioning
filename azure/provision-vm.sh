@@ -40,13 +40,7 @@ hostnamectl set-hostname $HOSTNAME
 # public node). Puppet is trying to solve the fqdn through the
 # /etc/resolv.conf if not provided in /etc/hosts
 IP=$(ip a | grep 192 | awk '{print $2}' | awk -F/ '{print $1}')
-cat >> /etc/hosts << EOF
-$IP $FQDN $HOSTNAME
-
-192.168.100.100 db
-192.168.100.101 uffizi
-192.168.100.31 moma
-EOF
+echo "$IP $FQDN $HOSTNAME" >> /etc/hosts
 
 # install puppet dependencies
 $APT install puppet
