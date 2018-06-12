@@ -18,15 +18,23 @@ $ ./create-vm.sh <name> <type> <location>
 $ ./create-vm.sh worker01 worker euwest
 # creates a node worker01.euwest.azure of type `worker` at location `euwest` (default)
 # ...
-$ ./create-vm.sh webapp0 webapp
-# creates a node webapp0 of type `something-different-than-worker-type`
-# at location euwest
+$ ./create-vm.sh dbreplica1 db
+# creates a node webapp0 of type `db` at location euwest
+# ...
 ```
 
-Example name:
+Possible names:
 - worker01
 - webapp0
 - dbreplica0
+
+
+Possible types:
+- db (replica or otherwise)
+- storage (stoarge service)
+- worker (computing nodes)
+- webapp
+
 
 This will:
 - create an azure vm node

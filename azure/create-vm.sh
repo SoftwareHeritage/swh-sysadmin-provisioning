@@ -13,15 +13,24 @@ resource_prefix=${3-"euwest"}
 location=westeurope
 
 # Depending on the types, we compute the resource group
+# worker, db, storage have dedicated shared resource group
+# other can be specifically tailored for them
 if [ $type = 'worker' ]; then
     # for workers, it's a shared resource
-    resource_group="${resource_prefix}-workers"
+    resource_group="${resource_prefix}-${type}s"
+elif [ $type = 'db' ]; then
+    # for dbs as well
+    resource_group="${resource_prefix}-${type}"
+elif [ $type = 'storage' ]; then
+    resource_group="${resource_prefix}-server"
 else
-    # for other nodes, that is specifically tailored for
+    # for other node types (webapp), that is specifically tailored for
     resource_group="${resource_prefix}-${nodename}"
-    # create the resource group specific
-    az group create --name "${resource_group}" --location "${location}"
 fi
+
+# create the resource group specific (idempotent, if already existing,
+# do nothing)
+az group create --name "${resource_group}" --location "${location}"
 
 # Image we create the node from
 image=credativ:Debian:9:latest
