@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Script used to boostrap the injection of our objstorage to azure
+
 set -e
 
 group="injection"
