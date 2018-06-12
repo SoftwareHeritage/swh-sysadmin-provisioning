@@ -48,7 +48,10 @@ This will:
 ``` sh
 ADMIN_USER=zack
 scp ./provision-vm.sh $ADMIN_USER@<name>:/tmp/
-ssh $ADMIN_USER@<name> sudo /tmp/provision-vm.sh <public-or-private-nature>
+# check the ip and access the vm
+ssh $ADMIN_USER@<ip>
+$ chmod +x /tmp/provision-vm.sh
+$ /tmp/provision-vm.sh <public-or-private-nature>
 ```
 
 # More documentation
