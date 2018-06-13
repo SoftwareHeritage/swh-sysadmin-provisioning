@@ -12,19 +12,19 @@ type=${2-"worker"}
 resource_prefix=${3-"euwest"}
 location=westeurope
 
+full_nodename="${nodename}-${resouce_prefix}"
+
 # Depending on the types, we compute the resource group
 # worker, db, storage have dedicated shared resource group
 # other can be specifically tailored for them
-if [ $type = 'worker' ]; then
-    # for workers, it's a shared resource
+if [ $type = 'worker' ]; then   # for workers, it's a shared resource
     resource_group="${resource_prefix}-${type}s"
-elif [ $type = 'db' ]; then
-    # for dbs as well
+elif [ $type = 'db' ]; then     # for dbs as well
     resource_group="${resource_prefix}-${type}"
+    full_nodename="${nodename}"
 elif [ $type = 'storage' ]; then
     resource_group="${resource_prefix}-server"
-else
-    # for other node types (webapp), that is specifically tailored for
+else # for other node types (webapp), that is specifically tailored for
     resource_group="${resource_prefix}-${nodename}"
 fi
 
@@ -58,7 +58,7 @@ diagnostics_resource=swhresourcediag966
 admin_user=zack
 
 az vm create \
-   --name "${nodename}-${resource_prefix}" \
+   --name "${full_nodename}" \
    --resource-group "${resource_group}" \
    --location "${location}" \
    --image "${image}" \
