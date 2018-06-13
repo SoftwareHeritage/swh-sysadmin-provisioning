@@ -52,6 +52,15 @@ apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-conf
 service puppet stop
 systemctl disable puppet.service
 
+# we need a superior version of facter package
+# because we use syntax from that superior version
+cat > /etc/apt/sources.list.d/backports.list <<EOF
+deb https://deb.debian.org/debian stretch-backports main
+EOF
+
+apt-get update
+apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install -t stretch-backports facter
+
 # Install the location fact as that is needed by our puppet manifests
 mkdir -p /etc/facter/facts.d
 echo location=azure_euwest > /etc/facter/facts.d/location.txt
