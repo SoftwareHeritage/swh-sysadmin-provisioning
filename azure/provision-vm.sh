@@ -27,8 +27,8 @@ ORIG_HOSTNAME="$(hostname)"
 if [ $PRIVATE = "private" ]; then
     # private ip have a fqdn with the azure location
     # FIXME: Do we need to use a different hostname pattern when in azure?
-    HOSTNAME=${ORIG_HOSTNAME/-*/}.euwest.azure
-    FQDN=${HOSTNAME}.internal.softwareheritage.org
+    HOSTNAME=${ORIG_HOSTNAME/-*/}
+    FQDN=${HOSTNAME}.euwest.azure.internal.softwareheritage.org
 else
     # public ones do not need to leak that information
     HOSTNAME=${ORIG_HOSTNAME/-*/}
