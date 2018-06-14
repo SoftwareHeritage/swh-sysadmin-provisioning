@@ -71,4 +71,4 @@ $ sudo puppet agent --test
 
 # More documentation
 
-cf. [New machine setup](https://wiki.softwareheritage.org/index.php?title=New_machine_setup)
+cf. [New machine setup](https://wiki.softwareheritage.org/index.php?title=New_machine_setup#Setting_up_a_new_Virtual_Machine_.28semi-manual_process.29)
