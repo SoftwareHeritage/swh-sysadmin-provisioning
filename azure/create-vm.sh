@@ -64,6 +64,7 @@ az vm create \
    --image "${image}" \
    --size "${vm_type}" \
    --subnet "${subnet}" \
+   --public-ip-address "" \
    --admin-username "${admin_user}" \
    --ssh-key-value "${pub_key}" \
    --boot-diagnostics-storage "http://${diagnostics_resource}.blob.core.windows.net/"
