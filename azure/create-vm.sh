@@ -12,7 +12,7 @@ type=${2-"worker"}
 resource_prefix=${3-"euwest"}
 location=westeurope
 
-full_nodename="${nodename}-${resouce_prefix}"
+full_nodename="${nodename}-${resource_prefix}"
 
 # Depending on the types, we compute the resource group
 # worker, db, storage have dedicated shared resource group
