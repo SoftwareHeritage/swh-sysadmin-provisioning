@@ -87,7 +87,8 @@ if __name__ == "__main__":
     parser.add_argument("--public-dns", help="DNS server of the public interface")
     parser.add_argument("--private-mac", help="MAC of the private interface", required=True)
     parser.add_argument("--private-ip", help="IP of the private interface", required=True)
-    parser.add_argument("--preseed-template", help="Preseeding file template", required=True)
+    parser.add_argument("--preseed-template", help="Preseeding file template",
+                        default='preseed.cfg.tpl')
     parser.add_argument("--ram", help="RAM amount", type=int, default=2048)
     parser.add_argument("--cores", help="Number of virtual CPU cores", type=int, default=1)
     parser.add_argument("--sockets", help="Number of virtual CPU sockets", type=int, default=1)
