@@ -443,4 +443,4 @@ d-i debian-installer/exit/poweroff boolean true
 # packages and run commands in the target system.
 #d-i preseed/late_command string apt-install zsh; in-target chsh -s /bin/zsh
 
-d-i preseed/late_command string wget http://debian.internal.softwareheritage.org/installer/finish.sh -O /target/tmp/finish.sh && in-target chmod +x /tmp/finish.sh && in-target /tmp/finish.sh && rm /target/tmp/finish.sh
+d-i preseed/late_command string wget http://debian.softwareheritage.org/installer/finish.sh -O /target/tmp/finish.sh && in-target chmod +x /tmp/finish.sh && in-target /tmp/finish.sh && rm /target/tmp/finish.sh
