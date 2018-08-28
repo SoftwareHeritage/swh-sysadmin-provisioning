@@ -2,19 +2,21 @@
 
 set -e
 
+PUPPET_MASTER=pergamon.internal.softwareheritage.org
+LOCATION=sesi_rocquencourt
+
 apt-get update
 
 apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" -y dist-upgrade
 
-augtool << "EOF"
-set /files/etc/puppet/puppet.conf/main/server pergamon.internal.softwareheritage.org
-save
-EOF
-
 systemctl disable puppet.service
 
 mkdir -p /etc/facter/facts.d
-echo location=sesi_rocquencourt > /etc/facter/facts.d/location.txt
+echo "location=$LOCATION" > /etc/facter/facts.d/location.txt
 
-/usr/bin/puppet agent --enable
-/usr/bin/puppet agent --test || true
+# first time around, this will:
+# - update the node's puppet agent configuration defining the puppet master
+# - generate the certificates with the appropriate fqdn
+# - unfortunately, for now, this fails though, when not being able to
+#   install the apt-transport-https package
+puppet agent --server $PUPPET_MASTER --waitforcert 60 --test
