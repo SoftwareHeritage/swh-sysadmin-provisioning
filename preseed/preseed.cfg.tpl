@@ -312,6 +312,9 @@ partman-basicfilesystems partman-basicfilesystems/no_swap boolean false
 #d-i apt-setup/services-select multiselect security, updates
 #d-i apt-setup/security_host string security.debian.org
 
+# Scan another CD or DVD?
+apt-cdrom-setup apt-setup/cdrom/set-next    boolean false
+
 # Additional repositories, local[0-9] available
 #d-i apt-setup/local0/repository string \
 #       http://local.server/debian stable main
