@@ -213,5 +213,6 @@ if __name__ == "__main__":
 qm start {vmid}
 while qm status {vmid} | grep -q running; do sleep 10; done
 qm set {vmid} -delete args
+qm set {vmid} -ide2 none,media=cdrom
 qm start {vmid}""".format(**virt_template_vars)
     print(qm_start_command)
