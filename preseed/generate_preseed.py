@@ -80,6 +80,9 @@ if __name__ == "__main__":
 
     parser.add_argument("-n", "--hostname", help="Name of the new host", required=True)
     parser.add_argument("--reset-password", help="Reset password", default=False)
+    # some people cannot use the pass command as is
+    parser.add_argument("--force-password", help="Provide the root password",
+                        default=False)
     parser.add_argument("--public-mac", help="MAC of the public interface")
     parser.add_argument("--public-ip", help="IP of the public interface")
     parser.add_argument("--public-netmask", help="Netmask of the public interface")
@@ -123,9 +126,13 @@ if __name__ == "__main__":
     preseed_template_vars["netconfig"] = network_tpl.format(**network_vars)
 
     # Password Generation and hashing
-    password, generated_password = get_or_generate_password(
-        hostname=args.hostname, force_generate=args.reset_password
-    )
+
+    if args.force_password is not False:
+        password, generated_password = args.force_password, False
+    else:
+        password, generated_password = get_or_generate_password(
+            hostname=args.hostname, force_generate=args.reset_password
+        )
     preseed_template_vars["crypted_password"] = sha512_crypt.encrypt(password)
 
     # Generate the output preseed file
