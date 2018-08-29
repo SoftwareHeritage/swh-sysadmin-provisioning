@@ -13,7 +13,7 @@ QM_CREATE_CMD = (
     "-bootdisk scsi0 "
     "-cores {cores} "
     "-hotplug disk,network,usb,cpu "
-    "-ide2 none,media=cdrom "
+    "-ide2 {installer_image},media=cdrom "
     "-memory {ram} "
     "-name {hostname} "
     "{networks} "
@@ -95,6 +95,7 @@ if __name__ == "__main__":
     parser.add_argument("--disk-specs", help="Disk specifications (<storage unit>:size)", action="append", required=True)
     parser.add_argument("--vmid", help="Virtual machine ID", type=int, required=True)
     parser.add_argument("--startup", help="Startup settings", default="order=4")
+    parser.add_argument("--installer-image", help="Installation image to use", default="local:iso/debian-9.5.0-amd64-netinst.iso")
 
     args = parser.parse_args()
 
@@ -172,6 +173,8 @@ if __name__ == "__main__":
             typeindex = 0
 
     virt_template_vars["disks"] = " ".join(disk_configs)
+
+    virt_template_vars["installer_image"] = args.installer_image
 
     # network configuration: one network card per networks, public then private
     # public on vmbr1
