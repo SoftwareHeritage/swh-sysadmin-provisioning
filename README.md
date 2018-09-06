@@ -2,5 +2,5 @@ syadm-provisioning
 ------------------
 
 Provisioning scripts for swh infrastructures:
-- preseed: internal infrastructure
-- azure: azure cloud services
+- [preseed](./preseed/README.md): internal infrastructure
+- [azure](./azure/README.md): azure cloud services
