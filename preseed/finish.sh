@@ -6,8 +6,13 @@ PUPPET_MASTER=pergamon
 PUPPET_MASTER_FQDN="$PUPPET_MASTER.internal.softwareheritage.org"
 LOCATION=sesi_rocquencourt
 
+cat > /etc/apt/sources.list.d/backports.list <<EOF
+deb https://deb.debian.org/debian stretch-backports main
+EOF
+
 apt-get update
 
+apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install -t stretch-backports facter
 apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" -y dist-upgrade
 
 systemctl disable puppet.service
