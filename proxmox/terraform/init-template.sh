@@ -1,11 +1,18 @@
 #!/usr/bin/env bash
 
+# This scripts automates the vm build to from a cloud-init ready image We can
+# then connect to it through its $TMP_IP and adapt the vm the way we want it
+# prior to make it a template.
+# When satisfied with the vm, execute: `qm template <vmid>`
+
 set -x
 set -e
 
 VERSION=${1-"9"}
 NAME="template-debian-${VERSION}"
 IMG="debian-$VERSION/debian-$VERSION-openstack-amd64.qcow2"
+
+TMP_IP=${2-"192.168.100.199"}
 
 VM_ID="${VERSION}000"
 VM_DISK="vm-$VM_ID-disk-0"
@@ -30,7 +37,7 @@ qm set $VM_ID --sockets 2 --cores 1
 
 # cloud init temporary setup
 qm set $VM_ID --ciuser root
-qm set $VM_ID --ipconfig0 "ip=192.168.100.125/24,gw=192.168.100.1"
+qm set $VM_ID --ipconfig0 "ip=${TMP_IP}/24,gw=192.168.100.1"
 qm set $VM_ID --nameserver "192.168.100.29"
 
 SSH_KEY_PUB=$HOME/.ssh/proxmox-ssh-key.pub
