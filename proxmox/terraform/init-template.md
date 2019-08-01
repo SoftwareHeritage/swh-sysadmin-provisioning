@@ -39,11 +39,8 @@ chmod +x init-template.sh
 ./init-template.sh 9
 ```
 
-This created a basic vm with basic login/pass as root/test so we can
-connect to it.
-
-Note: Implementation wise, this uses an openstack debian image,
-cloud-init ready [1]
+This created a basic debian-9 vm (based on the cloud-stack one [1]). We still
+need to connect to it to adapt it prior to make it a template (cf. below).
 
 [1] https://cdimage.debian.org/cdimage/openstack/
 
@@ -63,9 +60,22 @@ The rationale is to:
 qm start 9000
 ```
 
-### Checks
+### Connect
 
-Login through the console web-ui:
+
+#### ssh
+
+```
+ssh root@192.168.100.199
+```
+
+Note:
+Public/Private Keys are stored in the credential store (`pass ls
+operations/terraform-proxmox/ssh-key`).
+
+#### proxmox console webui
+
+Providing you set it a "cipassword" and reboot the vm first:
 
 -   accessible from <https://orsay.internal.softwareheritage.org:8006/>
 -   View \`datacenter\`
@@ -74,7 +84,8 @@ Login through the console web-ui:
 -   click the \`console\` menu.
 -   log in as root/test password
 
-Checks:
+
+### Checks
 
 -   kernel linux version
 -   debian release
