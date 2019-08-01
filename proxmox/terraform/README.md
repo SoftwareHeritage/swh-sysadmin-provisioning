@@ -4,8 +4,6 @@ Terraform allows to transparently declare our infrastructure as code. Providing
 a (non-official so far) plugin, we can provision vm the same way for our rocq
 infra (proxmox)
 
-# The road so far
-
 ## Prepare workstation
 
 See prepare-workstation.md
@@ -25,7 +23,7 @@ source it in your current shell session.
 source setup.sh
 ```
 
-## provision new vm
+## provision infra
 
 ```
 terraform init
@@ -34,11 +32,14 @@ terraform apply
 
 # Details
 
-The provisioning is bootstraping vm declared in ".tf" files. It's using a base
-template (debian-9-template, debian-10-template) installed in the hypervisor.
-Instructions are detailed in the `init-template.md` file.
+The provisioning is bootstraping vms declared in ".tf" files (in dependency
+order if any).
 
-# Init
+It's using a base template (either debian-9-template, debian-10-template)
+installed in the hypervisor. Instructions are detailed in the
+`init-template.md` file.
+
+## Init
 
 This initializes your local copy with the necessary:
 
@@ -46,16 +47,15 @@ This initializes your local copy with the necessary:
 terraform init
 ```
 
-# Plan changes
+## Plan changes
 
-Compulse all *.tf files present in the folder, then compute a
-differential plan:
+Parse all *.tf files present in the folder, then compute a differential plan:
 
 ```
 terraform plan
 ```
 
-# Apply changes
+## Apply changes
 
 Propose to apply the plan to the infra (interactively):
 

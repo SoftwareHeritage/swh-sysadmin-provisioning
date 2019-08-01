@@ -14,7 +14,7 @@ make setup
 make
 make install
 
-# Install so that terrafor actually sees the plugin
+# Install so that terraform actually sees the plugin
 mkdir -p ~/.terraform.d/plugins/linux_amd64
 cp -v ./bin/* ~/.terraform.d/plugins/linux_amd64/
 ```
