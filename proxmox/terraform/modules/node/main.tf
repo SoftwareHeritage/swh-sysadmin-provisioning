@@ -13,20 +13,20 @@ resource "proxmox_vm_qemu" "node" {
     memory            = "${var.memory}"
     # boot machine when hypervirsor starts
     onboot            = true
-    # cloud-init setup
+    #### cloud-init setup
     os_type           = "cloud-init"
-    # ciuser - User name to change ssh keys and password for instead of the
-    # image’s configured default user.
-    ciuser            = "${var.user_admin}"
-    ssh_user          = "${var.user_admin}"
-    # sshkeys - public ssh keys, one per line
-    sshkeys           = "${var.user_admin_ssh_public_key}"
+    # ciuser - User name to change to use when connecting
+    ciuser            = "${var.config["user_admin"]}"
+    ssh_user          = "${var.config["user_admin"]}"
+    # sshkeys - public ssh key to use when connecting
+    sshkeys           = "${var.config["user_admin_ssh_public_key"]}"
     # searchdomain - Sets DNS search domains for a container.
-    searchdomain      = "${var.domain}"
+    searchdomain      = "${var.config["domain"]}"
     # nameserver - Sets DNS server IP address for a container.
-    nameserver        = "${var.dns}"
+    nameserver        = "${var.config["dns"]}"
     # ipconfig0 - [gw =] [,ip=<IPv4Format/CIDR>]
-    ipconfig0         = "ip=${var.network["ip"]}/24,gw=${var.gateway_ip}"
+    ipconfig0         = "ip=${var.network["ip"]}/24,gw=${var.config["gateway_ip"]}"
+    ####
     disk {
         id           = 0
         type         = "virtio"
@@ -41,11 +41,12 @@ resource "proxmox_vm_qemu" "node" {
         macaddr = "${lookup(var.network, "macaddr", "")}"
     }
 
-    # Delegate to puppet at the end of the provisioning the software setup
+    #### provisioning: (creation time only) connect through ssh
+    # Let puppet do its install
     provisioner "remote-exec" {
         inline = [
             "sed -i 's/127.0.1.1/${var.network["ip"]}/g' /etc/hosts",
-            "puppet agent --server ${var.puppet_master} --environment=${var.puppet_environment} --waitforcert 60 --test || echo 'Node provisionned!'",
+            "puppet agent --server ${var.config["puppet_master"]} --environment=${var.config["puppet_environment"]} --waitforcert 60 --test || echo 'Node provisionned!'",
         ]
     }
 }

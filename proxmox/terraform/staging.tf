@@ -9,7 +9,25 @@ provider "proxmox" {
     # in a shell (see README): source ./setup.sh
 }
 
-# define the staging network gateway
+
+# Default configuration passed along module calls
+# (There is no other way to avoid duplication)
+locals {
+    config = {
+        dns                       = "${var.dns}"
+        domain                    = "${var.domain}"
+        puppet_environment        = "${var.puppet_environment}"
+        puppet_master             = "${var.puppet_master}"
+        gateway_ip                = "${var.gateway_ip}"
+        user_admin                = "${var.user_admin}"
+        user_admin_ssh_public_key = "${var.user_admin_ssh_public_key}"
+    }
+}
+
+# Define the staging network gateway
+# FIXME: Find a way to reuse the module "node"
+# Main difference between node in module and this: gateway define 2 network
+# interfaces
 resource "proxmox_vm_qemu" "gateway" {
     name              = "gateway"
     desc              = "staging gateway node"
@@ -80,6 +98,7 @@ resource "proxmox_vm_qemu" "gateway" {
 
 module "storage0" {
     source      = "./modules/node"
+    config      = "${local.config}"
 
     hostname    = "storage0"
     description = "swh storage services"
@@ -97,6 +116,7 @@ output storage0_summary {
 
 module "db0" {
     source      = "./modules/node"
+    config      = "${local.config}"
 
     hostname    = "db0"
     description = "swh db"
