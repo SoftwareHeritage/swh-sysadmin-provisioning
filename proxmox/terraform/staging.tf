@@ -9,42 +9,7 @@ provider "proxmox" {
     # in a shell (see README): source ./setup.sh
 }
 
-# `pass search terraform-proxmox` in credential store
-variable "ssh_key_data" {
-  type    = "string"
-  default = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDVKCfpeIMg7GS3Pk03ZAcBWAeDZ+AvWk2k/pPY0z8MJ3YAbqZkRtSK7yaDgJV6Gro7nn/TxdJLo2jEzzWvlC8d8AEzhZPy5Z/qfVVjqBTBM4H5+e+TItAHFfaY5+0WvIahxcfsfaq70MWfpJhszAah3ThJ4mqzYaw+dkr42+a7Gx3Ygpb/m2dpnFnxvXdcuAJYStmHKU5AWGWWM+Fm50/fdMqUfNd8MbKhkJt5ihXQmZWMOt7ls4N8i5NZWnS9YSWow8X/ENOEqCRN9TyRkc+pPS0w9DNi0BCsWvSRJOkyvQ6caEnKWlNoywCmM1AlIQD3k4RUgRWe0vqg/UKPpH3Z root@terraform"
-}
-
-variable "user_admin" {
-  type    = "string"
-  default = "root"
-}
-
-variable "domain" {
-  type    = "string"
-  default = "internal.staging.swh.network"
-}
-
-variable "puppet_environment" {
-  type    = "string"
-  default = "new_staging"
-}
-
-variable "puppet_master" {
-  type    = "string"
-  default = "pergamon.internal.softwareheritage.org"
-}
-
-variable "dns" {
-  type    = "string"
-  default = "192.168.100.29"
-}
-
-variable "gateway_ip" {
-  type    = "string"
-  default = "192.168.128.1"
-}
-
+# define the staging network gateway
 resource "proxmox_vm_qemu" "gateway" {
     name              = "gateway"
     desc              = "staging gateway node"
@@ -73,7 +38,7 @@ resource "proxmox_vm_qemu" "gateway" {
     # nameserver - Sets DNS server IP address for a container.
     nameserver        = "${var.dns}"
     # sshkeys - public ssh keys, one per line
-    sshkeys           = "${var.ssh_key_data}"
+    sshkeys           = "${var.user_admin_ssh_public_key}"
     # FIXME: When T1872 lands, this will need to be updated
     # ipconfig0 - [gw =] [,ip=<IPv4Format/CIDR>]
     # ip to communicate for now with the prod network through louvre
@@ -113,58 +78,18 @@ resource "proxmox_vm_qemu" "gateway" {
     }
 }
 
-resource "proxmox_vm_qemu" "storage" {
-    name              = "storage0"
-    desc              = "swh storage node"
-    # hypervisor onto which make the vm
-    target_node       = "orsay"
-    # See init-template.md to see the template vm bootstrap
-    clone             = "template-debian-9"
-    # linux kernel 2.6
-    qemu_os           = "l26"
-    # generic setup
-    sockets           = 1
-    cores             = 2
-    memory            = 8192
-    # boot machine when hypervirsor starts
-    onboot            = true
-    #### cloud-init setup
-    # to actually set some information per os_type (values: ubuntu, centos,
-    # cloud-init). Keep this as cloud-init
-    os_type           = "cloud-init"
-    # ciuser - User name to change ssh keys and password for instead of the
-    # image’s configured default user.
-    ciuser            = "${var.user_admin}"
-    # searchdomain - Sets DNS search domains for a container.
-    searchdomain      = "${var.domain}"
-    # nameserver - Sets DNS server IP address for a container.
-    nameserver        = "${var.dns}"
-    # sshkeys - public ssh keys, one per line
-    sshkeys           = "${var.ssh_key_data}"
-    # ipconfig0 - [gw =] [,ip=<IPv4Format/CIDR>]
-    ipconfig0         = "ip=192.168.128.2/24,gw=${var.gateway_ip}"
-    ssh_user          = "${var.user_admin}"
-    disk {
-        id           = 0
-        type         = "virtio"
-        storage      = "orsay-ssd-2018"
-        storage_type = "ssd"
-        size         = "32G"
-    }
-    network {
-        id      = 0
-        model   = "virtio"
-        bridge  = "vmbr0"
+module "storage0" {
+    source      = "./modules/node"
+
+    hostname    = "storage0"
+    description = "swh storage services"
+    cores       = "4"
+    memory      = "8192"
+    network = {
+        ip      = "192.168.128.2"
         macaddr = "CA:73:7F:ED:F9:01"
     }
+}
 
-    # Delegate to puppet at the end of the provisioning the software setup
-    provisioner "remote-exec" {
-        inline = [
-            "sed -i 's/127.0.1.1/192.168.128.2/g' /etc/hosts",
-            "puppet agent --server ${var.puppet_master} --environment=${var.puppet_environment} --waitforcert 60 --test || echo 'Node provisionned!'",
-        ]
     }
-    # forced to specify as there is no way to introspect the gateway's ip
-    depends_on = ["proxmox_vm_qemu.gateway"]
 }
