@@ -1,11 +1,8 @@
-output name {
-    value = "${proxmox_vm_qemu.node.name}"
-}
+output summary {
+    value = <<EOF
 
-output ip {
-    value = "${proxmox_vm_qemu.node.network.*.ip}"
-}
-
-output macaddr {
-    value = "${proxmox_vm_qemu.node.network.*.macaddr}"
+hostname: ${proxmox_vm_qemu.node.name}
+fqdn: ${proxmox_vm_qemu.node.name}.${var.domain}
+network: ${proxmox_vm_qemu.node.ipconfig0} macaddr=${lookup(proxmox_vm_qemu.node.network[0], "macaddr")}
+EOF
 }

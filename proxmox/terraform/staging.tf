@@ -91,8 +91,8 @@ module "storage0" {
     }
 }
 
-output storage0_out {
-    value = "${module.storage0.name} ${module.storage0.ip} ${module.storage0.macaddr}"
+output storage0_summary {
+    value = "${module.storage0.summary}"
 }
 
 module "db0" {
@@ -104,10 +104,10 @@ module "db0" {
     memory      = "16384"
     network = {
         ip      = "192.168.128.3"
+        macaddr = "3A:65:31:7C:24:17"
     }
 }
 
-
-output db0_out {
-    value = "${module.db0.name} ${module.db0.ip} ${module.db0.macaddr}"
+output db0_summary {
+    value = "${module.db0.summary}"
 }
