@@ -91,5 +91,23 @@ module "storage0" {
     }
 }
 
+output storage0_out {
+    value = "${module.storage0.name} ${module.storage0.ip} ${module.storage0.macaddr}"
+}
+
+module "db0" {
+    source      = "./modules/node"
+
+    hostname    = "db0"
+    description = "swh db"
+    cores       = "4"
+    memory      = "16384"
+    network = {
+        ip      = "192.168.128.3"
     }
+}
+
+
+output db0_out {
+    value = "${module.db0.name} ${module.db0.ip} ${module.db0.macaddr}"
 }
