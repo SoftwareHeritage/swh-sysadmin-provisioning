@@ -26,8 +26,9 @@ locals {
 
 # Define the staging network gateway
 # FIXME: Find a way to reuse the module "node"
-# Main difference between node in module and this: gateway define 2 network
-# interfaces
+# Main difference between node in module and this:
+# - gateway define 2 network interfaces
+# - provisioning step is more complex
 resource "proxmox_vm_qemu" "gateway" {
     name              = "gateway"
     desc              = "staging gateway node"
