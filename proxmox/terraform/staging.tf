@@ -127,6 +127,10 @@ module "db0" {
         ip      = "192.168.128.3"
         macaddr = "3A:65:31:7C:24:17"
     }
+    storage = {
+        location = "orsay-ssd-2018"
+        size     = "100G"
+    }
 }
 
 output db0_summary {
