@@ -120,7 +120,7 @@ module "db0" {
     config      = "${local.config}"
 
     hostname    = "db0"
-    description = "swh db"
+    description = "Node to host storage/indexer/scheduler dbs"
     cores       = "4"
     memory      = "16384"
     network = {
