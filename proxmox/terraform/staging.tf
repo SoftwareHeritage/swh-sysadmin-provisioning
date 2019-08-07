@@ -172,3 +172,21 @@ module "worker0" {
 output worker0_summary {
     value = "${module.worker0.summary}"
 }
+
+module "worker1" {
+    source      = "./modules/node"
+    config      = "${local.config}"
+
+    hostname    = "worker1"
+    description = "Loader/lister service node"
+    cores       = "4"
+    memory      = "16384"
+    network = {
+        ip      = "192.168.128.6"
+        macaddr = "D6:A9:6F:02:E3:66"
+    }
+}
+
+output worker1_summary {
+    value = "${module.worker1.summary}"
+}
