@@ -165,6 +165,7 @@ module "worker0" {
     memory      = "16384"
     network = {
         ip      = "192.168.128.5"
+        macaddr = "72:D9:03:46:B1:47"
     }
 }
 
