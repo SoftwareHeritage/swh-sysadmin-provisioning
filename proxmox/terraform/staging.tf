@@ -132,3 +132,21 @@ module "db0" {
 output db0_summary {
     value = "${module.db0.summary}"
 }
+
+module "scheduler0" {
+    source      = "./modules/node"
+    config      = "${local.config}"
+
+    hostname    = "scheduler0"
+    description = "Scheduler api services"
+    cores       = "4"
+    memory      = "16384"
+    network = {
+        ip      = "192.168.128.4"
+        macaddr = "92:02:7E:D0:B9:36"
+    }
+}
+
+output scheduler0_summary {
+    value = "${module.scheduler0.summary}"
+}
