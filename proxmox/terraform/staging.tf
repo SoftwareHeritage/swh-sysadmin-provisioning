@@ -154,3 +154,20 @@ module "scheduler0" {
 output scheduler0_summary {
     value = "${module.scheduler0.summary}"
 }
+
+module "worker0" {
+    source      = "./modules/node"
+    config      = "${local.config}"
+
+    hostname    = "worker0"
+    description = "Loader/lister service node"
+    cores       = "4"
+    memory      = "16384"
+    network = {
+        ip      = "192.168.128.5"
+    }
+}
+
+output worker0_summary {
+    value = "${module.worker0.summary}"
+}
