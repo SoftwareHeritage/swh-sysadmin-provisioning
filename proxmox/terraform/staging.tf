@@ -208,3 +208,21 @@ module "webapp" {
 output webapp_summary {
     value = "${module.webapp.summary}"
 }
+
+module "deposit" {
+    source      = "./modules/node"
+    config      = "${local.config}"
+
+    hostname    = "deposit"
+    description = "Deposit service node"
+    cores       = "4"
+    memory      = "16384"
+    network = {
+        ip      = "192.168.128.7"
+        macaddr = "9E:81:DD:58:15:3B"
+    }
+}
+
+output deposit_summary {
+    value = "${module.deposit.summary}"
+}
