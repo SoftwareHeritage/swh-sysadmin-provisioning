@@ -7,7 +7,7 @@ variable "domain" {
 variable "puppet_environment" {
     description = "Puppet environment to use (swh-site's git branch)"
     type        = "string"
-    default     = "new_staging"
+    default     = "staging"
 }
 
 variable "puppet_master" {
