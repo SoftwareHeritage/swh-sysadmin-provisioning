@@ -190,3 +190,21 @@ module "worker1" {
 output worker1_summary {
     value = "${module.worker1.summary}"
 }
+
+module "webapp" {
+    source      = "./modules/node"
+    config      = "${local.config}"
+
+    hostname    = "webapp"
+    description = "Archive/Webapp service node"
+    cores       = "4"
+    memory      = "16384"
+    network = {
+        ip      = "192.168.128.8"
+        macaddr = "1A:00:39:95:D4:5F"
+    }
+}
+
+output webapp_summary {
+    value = "${module.webapp.summary}"
+}
