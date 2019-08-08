@@ -226,3 +226,21 @@ module "deposit" {
 output deposit_summary {
     value = "${module.deposit.summary}"
 }
+
+module "vault" {
+    source      = "./modules/node"
+    config      = "${local.config}"
+
+    hostname    = "vault"
+    description = "Vault services node"
+    cores       = "4"
+    memory      = "16384"
+    network = {
+        ip      = "192.168.128.9"
+        macaddr = "16:15:1C:79:CB:DB"
+    }
+}
+
+output vault_summary {
+    value = "${module.vault.summary}"
+}
