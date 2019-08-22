@@ -4,8 +4,7 @@
 
 set -e
 
-group="injection"
-storage_account="${group}"
+group="swh-injection"
 
 location="westeurope"
 
@@ -13,42 +12,36 @@ vm_name="$1"
 
 vm_size="Standard_DS5_v2"
 vm_subnet="/subscriptions/49b7f681-8efc-4689-8524-870fc0c1db09/resourceGroups/swh-resource/providers/Microsoft.Network/virtualNetworks/swh-vnet/subnets/default"
-vm_diagnostics="http://swhresourcediag966.blob.core.windows.net/"
+vm_nsg=""
 
 vm_user="injection"
 vm_sshkey="~/.ssh/id_rsa.inria.pub"
 
-vm_ndisks=11
+vm_ndisks=12
 
-if ! azure group show "$group" >/dev/null; then
-    azure group create "$group" "$location"
-fi
-
-if ! azure storage account show -g "$group" "$storage_account"; then
-    azure storage account create -g "$group" -l "$location" "$storage_account"
+if ! az group show "$group" >/dev/null; then
+    az group create "$group" "$location"
 fi
 
 azure vm create \
-      -g "${group}" \
-      -n "${vm_name}" \
-      -l "${location}" \
-      -y Linux -Q credativ:Debian:8:latest \
+      --resource-group "${group}" \
+      --name "${vm_name}" \
+      --size "${vm_size}" \
+      -y Linux \
+      --image credativ:Debian:9:latest \
+      --nsg "${vm_nsg}" \
       -S "${vm_subnet}" \
       -f "${vm_name}-if" \
       -i "${vm_name}-public" --public-ip-domain-name "swh${vm_name}" --public-ip-idletimeout 30 \
       -u "${vm_user}" -M "${vm_sshkey}" \
-      -o "${storage_account}" \
-      -z "${vm_size}" \
-      --boot-diagnostics-storage-uri "${vm_diagnostics}"
 
 for disk in $(seq 1 "${vm_ndisks}"); do
-    azure vm disk attach-new \
+    az vm disk attach \
+          --new \
           -g "${group}" \
-          -n "${vm_name}" \
-          -z 1023 \
-          -d "${vm_name}-data${disk}.vhd" \
-          -l "${disk}" \
-          -o "${storage_account}"
+          --vm-name "${vm_name}" \
+          --size-gb 1024 \
+          --disk "${vm_name}-data${disk}"
 done
 
 vm_hostname="swh${vm_name}.${location}.cloudapp.azure.com"
