@@ -244,3 +244,21 @@ module "vault" {
 output vault_summary {
     value = "${module.vault.summary}"
 }
+
+module "journal0" {
+    source      = "./modules/node"
+    config      = "${local.config}"
+
+    hostname    = "journal0"
+    description = "Journal services node"
+    cores       = "4"
+    memory      = "16384"
+    network = {
+        ip      = "192.168.128.10"
+        macaddr = "1E:98:C2:66:BF:33"
+    }
+}
+
+output journal0_summary {
+    value = "${module.journal0.summary}"
+}
