@@ -77,7 +77,7 @@ resource "azurerm_virtual_machine" "vault-server" {
     disable_password_authentication = true
     ssh_keys {
       path     = "/home/${var.user_admin}/.ssh/authorized_keys"
-      key_data = var.ssh_key_data
+      key_data = var.ssh_key_data_ardumont
     }
   }
 
