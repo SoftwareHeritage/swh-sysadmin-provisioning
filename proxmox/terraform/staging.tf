@@ -262,3 +262,21 @@ module "journal0" {
 output journal0_summary {
     value = "${module.journal0.summary}"
 }
+
+module "worker2" {
+    source      = "./modules/node"
+    config      = "${local.config}"
+
+    hostname    = "worker2"
+    description = "Loader/lister service node"
+    cores       = "4"
+    memory      = "16384"
+    network = {
+        ip      = "192.168.128.11"
+        macaddr = "AA:57:27:51:75:18"
+    }
+}
+
+output worker2_summary {
+    value = "${module.worker2.summary}"
+}
