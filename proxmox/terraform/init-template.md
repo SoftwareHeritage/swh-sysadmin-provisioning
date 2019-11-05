@@ -103,7 +103,7 @@ Then, add some expected defaults:
 sed -i 's/nameserver 127.0.0.1/nameserver 192.168.100.29/' /etc/resolv.conf
 apt update
 apt upgrade -y
-apt install -y puppet
+apt install -y gnupg puppet
 systemctl stop puppet; systemctl disable puppet.service
 mkdir -p /etc/facter/facts.d
 echo location=sesi_rocquencourt_staging > /etc/facter/facts.d/location.txt
