@@ -17,7 +17,7 @@ variable "hypervisor" {
 variable "template" {
     description = "Template to use (template-debian-9, template-debian-10)"
     type        = "string"
-    default     = "template-debian-9"
+    default     = "template-debian-10"
 }
 
 variable "sockets" {

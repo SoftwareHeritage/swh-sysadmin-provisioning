@@ -35,7 +35,7 @@ resource "proxmox_vm_qemu" "gateway" {
     # hypervisor onto which make the vm
     target_node       = "orsay"
     # See init-template.md to see the template vm bootstrap
-    clone             = "template-debian-9"
+    clone             = "template-debian-10"
     # linux kernel 2.6
     qemu_os           = "l26"
     # generic setup
