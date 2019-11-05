@@ -36,7 +36,7 @@ Create vm
 
 ```
 chmod +x init-template.sh
-./init-template.sh 9
+./init-template.sh 10
 ```
 
 This created a basic debian-9 vm (based on the cloud-stack one [1]). We still
@@ -57,7 +57,7 @@ The rationale is to:
 ### Start vm
 
 ```
-qm start 9000
+qm start 10000
 ```
 
 ### Connect
@@ -80,7 +80,7 @@ Providing you set it a "cipassword" and reboot the vm first:
 -   accessible from <https://orsay.internal.softwareheritage.org:8006/>
 -   View \`datacenter\`
 -   unfold the hypervisor \`orsay\` menu
--   select the vm \`9000\`
+-   select the vm \`10000\`
 -   click the \`console\` menu.
 -   log in as root/test password
 
@@ -94,37 +94,19 @@ Providing you set it a "cipassword" and reboot the vm first:
 
 Update grub's timeout to 0 for a faster boot (as root):
 ```
-sed -i s'/GRUB_TIMEOUT = 5/GRUB_TIMEOUT = 0/' etc/default/grub
+sed -i s'/GRUB_TIMEOUT = 5/GRUB_TIMEOUT = 0/' /etc/default/grub
 update-grub
 ```
 
 Then, add some expected defaults:
 ```
+sed -i 's/nameserver 127.0.0.1/nameserver 192.168.100.29/' /etc/resolv.conf
 apt update
 apt upgrade -y
 apt install -y puppet
 systemctl stop puppet; systemctl disable puppet.service
 mkdir -p /etc/facter/facts.d
 echo location=sesi_rocquencourt_staging > /etc/facter/facts.d/location.txt
-
-# for stretch (debian-9)
-# we need a superior version of facter package
-# because we use syntax from that superior version
-cat > /etc/apt/sources.list.d/backports.list <<EOF
-deb https://deb.debian.org/debian stretch-backports main
-EOF
-apt install -t stretch-backports facter
-# for stretch, we also need a superior version of cloud-init
-# the current stable version fails silently to set some cloud-init configuration
-cat > /etc/apt/sources.list.d/buster.list <<EOF
-deb https://deb.debian.org/debian buster main
-EOF
-apt update
-apt install -y cloud-init
-rm /etc/apt/sources.list.d/{buster,backports}.list
-# install cloud-init from buster version (7.9 is too old
-# and prevents some cloud-init functionalities from working)
-userdel debian # remove id 1000 which conflicts with our puppet setup
 ```
 -   etc...
 
@@ -132,9 +114,9 @@ userdel debian # remove id 1000 which conflicts with our puppet setup
 
 ```
 # stop vm
-qm stop 9000
+qm stop 10000
 # remove cloud-init setup
-qm set 9000 --delete ciuser,cipassword,ipconfig0,nameserver,sshkeys
+qm set 10000 --delete ciuser,cipassword,ipconfig0,nameserver,sshkeys
 ```
 
 Template the image
@@ -144,7 +126,7 @@ When the vm is ready, we can use it as a base template for future
 clones:
 
 ```
-qm template 9000
+qm template 10000
 ```
 
 Clone image
@@ -156,16 +138,16 @@ not necesary to do this as this will be taken care of by proxmox.
 Sadly full clone only works:
 
 ```
-qm clone 9000 666 --name debian-10-tryout --full true
+qm clone 10000 666 --name debian-10-tryout --full true
 ```
 
-As in: Fully clone from template \"9000\", the new vm with id \"666\"
+As in: Fully clone from template \"10000\", the new vm with id \"666\"
 dubbed \"buster-tryout\".
 
 Note (partial clone does not work):
 
 ```
-root@orsay:/home/ardumont/proxmox# qm clone 9000 666 --name buster-tryout
+root@orsay:/home/ardumont/proxmox# qm clone 10000 666 --name buster-tryout
 Linked clone feature is not supported for drive 'virtio0'
 ```
 
