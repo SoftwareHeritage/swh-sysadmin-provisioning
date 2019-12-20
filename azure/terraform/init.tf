@@ -3,6 +3,15 @@
 # - data: Retrieve data information to be used within the file
 # - resource: Define resource and create/update
 
+terraform {
+  backend "azurerm" {
+    resource_group_name  = "euwest-admin"
+    storage_account_name = "swhterraform"
+    container_name       = "tfstate"
+    key                  = "prod.azure.terraform.tfstate"
+  }
+}
+
 # Configure the Microsoft Azure Provider
 # Empty if using the `az login` tool
 provider "azurerm" {
