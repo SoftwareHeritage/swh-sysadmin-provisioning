@@ -40,6 +40,11 @@ resource "azurerm_virtual_machine" "kafka-server" {
   network_interface_ids = [azurerm_network_interface.kafka-interface[count.index].id]
   vm_size               = "Standard_B2s"
 
+  boot_diagnostics {
+    enabled     = true
+    storage_uri = var.boot_diagnostics_uri
+  }
+
   storage_os_disk {
     name              = format("kafka%02d-osdisk", count.index + 1)
     caching           = "ReadWrite"
@@ -102,6 +107,7 @@ resource "azurerm_virtual_machine" "kafka-server" {
         filesystem = "ext4",
         mount_options = "defaults",
       }]
+      raids = []
     })
     destination = var.firstboot_script
 

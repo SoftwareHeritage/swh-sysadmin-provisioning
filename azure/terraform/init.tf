@@ -50,3 +50,7 @@ variable "user_admin" {
   type    = string
   default = "tmpadmin"
 }
+
+variable "boot_diagnostics_uri" {
+  default = "https://swhresourcediag966.blob.core.windows.net"
+}
