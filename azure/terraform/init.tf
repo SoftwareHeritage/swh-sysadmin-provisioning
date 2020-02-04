@@ -31,6 +31,11 @@ data "azurerm_subnet" "default" {
   resource_group_name  = "swh-resource"
 }
 
+# same for resource group used by storage servers
+data "azurerm_resource_group" "euwest-servers" {
+  name = "euwest-servers"
+}
+
 variable "firstboot_script" {
   type = string
   default = "/root/firstboot.sh"
