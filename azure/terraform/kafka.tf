@@ -21,6 +21,18 @@ resource "azurerm_network_security_group" "kafka-public-nsg" {
   resource_group_name = "euwest-kafka"
 
   security_rule {
+    name                       = "kafka-icmp-inbound-public"
+    priority                   = 1000
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Icmp"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "VirtualNetwork"
+  }
+
+  security_rule {
     name                       = "kafka-tls-inbound-public"
     priority                   = 2000
     direction                  = "Inbound"
