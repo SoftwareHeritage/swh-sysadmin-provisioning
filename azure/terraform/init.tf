@@ -15,7 +15,7 @@ terraform {
 # Configure the Microsoft Azure Provider
 # Empty if using the `az login` tool
 provider "azurerm" {
-  version = "~> 1.27"
+  version = "=1.43.0"
 }
 
 # Reuse the network security group as defined currently
