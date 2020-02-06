@@ -15,18 +15,47 @@ resource "azurerm_resource_group" "euwest-kafka" {
   }
 }
 
+resource "azurerm_network_security_group" "kafka-public-nsg" {
+  name                = "kafka-public-nsg"
+  location            = "westeurope"
+  resource_group_name = "euwest-kafka"
+
+  security_rule {
+    name                       = "kafka-tls-inbound-public"
+    priority                   = 2000
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "9093"
+    source_address_prefix      = "*"
+    destination_address_prefix = "VirtualNetwork"
+  }
+}
+
+resource "azurerm_public_ip" "kafka-public-ip" {
+  count = var.kafka_servers
+
+  name                = format("kafka%02d-ip", count.index + 1)
+  domain_name_label   = format("swh-kafka%02d", count.index + 1)
+  location            = "westeurope"
+  resource_group_name = "euwest-kafka"
+  allocation_method   = "Static"
+  sku                 = "Standard"
+}
+
 resource "azurerm_network_interface" "kafka-interface" {
   count = var.kafka_servers
 
   name                      = format("kafka%02d-interface", count.index + 1)
   location                  = "westeurope"
   resource_group_name       = "euwest-kafka"
-  network_security_group_id = data.azurerm_network_security_group.worker-nsg.id
+  network_security_group_id = azurerm_network_security_group.kafka-public-nsg.id
 
   ip_configuration {
     name                          = "vaultNicConfiguration"
     subnet_id                     = data.azurerm_subnet.default.id
-    public_ip_address_id          = ""
+    public_ip_address_id          = azurerm_public_ip.kafka-public-ip[count.index].id
     private_ip_address_allocation = "Dynamic"
   }
 }
@@ -96,15 +125,15 @@ resource "azurerm_virtual_machine" "kafka-server" {
   }
 
   provisioner "file" {
-    content     = templatefile("templates/firstboot.sh.tpl", {
-      hostname   = format("kafka%02d", count.index + 1),
-      fqdn       = format("kafka%02d.euwest.azure.internal.softwareheritage.org", count.index + 1),
-      ip_address = azurerm_network_interface.kafka-interface[count.index].private_ip_address,
+    content = templatefile("templates/firstboot.sh.tpl", {
+      hostname        = format("kafka%02d", count.index + 1),
+      fqdn            = format("kafka%02d.euwest.azure.internal.softwareheritage.org", count.index + 1),
+      ip_address      = azurerm_network_interface.kafka-interface[count.index].private_ip_address,
       facter_location = "azure_euwest",
       disks = [{
-        base_disk = "/dev/sdc",
-        mountpoint = "/srv/kafka",
-        filesystem = "ext4",
+        base_disk     = "/dev/sdc",
+        mountpoint    = "/srv/kafka",
+        filesystem    = "ext4",
         mount_options = "defaults",
       }]
       raids = []
