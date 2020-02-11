@@ -142,13 +142,14 @@ resource "azurerm_virtual_machine" "kafka-server" {
       fqdn            = format("kafka%02d.euwest.azure.internal.softwareheritage.org", count.index + 1),
       ip_address      = azurerm_network_interface.kafka-interface[count.index].private_ip_address,
       facter_location = "azure_euwest",
+      disk_setup = {
       disks = [{
         base_disk     = "/dev/sdc",
         mountpoint    = "/srv/kafka",
         filesystem    = "ext4",
         mount_options = "defaults",
       }]
-      raids = []
+      }
     })
     destination = var.firstboot_script
 

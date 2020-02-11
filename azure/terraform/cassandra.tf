@@ -134,7 +134,8 @@ resource "azurerm_virtual_machine" "cassandra-server" {
       hostname   = self.name
       fqdn       = format("%s.euwest.azure.internal.softwareheritage.org", self.name)
       ip_address = azurerm_network_interface.cassandra-interface[self.name].private_ip_address
-      facter_location = "azure_euwest",
+      facter_location = "azure_euwest"
+      disk_setup = {
       disks = [
         for disk in local.cassandra_servers[self.name].datadisks: {
           base_disk = disk.path
@@ -149,6 +150,7 @@ resource "azurerm_virtual_machine" "cassandra-server" {
         filesystem    = "ext4"
         mount_options = "defaults"
       }]
+      }
     })
     destination = var.firstboot_script
 

@@ -108,9 +108,8 @@ resource "azurerm_virtual_machine" "cassandra-replay-server" {
       hostname   = self.name
       fqdn       = format("%s.euwest.azure.internal.softwareheritage.org", self.name)
       ip_address = azurerm_network_interface.cassandra-replayer-interface[self.name].private_ip_address
-      facter_location = "azure_euwest",
-      disks = []
-      raids = []
+      facter_location = "azure_euwest"
+      disk_setup = {}
     })
     destination = var.firstboot_script
 

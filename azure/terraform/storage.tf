@@ -98,9 +98,8 @@ resource "azurerm_virtual_machine" "storage-server" {
       hostname   = each.key
       fqdn       = format("%s.euwest.azure.internal.softwareheritage.org", each.key),
       ip_address = azurerm_network_interface.storage-interface[each.key].private_ip_address,
-      facter_location = "azure_euwest",
-      disks = []
-      raids = []
+      facter_location = "azure_euwest"
+      disk_setup = {}
     })
     destination = var.firstboot_script
 
