@@ -4,6 +4,8 @@ set -ex
 
 cd /
 
+export DEBIAN_FRONTEND=noninteractive
+
 PUPPET_MASTER=pergamon.internal.softwareheritage.org
 
 # Variables provided by terraform
@@ -31,7 +33,6 @@ apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-conf
 echo $HOSTNAME > /etc/hostname
 hostnamectl set-hostname $HOSTNAME
 echo "$IP $FQDN $HOSTNAME" >> /etc/hosts
-
 
 # Handle disk configuration
 
@@ -100,7 +101,6 @@ echo "UUID=\"$uuid\" ${lvm_lv.mountpoint} ${lvm_lv.filesystem} ${lvm_lv.mount_op
 
 update-initramfs -k all -u
 %{ endif }
-
 
 mount -a
 
