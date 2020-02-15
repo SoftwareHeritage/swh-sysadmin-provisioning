@@ -48,12 +48,13 @@ resource "azurerm_network_security_group" "kafka-public-nsg" {
 resource "azurerm_public_ip" "kafka-public-ip" {
   count = var.kafka_servers
 
-  name                = format("kafka%02d-ip", count.index + 1)
-  domain_name_label   = format("swh-kafka%02d", count.index + 1)
-  location            = "westeurope"
-  resource_group_name = "euwest-kafka"
-  allocation_method   = "Static"
-  sku                 = "Standard"
+  name                    = format("kafka%02d-ip", count.index + 1)
+  domain_name_label       = format("swh-kafka%02d", count.index + 1)
+  location                = "westeurope"
+  resource_group_name     = "euwest-kafka"
+  allocation_method       = "Static"
+  sku                     = "Standard"
+  idle_timeout_in_minutes = 30
 }
 
 resource "azurerm_network_interface" "kafka-interface" {

@@ -65,12 +65,13 @@ locals {
 resource "azurerm_public_ip" "boatbucket-public-ip" {
   for_each = local.boatbucket_servers
 
-  name                = format("%s-ip", each.key)
-  domain_name_label   = format("swh-%s", each.key)
-  location            = "westeurope"
-  resource_group_name = azurerm_resource_group.euwest-boatbucket.name
-  allocation_method   = "Static"
-  sku                 = "Standard"
+  name                    = format("%s-ip", each.key)
+  domain_name_label       = format("swh-%s", each.key)
+  location                = "westeurope"
+  resource_group_name     = azurerm_resource_group.euwest-boatbucket.name
+  allocation_method       = "Static"
+  sku                     = "Standard"
+  idle_timeout_in_minutes = 30
 }
 
 resource "azurerm_network_interface" "boatbucket-interface" {
