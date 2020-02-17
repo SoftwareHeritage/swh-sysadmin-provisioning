@@ -9,6 +9,15 @@ SWH azure provisioning
 [1] https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-apt?view=azure-cli-latest
 [2] https://portal.azure.com
 
+Note: `azure-cli` is actually a Python package, so it can also be installed in
+a virtualenv (preferably a frech dedicated one, since it pulls something like
+130 packages.):
+
+``` sh
+$ mkvirtualenv -p /usr/bin/python3 -a $PWD azure
+(azure) $
+```
+
 # Create vm
 
 ``` sh

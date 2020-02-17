@@ -41,7 +41,6 @@ resource "azurerm_storage_account" "vault-storage" {
 # A container for the blob storage named 'contents' (as other blob storages)
 resource "azurerm_storage_container" "contents" {
   name                  = "contents"
-  resource_group_name   = azurerm_resource_group.euwest-vault.name
   storage_account_name  = azurerm_storage_account.vault-storage.name
   container_access_type = "private"
 }
@@ -85,4 +84,3 @@ resource "azurerm_virtual_machine" "vault-server" {
     environment = "SWH Vault"
   }
 }
-
