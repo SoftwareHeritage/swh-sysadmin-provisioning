@@ -122,7 +122,7 @@ resource "azurerm_virtual_machine" "boatbucket-server" {
 
     content {
       name              = format("%s-%s", each.key, storage_data_disk.key)
-      caching           = "None"
+      caching           = "ReadOnly"
       create_option     = "Empty"
       managed_disk_type = "Premium_LRS"
       disk_size_gb      = var.boatbucket_disk_size
