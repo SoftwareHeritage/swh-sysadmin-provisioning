@@ -2,9 +2,47 @@ variable "boatbucket_disk_size" {
   default = 1024
 }
 
+variable "boatbucket_zfs_disk_size" {
+  default = 1024
+}
+
+variable "boatbucket_zfs_slog_disk_size" {
+  default = 128
+}
+
+variable "boatbucket_zfs_special_disk_size" {
+  default = 256
+}
+
 variable "boatbucket_disks_per_server" {
   default = 8
 }
+
+variable "boatbucket_zfs_slog_disks_per_server" {
+  default = 2
+}
+
+variable "boatbucket_zfs_slog_lun_offset" {
+  default = 9
+}
+
+variable "boatbucket_zfs_disks_per_server" {
+  default = 8
+}
+
+variable "boatbucket_zfs_lun_offset" {
+  default = 15
+}
+
+variable "boatbucket_zfs_special_disks_per_server" {
+  default = 2
+}
+
+variable "boatbucket_zfs_special_lun_offset" {
+  default = 31
+}
+
+
 
 resource "azurerm_resource_group" "euwest-boatbucket" {
   name     = "euwest-boatbucket"
@@ -57,7 +95,28 @@ locals {
           path = format("/dev/disk/azure/scsi1/lun%d", i + 1)
         }
       }
-    }
+      zfs_slog_disks = {
+        for i in range(var.boatbucket_zfs_slog_disks_per_server):
+        format("zfs-slog%02d", i + 1) => {
+          lun  = i + var.boatbucket_zfs_slog_lun_offset
+          path = format("/dev/disk/azure/scsi1/lun%d", i + var.boatbucket_zfs_slog_lun_offset)
+        }
+      }
+      zfs_disks = {
+        for i in range(var.boatbucket_zfs_disks_per_server):
+        format("zfs%02d", i + 1) => {
+          lun  = i + var.boatbucket_zfs_lun_offset
+          path = format("/dev/disk/azure/scsi1/lun%d", i + var.boatbucket_zfs_lun_offset)
+        }
+      }
+      zfs_special_disks = {
+        for i in range(var.boatbucket_zfs_special_disks_per_server):
+        format("zfs-special%02d", i + 1) => {
+          lun  = i + var.boatbucket_zfs_special_lun_offset
+          path = format("/dev/disk/azure/scsi1/lun%d", i + var.boatbucket_zfs_special_lun_offset)
+        }
+      }
+   }
   }
 }
 
@@ -100,7 +159,7 @@ resource "azurerm_virtual_machine" "boatbucket-server" {
   location              = "westeurope"
   resource_group_name   = azurerm_resource_group.euwest-boatbucket.name
   network_interface_ids = [azurerm_network_interface.boatbucket-interface[each.key].id]
-  vm_size               = "Standard_F8s_v2"
+  vm_size               = "Standard_D16as_v4"
 
   delete_os_disk_on_termination    = true
   delete_data_disks_on_termination = true
@@ -111,7 +170,7 @@ resource "azurerm_virtual_machine" "boatbucket-server" {
   }
 
   storage_os_disk {
-    name              = format("%s-osdisk", each.key)
+    name              = format("%s-osdisk2", each.key)
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Premium_LRS"
@@ -126,6 +185,45 @@ resource "azurerm_virtual_machine" "boatbucket-server" {
       create_option     = "Empty"
       managed_disk_type = "Premium_LRS"
       disk_size_gb      = var.boatbucket_disk_size
+      lun               = storage_data_disk.value.lun
+    }
+  }
+
+  dynamic storage_data_disk {
+    for_each = each.value.zfs_slog_disks
+
+    content {
+      name              = format("%s-%s", each.key, storage_data_disk.key)
+      caching           = "None"
+      create_option     = "Empty"
+      managed_disk_type = "Premium_LRS"
+      disk_size_gb      = var.boatbucket_zfs_slog_disk_size
+      lun               = storage_data_disk.value.lun
+    }
+  }
+
+  dynamic storage_data_disk {
+    for_each = each.value.zfs_disks
+
+    content {
+      name              = format("%s-%s", each.key, storage_data_disk.key)
+      caching           = "None"
+      create_option     = "Empty"
+      managed_disk_type = "Standard_LRS"
+      disk_size_gb      = var.boatbucket_zfs_disk_size
+      lun               = storage_data_disk.value.lun
+    }
+  }
+
+  dynamic storage_data_disk {
+    for_each = each.value.zfs_special_disks
+
+    content {
+      name              = format("%s-%s", each.key, storage_data_disk.key)
+      caching           = "None"
+      create_option     = "Empty"
+      managed_disk_type = "Premium_LRS"
+      disk_size_gb      = var.boatbucket_zfs_special_disk_size
       lun               = storage_data_disk.value.lun
     }
   }
