@@ -27,7 +27,7 @@ variable "boatbucket_zfs_slog_lun_offset" {
 }
 
 variable "boatbucket_zfs_disks_per_server" {
-  default = 8
+  default = 10
 }
 
 variable "boatbucket_zfs_lun_offset" {
