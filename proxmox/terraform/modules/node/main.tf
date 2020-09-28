@@ -1,7 +1,10 @@
 resource "proxmox_vm_qemu" "node" {
   name = var.hostname
   desc = var.description
+  vmid = var.vmid
 
+  balloon = var.balloon
+  full_clone = false
   # hypervisor onto which make the vm
   target_node = var.hypervisor
 
@@ -16,6 +19,7 @@ resource "proxmox_vm_qemu" "node" {
   # generic setup
   sockets = var.sockets
   cores   = var.cores
+  numa    = var.numa
   memory  = var.memory
 
   # boot machine when hypervirsor starts
@@ -52,7 +56,7 @@ resource "proxmox_vm_qemu" "node" {
   network {
     id      = 0
     model   = "virtio"
-    bridge  = "vmbr0"
+    bridge  = lookup(var.network, "bridge", "")
     macaddr = lookup(var.network, "macaddr", "")
   }
 
@@ -74,7 +78,8 @@ resource "proxmox_vm_qemu" "node" {
     ignore_changes = [
       bootdisk,
       scsihw,
+      network,
+      disk
     ]
   }
 }
-

@@ -12,17 +12,18 @@ module "zookeeper1" {
 
   hostname    = "zookeeper1"
   description = "Zookeeper server"
+  hypervisor  = "hypervisor3"
+  vmid        = 125
   cores       = "2"
   memory      = "4096"
   network = {
     ip      = "192.168.100.131"
+    bridge  = "vmbr0"
   }
-  hypervisor = "hypervisor3"
   storage = {
-    location = "hypervisor3-ssd"
+    location = "proxmox"
     size     = "32G"
   }
-  template = "template-debian-10"
 }
 
 module "zookeeper2" {
@@ -39,17 +40,18 @@ module "zookeeper2" {
 
   hostname    = "zookeeper2"
   description = "Zookeeper server"
+  hypervisor  = "branly"
+  vmid        = 124
   cores       = "2"
   memory      = "4096"
   network = {
     ip      = "192.168.100.132"
+    bridge  = "vmbr0"
   }
-  hypervisor = "hypervisor3"
   storage = {
-    location = "hypervisor3-ssd"
+    location = "proxmox"
     size     = "32G"
   }
-  template = "template-debian-10"
 }
 
 module "zookeeper3" {
@@ -66,15 +68,16 @@ module "zookeeper3" {
 
   hostname    = "zookeeper3"
   description = "Zookeeper server"
+  hypervisor  = "beaubourg"
+  vmid        = 101
   cores       = "2"
   memory      = "4096"
   network = {
     ip      = "192.168.100.133"
+    bridge  = "vmbr0"
   }
-  hypervisor = "hypervisor3"
   storage = {
-    location = "hypervisor3-ssd"
+    location = "proxmox"
     size     = "32G"
   }
-  template = "template-debian-10"
 }

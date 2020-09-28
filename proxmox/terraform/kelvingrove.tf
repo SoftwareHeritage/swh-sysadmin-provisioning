@@ -12,17 +12,19 @@ module "kelvingrove" {
 
   hostname    = "kelvingrove"
   description = "Keycloak server"
+  hypervisor  = "hypervisor3"
+  vmid        = 123
   cores       = "4"
   memory      = "8192"
+  numa        = true
+  balloon     = 0
   network = {
     ip      = "192.168.100.106"
     macaddr = "72:55:5E:58:01:0B"
+    bridge  = "vmbr0"
   }
-  hypervisor = "hypervisor3"
   storage = {
-    location = "hypervisor3-ssd"
+    location = "proxmox"
     size     = "32G"
   }
-  template = "template-debian-10"
-
 }

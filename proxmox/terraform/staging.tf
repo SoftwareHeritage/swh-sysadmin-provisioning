@@ -5,7 +5,7 @@
 
 provider "proxmox" {
   pm_tls_insecure = true
-  pm_api_url      = "https://orsay.internal.softwareheritage.org:8006/api2/json"
+  pm_api_url      = "https://beaubourg.internal.softwareheritage.org:8006/api2/json"
   # in a shell (see README): source ./setup.sh
 }
 
@@ -34,7 +34,10 @@ resource "proxmox_vm_qemu" "gateway" {
   desc = "staging gateway node"
 
   # hypervisor onto which make the vm
-  target_node = "orsay"
+  target_node = "beaubourg"
+  vmid = 109
+  balloon = 0
+  full_clone = false
 
   # See init-template.md to see the template vm bootstrap
   clone = "template-debian-10"
@@ -81,7 +84,7 @@ resource "proxmox_vm_qemu" "gateway" {
   disk {
     id           = 0
     type         = "virtio"
-    storage      = "orsay-ssd-2018"
+    storage      = "proxmox"
     storage_type = "ssd"
     size         = "20G"
   }
@@ -94,7 +97,7 @@ resource "proxmox_vm_qemu" "gateway" {
   network {
     id      = 1
     model   = "virtio"
-    bridge  = "vmbr0"
+    bridge  = "vmbr443"
     macaddr = "FE:95:CC:A5:EB:43"
   }
 
@@ -114,44 +117,130 @@ resource "proxmox_vm_qemu" "gateway" {
     ignore_changes = [
       bootdisk,
       scsihw,
+      network,
+      disk
     ]
   }
 }
 
-module "storage0" {
-  source = "./modules/node"
-  config = local.config
+# Define the staging network gateway
+# FIXME: Find a way to reuse the module "node"
+# Main difference between node in module and this:
+# - storage0 define 2 disks
+resource "proxmox_vm_qemu" "storage0" {
+  name = "storage0"
+  desc = "swh storage services"
 
-  hostname    = "storage0"
-  description = "swh storage services"
-  cores       = "4"
-  memory      = "8192"
-  network = {
-    ip      = "192.168.128.2"
+  # hypervisor onto which make the vm
+  target_node = "orsay"
+  vmid = 114
+  full_clone = false
+
+  # See init-template.md to see the template vm bootstrap
+  clone = "template-debian-10"
+
+  # linux kernel 2.6
+  qemu_os = "l26"
+
+  # generic setup
+  sockets = 1
+  cores   = 4
+  memory  = 8192
+  balloon = 1024
+
+  boot = "c"
+
+  # boot machine when hypervirsor starts
+  onboot = true
+
+  #### cloud-init setup
+  # to actually set some information per os_type (values: ubuntu, centos,
+  # cloud-init). Keep this as cloud-init
+  os_type = "cloud-init"
+
+  # ciuser - User name to change ssh keys and password for instead of the
+  # image’s configured default user.
+  ciuser   = var.user_admin
+  ssh_user = var.user_admin
+
+  # searchdomain - Sets DNS search domains for a container.
+  searchdomain = var.domain
+
+  # nameserver - Sets DNS server IP address for a container.
+  nameserver = var.dns
+
+  # sshkeys - public ssh keys, one per line
+  sshkeys = var.user_admin_ssh_public_key
+
+  # ip to communicate for now with the prod network through louvre
+  ipconfig0 = "ip=192.168.128.2/24,gw=192.168.128.1"
+
+  disk {
+    id           = 0
+    type         = "virtio"
+    storage      = "orsay-ssd-2018"
+    storage_type = "ssd"
+    size         = "32G"
+  }
+  disk {
+    id           = 1
+    type         = "virtio"
+    storage      = "orsay-ssd-2018"
+    storage_type = "ssd"
+    size         = "512G"
+  }
+
+  network {
+    id      = 0
+    model   = "virtio"
+    bridge  = "vmbr443"
     macaddr = "CA:73:7F:ED:F9:01"
   }
-}
 
-output "storage0_summary" {
-  value = module.storage0.summary
+  # Delegate to puppet at the end of the provisioning the software setup
+  provisioner "remote-exec" {
+    inline = [
+      "sed -i 's/127.0.1.1/192.168.128.2}/g' /etc/hosts",
+      "puppet agent --server ${var.puppet_master} --environment=${var.puppet_environment} --waitforcert 60 --test || echo 'Node provisionned!'",
+    ]
+    connection {
+      type = "ssh"
+      user = "root"
+      host = "192.168.128.2"
+    }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      bootdisk,
+      scsihw,
+      network,
+      disk
+    ]
+  }
 }
 
 module "db0" {
   source = "./modules/node"
   config = local.config
+  hypervisor = "orsay"
 
+  vmid        = 115
   hostname    = "db0"
   description = "Node to host storage/indexer/scheduler dbs"
   cores       = "4"
   memory      = "16384"
+  balloon     = 1024
   network = {
     ip      = "192.168.128.3"
     macaddr = "3A:65:31:7C:24:17"
+    bridge  = "vmbr443"
   }
   storage = {
     location = "orsay-ssd-2018"
-    size     = "100G"
+    size     = "400G"
   }
+
 }
 
 output "db0_summary" {
@@ -162,13 +251,17 @@ module "scheduler0" {
   source = "./modules/node"
   config = local.config
 
+  vmid        = 116
   hostname    = "scheduler0"
   description = "Scheduler api services"
+  hypervisor  = "beaubourg"
   cores       = "4"
-  memory      = "16384"
+  memory      = "8192"
+  balloon     = 1024
   network = {
     ip      = "192.168.128.4"
     macaddr = "92:02:7E:D0:B9:36"
+    bridge  = "vmbr443"
   }
 }
 
@@ -180,10 +273,13 @@ module "worker0" {
   source = "./modules/node"
   config = local.config
 
+  vmid        = 117
   hostname    = "worker0"
   description = "Loader/lister service node"
+  hypervisor  = "beaubourg"
   cores       = "4"
-  memory      = "16384"
+  memory      = "12288"
+  balloon     = 1024
   network = {
     ip      = "192.168.128.5"
     macaddr = "72:D9:03:46:B1:47"
@@ -198,13 +294,17 @@ module "worker1" {
   source = "./modules/node"
   config = local.config
 
+  vmid        = 118
   hostname    = "worker1"
   description = "Loader/lister service node"
+  hypervisor  = "beaubourg"
   cores       = "4"
-  memory      = "16384"
+  memory      = "12288"
+  balloon     = 1024
   network = {
     ip      = "192.168.128.6"
     macaddr = "D6:A9:6F:02:E3:66"
+    bridge  = "vmbr443"
   }
 }
 
@@ -216,13 +316,17 @@ module "webapp" {
   source = "./modules/node"
   config = local.config
 
+  vmid        = 119
   hostname    = "webapp"
   description = "Archive/Webapp service node"
+  hypervisor  = "branly"
   cores       = "4"
   memory      = "16384"
+  balloon     = 1024
   network = {
     ip      = "192.168.128.8"
     macaddr = "1A:00:39:95:D4:5F"
+    bridge  = "vmbr443"
   }
 }
 
@@ -234,13 +338,17 @@ module "deposit" {
   source = "./modules/node"
   config = local.config
 
+  vmid        = 120
   hostname    = "deposit"
   description = "Deposit service node"
+  hypervisor  = "beaubourg"
   cores       = "4"
-  memory      = "16384"
+  memory      = "8192"
+  balloon     = 1024
   network = {
     ip      = "192.168.128.7"
     macaddr = "9E:81:DD:58:15:3B"
+    bridge  = "vmbr443"
   }
 }
 
@@ -252,13 +360,17 @@ module "vault" {
   source = "./modules/node"
   config = local.config
 
+  vmid        = 121
   hostname    = "vault"
   description = "Vault services node"
+  hypervisor  = "beaubourg"
   cores       = "4"
-  memory      = "16384"
+  memory      = "8192"
+  balloon     = 1024
   network = {
     ip      = "192.168.128.9"
     macaddr = "16:15:1C:79:CB:DB"
+    bridge  = "vmbr443"
   }
 }
 
@@ -270,13 +382,17 @@ module "journal0" {
   source = "./modules/node"
   config = local.config
 
+  vmid        = 122
   hostname    = "journal0"
   description = "Journal services node"
+  hypervisor  = "beaubourg"
   cores       = "4"
-  memory      = "16384"
+  memory      = "12288"
+  balloon     = 1024
   network = {
     ip      = "192.168.128.10"
     macaddr = "1E:98:C2:66:BF:33"
+    bridge  = "vmbr443"
   }
 }
 
@@ -288,17 +404,20 @@ module "worker2" {
   source = "./modules/node"
   config = local.config
 
+  vmid        = 112
   hostname    = "worker2"
   description = "Loader/lister service node"
+  hypervisor = "branly"
   cores       = "4"
-  memory      = "16384"
+  memory      = "12288"
+  balloon     = 1024
   network = {
     ip      = "192.168.128.11"
     macaddr = "AA:57:27:51:75:18"
+    bridge  = "vmbr443"
   }
 }
 
 output "worker2_summary" {
   value = module.worker2.summary
 }
-

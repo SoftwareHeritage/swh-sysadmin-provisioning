@@ -9,9 +9,8 @@ variable "description" {
 }
 
 variable "hypervisor" {
-  description = "Hypervisor to install the vm to (choice: orsay, hypervisor3, beaubourg)"
+  description = "Hypervisor to install the vm to (choice: orsay, hypervisor3, beaubourg, branly)"
   type        = string
-  default     = "orsay"
 }
 
 variable "template" {
@@ -39,15 +38,33 @@ variable "memory" {
 }
 
 variable "network" {
-  description = "staging network's ip/macaddr"
+  description = "staging network's ip/macaddr/bridge"
   type        = map(string)
+}
+
+
+variable "vmid" {
+  description = "virtual machine id"
+  type        = number
+  default     = 0
+}
+
+variable "balloon" {
+  description = "ballooning option"
+  type        = number
+  default     = 0
+}
+
+variable "numa" {
+  type = bool
+  default = false
 }
 
 variable "storage" {
   description = "Storage disk location and size in the hypervisor storage"
   type        = map(string)
   default = {
-    location = "orsay-ssd-2018"
+    location = "proxmox"
     size     = "32G"
   }
 }
@@ -56,4 +73,3 @@ variable "config" {
   description = "Local config to avoid duplication from the main module"
   type        = map(string)
 }
-
