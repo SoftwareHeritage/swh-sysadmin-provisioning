@@ -6,7 +6,7 @@
 provider "proxmox" {
   pm_tls_insecure = true
   pm_api_url      = "https://beaubourg.internal.softwareheritage.org:8006/api2/json"
-  # in a shell (see README): source ./setup.sh
+  # in a shell (see README): source ../setup.sh
 }
 
 # Default configuration passed along module calls
@@ -117,8 +117,7 @@ resource "proxmox_vm_qemu" "gateway" {
     ignore_changes = [
       bootdisk,
       scsihw,
-      network,
-      disk
+      target_node
     ]
   }
 }
@@ -214,14 +213,13 @@ resource "proxmox_vm_qemu" "storage0" {
     ignore_changes = [
       bootdisk,
       scsihw,
-      network,
-      disk
+      target_node
     ]
   }
 }
 
 module "db0" {
-  source = "./modules/node"
+  source = "../modules/node"
   config = local.config
   hypervisor = "orsay"
 
@@ -248,7 +246,7 @@ output "db0_summary" {
 }
 
 module "scheduler0" {
-  source = "./modules/node"
+  source = "../modules/node"
   config = local.config
 
   vmid        = 116
@@ -270,7 +268,7 @@ output "scheduler0_summary" {
 }
 
 module "worker0" {
-  source = "./modules/node"
+  source = "../modules/node"
   config = local.config
 
   vmid        = 117
@@ -283,6 +281,7 @@ module "worker0" {
   network = {
     ip      = "192.168.128.5"
     macaddr = "72:D9:03:46:B1:47"
+    bridge  = "vmbr443"
   }
 }
 
@@ -291,7 +290,7 @@ output "worker0_summary" {
 }
 
 module "worker1" {
-  source = "./modules/node"
+  source = "../modules/node"
   config = local.config
 
   vmid        = 118
@@ -313,7 +312,7 @@ output "worker1_summary" {
 }
 
 module "webapp" {
-  source = "./modules/node"
+  source = "../modules/node"
   config = local.config
 
   vmid        = 119
@@ -335,7 +334,7 @@ output "webapp_summary" {
 }
 
 module "deposit" {
-  source = "./modules/node"
+  source = "../modules/node"
   config = local.config
 
   vmid        = 120
@@ -357,7 +356,7 @@ output "deposit_summary" {
 }
 
 module "vault" {
-  source = "./modules/node"
+  source = "../modules/node"
   config = local.config
 
   vmid        = 121
@@ -379,7 +378,7 @@ output "vault_summary" {
 }
 
 module "journal0" {
-  source = "./modules/node"
+  source = "../modules/node"
   config = local.config
 
   vmid        = 122
@@ -401,7 +400,7 @@ output "journal0_summary" {
 }
 
 module "worker2" {
-  source = "./modules/node"
+  source = "../modules/node"
   config = local.config
 
   vmid        = 112
