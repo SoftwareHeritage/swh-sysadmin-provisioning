@@ -66,12 +66,14 @@ variable "storages" {
     id           = number,
     storage      = string
     size         = string
+    storage_type = string
   }))
   default = [{
-      id           = 0
-      storage      = "proxmox"
-      size         = "32G"
-    }]
+    id           = 0
+    storage      = "proxmox"
+    size         = "32G"
+    storage_type = "cephfs"
+  }]
 }
 
 variable "config" {

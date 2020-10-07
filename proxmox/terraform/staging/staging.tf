@@ -85,7 +85,7 @@ resource "proxmox_vm_qemu" "gateway" {
     id           = 0
     type         = "virtio"
     storage      = "proxmox"
-    storage_type = "ssd"
+    storage_type = "cephfs"
     size         = "20G"
   }
   network {
@@ -142,10 +142,12 @@ module "storage0" {
       id           = 0
       storage      = "orsay-ssd-2018"
       size         = "32G"
+      storage_type = "ssd"
     }, {
       id           = 1
       storage      = "orsay-ssd-2018"
       size         = "512G"
+      storage_type = "ssd"
     }]
 }
 
@@ -169,6 +171,7 @@ module "db0" {
     id           = 0
     storage      = "orsay-ssd-2018"
     size         = "400G"
+    storage_type = "ssd"
   }]
 
 }

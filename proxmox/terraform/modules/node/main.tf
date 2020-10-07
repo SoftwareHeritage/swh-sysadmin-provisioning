@@ -53,7 +53,8 @@ resource "proxmox_vm_qemu" "node" {
       storage      = disk.value["storage"]
       size         = disk.value["size"]
       type         = "virtio"
-      storage_type = "ssd"
+      # storage_type: https://pve.proxmox.com/wiki/Storage
+      storage_type = lookup(disk.value, "storage_type", "cephfs")
     }
   }
 
