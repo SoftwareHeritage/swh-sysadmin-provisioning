@@ -60,13 +60,18 @@ variable "numa" {
   default = false
 }
 
-variable "storage" {
-  description = "Storage disk location and size in the hypervisor storage"
-  type        = map(string)
-  default = {
-    location = "proxmox"
-    size     = "32G"
-  }
+variable "storages" {
+  description = "Default disks configuration"
+  type = list(object({
+    id           = number,
+    storage      = string
+    size         = string
+  }))
+  default = [{
+      id           = 0
+      storage      = "proxmox"
+      size         = "32G"
+    }]
 }
 
 variable "config" {

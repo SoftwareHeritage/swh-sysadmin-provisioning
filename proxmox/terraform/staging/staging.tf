@@ -130,100 +130,31 @@ resource "proxmox_vm_qemu" "gateway" {
   }
 }
 
-# Define the staging network gateway
-# FIXME: Find a way to reuse the module "node"
-# Main difference between node in module and this:
-# - storage0 define 2 disks
-resource "proxmox_vm_qemu" "storage0" {
-  name = "storage0"
-  desc = "swh storage services"
+module "storage0" {
+  source = "../modules/node"
+  config = local.config
+  hypervisor = "orsay"
 
-  # hypervisor onto which make the vm
-  target_node = "orsay"
-  vmid = 114
-  full_clone = false
-
-  # See init-template.md to see the template vm bootstrap
-  clone = "template-debian-10"
-
-  # linux kernel 2.6
-  qemu_os = "l26"
-
-  # generic setup
-  sockets = 1
-  cores   = 4
-  memory  = 8192
-  balloon = 1024
-
-  boot = "c"
-
-  # boot machine when hypervirsor starts
-  onboot = true
-
-  #### cloud-init setup
-  # to actually set some information per os_type (values: ubuntu, centos,
-  # cloud-init). Keep this as cloud-init
-  os_type = "cloud-init"
-
-  # ciuser - User name to change ssh keys and password for instead of the
-  # image’s configured default user.
-  ciuser   = var.user_admin
-  ssh_user = var.user_admin
-
-  # searchdomain - Sets DNS search domains for a container.
-  searchdomain = var.domain
-
-  # nameserver - Sets DNS server IP address for a container.
-  nameserver = var.dns
-
-  # sshkeys - public ssh keys, one per line
-  sshkeys = var.user_admin_ssh_public_key
-
-  # ip to communicate for now with the prod network through louvre
-  ipconfig0 = "ip=192.168.128.2/24,gw=192.168.128.1"
-
-  disk {
-    id           = 0
-    type         = "virtio"
-    storage      = "orsay-ssd-2018"
-    storage_type = "ssd"
-    size         = "32G"
-  }
-  disk {
-    id           = 1
-    type         = "virtio"
-    storage      = "orsay-ssd-2018"
-    storage_type = "ssd"
-    size         = "512G"
-  }
-
-  network {
-    id      = 0
-    model   = "virtio"
-    bridge  = "vmbr443"
+  vmid        = 114
+  hostname    = "storage0"
+  description = "swh storage services"
+  cores       = "4"
+  memory      = "8192"
+  balloon     = 1024
+  network = {
+    ip      = "192.168.128.2"
     macaddr = "CA:73:7F:ED:F9:01"
+    bridge  = "vmbr443"
   }
-
-  # Delegate to puppet at the end of the provisioning the software setup
-  provisioner "remote-exec" {
-    inline = [
-      "sed -i 's/127.0.1.1/192.168.128.2}/g' /etc/hosts",
-      "puppet agent --server ${var.puppet_master} --environment=${var.puppet_environment} --waitforcert 60 --test || echo 'Node provisionned!'",
-    ]
-    connection {
-      type = "ssh"
-      user = "root"
-      host = "192.168.128.2"
-    }
-  }
-
-  lifecycle {
-    ignore_changes = [
-      bootdisk,
-      scsihw,
-      target_node
-    ]
-  }
+  storages = [{
+      id           = 0
+      storage      = "orsay-ssd-2018"
+      size         = "32G"
+    }, {
+      id           = 1
+      storage      = "orsay-ssd-2018"
+      size         = "512G"
+    }]
 }
 
 module "db0" {
@@ -242,10 +173,11 @@ module "db0" {
     macaddr = "3A:65:31:7C:24:17"
     bridge  = "vmbr443"
   }
-  storage = {
-    location = "orsay-ssd-2018"
-    size     = "400G"
-  }
+  storages = [{
+    id           = 0
+    storage      = "orsay-ssd-2018"
+    size         = "400G"
+  }]
 
 }
 

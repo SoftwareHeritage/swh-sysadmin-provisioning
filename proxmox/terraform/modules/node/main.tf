@@ -45,12 +45,16 @@ resource "proxmox_vm_qemu" "node" {
   ipconfig0 = "ip=${var.network["ip"]}/24,gw=${var.config["gateway_ip"]}"
 
   ####
-  disk {
-    id           = 0
-    type         = "virtio"
-    storage      = var.storage["location"]
-    storage_type = "ssd"
-    size         = var.storage["size"]
+  dynamic disk {
+    for_each = var.storages
+
+    content {
+      id           = disk.value["id"]
+      storage      = disk.value["storage"]
+      size         = disk.value["size"]
+      type         = "virtio"
+      storage_type = "ssd"
+    }
   }
 
   network {
