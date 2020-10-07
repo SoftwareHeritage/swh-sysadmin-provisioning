@@ -2,6 +2,14 @@
 # - provider: Define the provider(s)
 # - data: Retrieve data information to be used within the file
 # - resource: Define resource and create/update
+terraform {
+  required_providers {
+    proxmox = {
+      source = "local/telmate/proxmox"
+      version = "0.0.1"
+    }
+  }
+}
 
 provider "proxmox" {
   pm_tls_insecure = true
