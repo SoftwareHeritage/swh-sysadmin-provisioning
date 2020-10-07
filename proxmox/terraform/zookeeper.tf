@@ -1,14 +1,6 @@
 module "zookeeper1" {
   source = "./modules/node"
-  config = {
-    dns                       = var.dns
-    domain                    = "internal.softwareheritage.org"
-    puppet_environment        = "production"
-    puppet_master             = var.puppet_master
-    gateway_ip                = "192.168.100.1"
-    user_admin                = var.user_admin
-    user_admin_ssh_public_key = var.user_admin_ssh_public_key
-  }
+  config = local.config
 
   hostname    = "zookeeper1"
   description = "Zookeeper server"
@@ -16,27 +8,18 @@ module "zookeeper1" {
   vmid        = 125
   cores       = "2"
   memory      = "4096"
-  network = {
+  networks = [{
+    id      = 0
     ip      = "192.168.100.131"
+    gateway = local.config["gateway_ip"]
+    macaddr = "9A:BF:FB:6D:49:27"
     bridge  = "vmbr0"
-  }
-  storage = {
-    location = "proxmox"
-    size     = "32G"
-  }
+  }]
 }
 
 module "zookeeper2" {
   source = "./modules/node"
-  config = {
-    dns                       = var.dns
-    domain                    = "internal.softwareheritage.org"
-    puppet_environment        = "production"
-    puppet_master             = var.puppet_master
-    gateway_ip                = "192.168.100.1"
-    user_admin                = var.user_admin
-    user_admin_ssh_public_key = var.user_admin_ssh_public_key
-  }
+  config = local.config
 
   hostname    = "zookeeper2"
   description = "Zookeeper server"
@@ -44,40 +27,30 @@ module "zookeeper2" {
   vmid        = 124
   cores       = "2"
   memory      = "4096"
-  network = {
+  networks = [{
+    id      = 0
     ip      = "192.168.100.132"
+    gateway = local.config["gateway_ip"]
+    macaddr = "66:B0:72:A8:70:5C"
     bridge  = "vmbr0"
-  }
-  storage = {
-    location = "proxmox"
-    size     = "32G"
-  }
+  }]
 }
 
 module "zookeeper3" {
   source = "./modules/node"
-  config = {
-    dns                       = var.dns
-    domain                    = "internal.softwareheritage.org"
-    puppet_environment        = "production"
-    puppet_master             = var.puppet_master
-    gateway_ip                = "192.168.100.1"
-    user_admin                = var.user_admin
-    user_admin_ssh_public_key = var.user_admin_ssh_public_key
-  }
+  config = local.config
 
   hostname    = "zookeeper3"
   description = "Zookeeper server"
   hypervisor  = "beaubourg"
-  vmid        = 101
+  vmid        = 102
   cores       = "2"
   memory      = "4096"
-  network = {
+  networks = [{
+    id      = 0
     ip      = "192.168.100.133"
+    gateway = local.config["gateway_ip"]
+    macaddr = "E2:7C:D7:6A:F6:B0"
     bridge  = "vmbr0"
-  }
-  storage = {
-    location = "proxmox"
-    size     = "32G"
-  }
+  }]
 }
