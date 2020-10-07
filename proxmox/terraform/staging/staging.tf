@@ -17,103 +17,47 @@ locals {
   }
 }
 
+module "gateway" {
+  source = "../modules/node"
+  config = local.config
+  hypervisor = "beaubourg"
 
-# Define the staging network gateway
-# FIXME: Find a way to reuse the module "node"
-# Main difference between node in module and this:
-# - gateway define 2 network interfaces
-# - provisioning step is more complex
-resource "proxmox_vm_qemu" "gateway" {
-  name = "gateway"
-  desc = "staging gateway node"
-
-  # hypervisor onto which make the vm
-  target_node = "beaubourg"
-  vmid = 109
-  balloon = 0
-  full_clone = false
-
-  # See init-template.md to see the template vm bootstrap
-  clone = "template-debian-10"
-
-  # linux kernel 2.6
-  qemu_os = "l26"
-
-  # generic setup
-  sockets = 1
-  cores   = 1
-  memory  = 1024
-
-  boot = "c"
-
-  # boot machine when hypervirsor starts
-  onboot = true
-
-  #### cloud-init setup
-  # to actually set some information per os_type (values: ubuntu, centos,
-  # cloud-init). Keep this as cloud-init
-  os_type = "cloud-init"
-
-  # ciuser - User name to change ssh keys and password for instead of the
-  # image’s configured default user.
-  ciuser   = var.user_admin
-  ssh_user = var.user_admin
-
-  # searchdomain - Sets DNS search domains for a container.
-  searchdomain = var.domain
-
-  # nameserver - Sets DNS server IP address for a container.
-  nameserver = var.dns
-
-  # sshkeys - public ssh keys, one per line
-  sshkeys = var.user_admin_ssh_public_key
-
-  # FIXME: When T1872 lands, this will need to be updated
-  # ipconfig0 - [gw =] [,ip=<IPv4Format/CIDR>]
-  # ip to communicate for now with the prod network through louvre
-  ipconfig0 = "ip=192.168.100.125/24,gw=192.168.100.1"
-
-  # vms from the staging network will use this vm as gateway
-  ipconfig1 = "ip=${var.gateway_ip}/24"
-  disk {
-    id           = 0
-    type         = "virtio"
-    storage      = "proxmox"
-    storage_type = "cephfs"
-    size         = "20G"
-  }
-  network {
-    id      = 0
-    model   = "virtio"
-    bridge  = "vmbr0"
-    macaddr = "6E:ED:EF:EB:3C:AA"
-  }
-  network {
-    id      = 1
-    model   = "virtio"
-    bridge  = "vmbr443"
-    macaddr = "FE:95:CC:A5:EB:43"
-  }
-
-  # Delegate to puppet at the end of the provisioning the software setup
-  # Delegate to puppet at the end of the provisioning the software setup
-  provisioner "remote-exec" {
-    inline = [
-      "sysctl -w net.ipv4.ip_forward=1",
-      "sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf",
-      "iptables -t nat -A POSTROUTING -s 192.168.128.0/24 -o eth0 -j MASQUERADE",
-      "sed -i 's/127.0.1.1/${var.gateway_ip}/g' /etc/hosts",
-      "puppet agent --server ${var.puppet_master} --environment=${var.puppet_environment} --waitforcert 60 --test || echo 'Node provisionned!'",
-    ]
-  }
-
-  lifecycle {
-    ignore_changes = [
-      bootdisk,
-      scsihw,
-      target_node
-    ]
-  }
+  vmid        = 109
+  hostname    = "gateway"
+  description = "staging gateway node"
+  cores       = "1"
+  memory      = "1024"
+  networks = [
+    {
+      id      = 0
+      ip      = "192.168.100.125"
+      gateway = "192.168.100.1"
+      bridge  = "vmbr0"
+      macaddr = "6E:ED:EF:EB:3C:AA"
+    },
+    {
+      id      = 1
+      ip      = local.config["gateway_ip"]
+      gateway = ""
+      bridge  = "vmbr443"
+      macaddr = "FE:95:CC:A5:EB:43"
+    }
+  ]
+  storages = [
+    {
+      id           = 0
+      storage      = "proxmox"
+      storage_type = "cephfs"
+      size         = "20G"
+    }
+  ]
+    # inline = [
+    #   "sysctl -w net.ipv4.ip_forward=1",
+    #   "sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf",
+    #   "iptables -t nat -A POSTROUTING -s 192.168.128.0/24 -o eth0 -j MASQUERADE",
+    #   "sed -i 's/127.0.1.1/${var.gateway_ip}/g' /etc/hosts",
+    #   "puppet agent --server ${var.puppet_master} --environment=${var.puppet_environment} --waitforcert 60 --test || echo 'Node provisionned!'",
+    # ]
 }
 
 module "storage0" {
@@ -127,22 +71,24 @@ module "storage0" {
   cores       = "4"
   memory      = "8192"
   balloon     = 1024
-  network = {
+  networks = [{
+    id      = 0
     ip      = "192.168.128.2"
+    gateway = local.config["gateway_ip"]
     macaddr = "CA:73:7F:ED:F9:01"
     bridge  = "vmbr443"
-  }
+  }]
   storages = [{
-      id           = 0
-      storage      = "orsay-ssd-2018"
-      size         = "32G"
-      storage_type = "ssd"
-    }, {
-      id           = 1
-      storage      = "orsay-ssd-2018"
-      size         = "512G"
-      storage_type = "ssd"
-    }]
+    id           = 0
+    storage      = "orsay-ssd-2018"
+    size         = "32G"
+    storage_type = "ssd"
+  }, {
+    id           = 1
+    storage      = "orsay-ssd-2018"
+    size         = "512G"
+    storage_type = "ssd"
+  }]
 }
 
 module "db0" {
@@ -156,11 +102,13 @@ module "db0" {
   cores       = "4"
   memory      = "16384"
   balloon     = 1024
-  network = {
+  networks = [{
+    id      = 0
     ip      = "192.168.128.3"
+    gateway = local.config["gateway_ip"]
     macaddr = "3A:65:31:7C:24:17"
     bridge  = "vmbr443"
-  }
+  }]
   storages = [{
     id           = 0
     storage      = "orsay-ssd-2018"
@@ -185,11 +133,13 @@ module "scheduler0" {
   cores       = "4"
   memory      = "8192"
   balloon     = 1024
-  network = {
+  networks = [{
+    id      = 0
     ip      = "192.168.128.4"
+    gateway = local.config["gateway_ip"]
     macaddr = "92:02:7E:D0:B9:36"
     bridge  = "vmbr443"
-  }
+  }]
 }
 
 output "scheduler0_summary" {
@@ -207,11 +157,13 @@ module "worker0" {
   cores       = "4"
   memory      = "12288"
   balloon     = 1024
-  network = {
+  networks = [{
+    id      = 0
     ip      = "192.168.128.5"
+    gateway = local.config["gateway_ip"]
     macaddr = "72:D9:03:46:B1:47"
     bridge  = "vmbr443"
-  }
+  }]
 }
 
 output "worker0_summary" {
@@ -229,11 +181,13 @@ module "worker1" {
   cores       = "4"
   memory      = "12288"
   balloon     = 1024
-  network = {
+  networks = [{
+    id      = 0
     ip      = "192.168.128.6"
+    gateway = local.config["gateway_ip"]
     macaddr = "D6:A9:6F:02:E3:66"
     bridge  = "vmbr443"
-  }
+  }]
 }
 
 output "worker1_summary" {
@@ -251,11 +205,13 @@ module "webapp" {
   cores       = "4"
   memory      = "16384"
   balloon     = 1024
-  network = {
+  networks = [{
+    id      = 0
     ip      = "192.168.128.8"
+    gateway = local.config["gateway_ip"]
     macaddr = "1A:00:39:95:D4:5F"
     bridge  = "vmbr443"
-  }
+  }]
 }
 
 output "webapp_summary" {
@@ -273,11 +229,13 @@ module "deposit" {
   cores       = "4"
   memory      = "8192"
   balloon     = 1024
-  network = {
+  networks = [{
+    id      = 0
     ip      = "192.168.128.7"
+    gateway = local.config["gateway_ip"]
     macaddr = "9E:81:DD:58:15:3B"
     bridge  = "vmbr443"
-  }
+  }]
 }
 
 output "deposit_summary" {
@@ -295,11 +253,13 @@ module "vault" {
   cores       = "4"
   memory      = "8192"
   balloon     = 1024
-  network = {
+  networks = [{
+    id      = 0
     ip      = "192.168.128.9"
+    gateway = local.config["gateway_ip"]
     macaddr = "16:15:1C:79:CB:DB"
     bridge  = "vmbr443"
-  }
+  }]
 }
 
 output "vault_summary" {
@@ -317,11 +277,13 @@ module "journal0" {
   cores       = "4"
   memory      = "12288"
   balloon     = 1024
-  network = {
+  networks = [{
+    id      = 0
     ip      = "192.168.128.10"
+    gateway = local.config["gateway_ip"]
     macaddr = "1E:98:C2:66:BF:33"
     bridge  = "vmbr443"
-  }
+  }]
 }
 
 output "journal0_summary" {
@@ -339,11 +301,13 @@ module "worker2" {
   cores       = "4"
   memory      = "12288"
   balloon     = 1024
-  network = {
+  networks = [{
+    id      = 0
     ip      = "192.168.128.11"
+    gateway = local.config["gateway_ip"]
     macaddr = "AA:57:27:51:75:18"
     bridge  = "vmbr443"
-  }
+  }]
 }
 
 output "worker2_summary" {

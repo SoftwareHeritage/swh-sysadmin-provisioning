@@ -37,9 +37,16 @@ variable "memory" {
   default     = "1024"
 }
 
-variable "network" {
-  description = "staging network's ip/macaddr/bridge"
-  type        = map(string)
+variable "networks" {
+  description = "Default networks configuration (id, ip, gateway, macaddr, bridge)"
+  type = list(object({
+    id      = number
+    ip      = string
+    gateway = string
+    macaddr = string
+    bridge  = string
+  }))
+  default = []
 }
 
 
@@ -61,9 +68,9 @@ variable "numa" {
 }
 
 variable "storages" {
-  description = "Default disks configuration"
+  description = "Default disks configuration (id, storage, size, storage_type)"
   type = list(object({
-    id           = number,
+    id           = number
     storage      = string
     size         = string
     storage_type = string

@@ -42,7 +42,12 @@ resource "proxmox_vm_qemu" "node" {
   nameserver = var.config["dns"]
 
   # ipconfig0 - [gw =] [,ip=<IPv4Format/CIDR>]
-  ipconfig0 = "ip=${var.network["ip"]}/24,gw=${var.config["gateway_ip"]}"
+  ipconfig0 = "ip=${var.networks[0]["ip"]}/24,gw=${var.networks[0]["gateway"]}"
+
+  # Mostly, var.networks holds only one network declaration except for gateways
+  # Try to lookup such value, if it fails (or is undefined), then ipconfig1
+  # will be empty, thus no secondary ip config
+  ipconfig1 = try(lookup(var.networks[1], "ip"), "") != "" ? "ip=${var.networks[1]["ip"]}/24" : ""
 
   ####
   dynamic disk {
@@ -58,24 +63,28 @@ resource "proxmox_vm_qemu" "node" {
     }
   }
 
-  network {
-    id      = 0
-    model   = "virtio"
-    bridge  = lookup(var.network, "bridge", "")
-    macaddr = lookup(var.network, "macaddr", "")
+  dynamic network {
+    for_each = var.networks
+
+    content {
+      id      = lookup(network.value, "id", 0)
+      macaddr = lookup(network.value, "macaddr", "")
+      bridge  = lookup(network.value, "bridge", "vmbr443")
+      model   = "virtio"
+    }
   }
 
   #### provisioning: (creation time only) connect through ssh
   # Let puppet do its install
   provisioner "remote-exec" {
     inline = [
-      "sed -i 's/127.0.1.1/${var.network["ip"]}/g' /etc/hosts",
+      "sed -i 's/127.0.1.1/${lookup(var.networks[0], "ip")}/g' /etc/hosts",
       "puppet agent --server ${var.config["puppet_master"]} --environment=${var.config["puppet_environment"]} --waitforcert 60 --test || echo 'Node provisionned!'",
     ]
     connection {
       type = "ssh"
       user = "root"
-      host = var.network["ip"]
+      host = lookup(var.networks[0], "ip")
     }
   }
 
