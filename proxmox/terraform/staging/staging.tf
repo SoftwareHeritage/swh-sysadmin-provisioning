@@ -51,13 +51,11 @@ module "gateway" {
       size         = "20G"
     }
   ]
-    # inline = [
-    #   "sysctl -w net.ipv4.ip_forward=1",
-    #   "sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf",
-    #   "iptables -t nat -A POSTROUTING -s 192.168.128.0/24 -o eth0 -j MASQUERADE",
-    #   "sed -i 's/127.0.1.1/${var.gateway_ip}/g' /etc/hosts",
-    #   "puppet agent --server ${var.puppet_master} --environment=${var.puppet_environment} --waitforcert 60 --test || echo 'Node provisionned!'",
-    # ]
+  pre_provision_steps = [
+    "sysctl -w net.ipv4.ip_forward=1",
+    "sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf",
+    "iptables -t nat -A POSTROUTING -s 192.168.128.0/24 -o eth0 -j MASQUERADE",
+  ]
 }
 
 module "storage0" {

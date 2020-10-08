@@ -87,3 +87,10 @@ variable "config" {
   description = "Local config to avoid duplication from the main module"
   type        = map(string)
 }
+
+
+variable "pre_provision_steps" {
+    description = "List of sequential provisioning steps to apply"
+    type        = list(string)
+    default     = []
+}

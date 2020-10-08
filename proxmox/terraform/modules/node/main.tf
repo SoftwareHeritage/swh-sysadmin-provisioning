@@ -77,10 +77,13 @@ resource "proxmox_vm_qemu" "node" {
   #### provisioning: (creation time only) connect through ssh
   # Let puppet do its install
   provisioner "remote-exec" {
-    inline = [
-      "sed -i 's/127.0.1.1/${lookup(var.networks[0], "ip")}/g' /etc/hosts",
-      "puppet agent --server ${var.config["puppet_master"]} --environment=${var.config["puppet_environment"]} --waitforcert 60 --test || echo 'Node provisionned!'",
-    ]
+    inline = concat(
+      var.pre_provision_steps,
+      [
+        "sed -i 's/127.0.1.1/${lookup(var.networks[0], "ip")}/g' /etc/hosts",
+        "puppet agent --server ${var.config["puppet_master"]} --environment=${var.config["puppet_environment"]} --waitforcert 60 --test || echo 'Node provisionned!'",
+      ]
+    )
     connection {
       type = "ssh"
       user = "root"
