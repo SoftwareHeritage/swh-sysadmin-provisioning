@@ -2,3 +2,5 @@
 terraform.tfstate*
 plan
 plan.*
+env.sh
+packer_cache
