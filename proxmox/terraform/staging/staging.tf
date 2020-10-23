@@ -17,47 +17,6 @@ locals {
   }
 }
 
-module "gateway" {
-  source = "../modules/node"
-  config = local.config
-  hypervisor = "beaubourg"
-
-  vmid        = 109
-  hostname    = "gateway"
-  description = "staging gateway node"
-  cores       = "1"
-  memory      = "1024"
-  networks = [
-    {
-      id      = 0
-      ip      = "192.168.100.125"
-      gateway = "192.168.100.1"
-      bridge  = "vmbr0"
-      macaddr = "6E:ED:EF:EB:3C:AA"
-    },
-    {
-      id      = 1
-      ip      = local.config["gateway_ip"]
-      gateway = ""
-      bridge  = "vmbr443"
-      macaddr = "FE:95:CC:A5:EB:43"
-    }
-  ]
-  storages = [
-    {
-      id           = 0
-      storage      = "proxmox"
-      storage_type = "cephfs"
-      size         = "20G"
-    }
-  ]
-  pre_provision_steps = [
-    "sysctl -w net.ipv4.ip_forward=1",
-    "sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf",
-    "iptables -t nat -A POSTROUTING -s 192.168.128.0/24 -o eth0 -j MASQUERADE",
-  ]
-}
-
 module "storage0" {
   source = "../modules/node"
   config = local.config
@@ -71,7 +30,7 @@ module "storage0" {
   balloon     = 1024
   networks = [{
     id      = 0
-    ip      = "192.168.128.2"
+    ip      = "192.168.130.40"
     gateway = local.config["gateway_ip"]
     macaddr = "CA:73:7F:ED:F9:01"
     bridge  = "vmbr443"
@@ -84,7 +43,7 @@ module "storage0" {
   }, {
     id           = 1
     storage      = "orsay-ssd-2018"
-    size         = "512G"
+    size         = "812G"
     storage_type = "ssd"
   }]
 }
@@ -102,7 +61,7 @@ module "db0" {
   balloon     = 1024
   networks = [{
     id      = 0
-    ip      = "192.168.128.3"
+    ip      = "192.168.130.10"
     gateway = local.config["gateway_ip"]
     macaddr = "3A:65:31:7C:24:17"
     bridge  = "vmbr443"
@@ -133,7 +92,7 @@ module "scheduler0" {
   balloon     = 1024
   networks = [{
     id      = 0
-    ip      = "192.168.128.4"
+    ip      = "192.168.130.50"
     gateway = local.config["gateway_ip"]
     macaddr = "92:02:7E:D0:B9:36"
     bridge  = "vmbr443"
@@ -157,7 +116,7 @@ module "worker0" {
   balloon     = 1024
   networks = [{
     id      = 0
-    ip      = "192.168.128.5"
+    ip      = "192.168.130.100"
     gateway = local.config["gateway_ip"]
     macaddr = "72:D9:03:46:B1:47"
     bridge  = "vmbr443"
@@ -181,7 +140,7 @@ module "worker1" {
   balloon     = 1024
   networks = [{
     id      = 0
-    ip      = "192.168.128.6"
+    ip      = "192.168.130.101"
     gateway = local.config["gateway_ip"]
     macaddr = "D6:A9:6F:02:E3:66"
     bridge  = "vmbr443"
@@ -190,6 +149,30 @@ module "worker1" {
 
 output "worker1_summary" {
   value = module.worker1.summary
+}
+
+module "worker2" {
+  source = "../modules/node"
+  config = local.config
+
+  vmid        = 112
+  hostname    = "worker2"
+  description = "Loader/lister service node"
+  hypervisor = "branly"
+  cores       = "4"
+  memory      = "12288"
+  balloon     = 1024
+  networks = [{
+    id      = 0
+    ip      = "192.168.130.102"
+    gateway = local.config["gateway_ip"]
+    macaddr = "AA:57:27:51:75:18"
+    bridge  = "vmbr443"
+  }]
+}
+
+output "worker2_summary" {
+  value = module.worker2.summary
 }
 
 module "webapp" {
@@ -205,7 +188,7 @@ module "webapp" {
   balloon     = 1024
   networks = [{
     id      = 0
-    ip      = "192.168.128.8"
+    ip      = "192.168.130.30"
     gateway = local.config["gateway_ip"]
     macaddr = "1A:00:39:95:D4:5F"
     bridge  = "vmbr443"
@@ -229,7 +212,7 @@ module "deposit" {
   balloon     = 1024
   networks = [{
     id      = 0
-    ip      = "192.168.128.7"
+    ip      = "192.168.130.31"
     gateway = local.config["gateway_ip"]
     macaddr = "9E:81:DD:58:15:3B"
     bridge  = "vmbr443"
@@ -253,7 +236,7 @@ module "vault" {
   balloon     = 1024
   networks = [{
     id      = 0
-    ip      = "192.168.128.9"
+    ip      = "192.168.130.60"
     gateway = local.config["gateway_ip"]
     macaddr = "16:15:1C:79:CB:DB"
     bridge  = "vmbr443"
@@ -277,7 +260,7 @@ module "journal0" {
   balloon     = 1024
   networks = [{
     id      = 0
-    ip      = "192.168.128.10"
+    ip      = "192.168.130.70"
     gateway = local.config["gateway_ip"]
     macaddr = "1E:98:C2:66:BF:33"
     bridge  = "vmbr443"
@@ -286,28 +269,4 @@ module "journal0" {
 
 output "journal0_summary" {
   value = module.journal0.summary
-}
-
-module "worker2" {
-  source = "../modules/node"
-  config = local.config
-
-  vmid        = 112
-  hostname    = "worker2"
-  description = "Loader/lister service node"
-  hypervisor = "branly"
-  cores       = "4"
-  memory      = "12288"
-  balloon     = 1024
-  networks = [{
-    id      = 0
-    ip      = "192.168.128.11"
-    gateway = local.config["gateway_ip"]
-    macaddr = "AA:57:27:51:75:18"
-    bridge  = "vmbr443"
-  }]
-}
-
-output "worker2_summary" {
-  value = module.worker2.summary
 }
