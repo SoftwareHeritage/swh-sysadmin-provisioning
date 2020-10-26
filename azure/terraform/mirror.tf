@@ -2,7 +2,7 @@
 # matching what we name elsewhere "euwest-${resource}"
 
 variable "mirror_replay_servers" {
-  default = 4
+  default = 0
 }
 
 data "azurerm_platform_image" "debian10" {
@@ -13,6 +13,9 @@ data "azurerm_platform_image" "debian10" {
 }
 
 resource "azurerm_resource_group" "euwest-mirror-test" {
+  # disable this
+  count = 0
+
   name     = "euwest-mirror-test"
   location = "westeurope"
 
@@ -22,6 +25,9 @@ resource "azurerm_resource_group" "euwest-mirror-test" {
 }
 
 resource "azurerm_network_security_group" "mirror-nsg" {
+  # disable this
+  count = 0
+
   name                = "mirror-nsg"
   resource_group_name = "euwest-mirror-test"
   location            = "westeurope"
@@ -40,10 +46,13 @@ locals {
 # master machine - run the docker swarm master node on which will run
 # most of the services but the db and replayers
 resource "azurerm_network_interface" "mirror-master-interface" {
+  # disable this
+  count = 0
+
   name                = "mirror-master-interface"
   location            = "westeurope"
   resource_group_name = "euwest-mirror-test"
-  network_security_group_id = azurerm_network_security_group.mirror-nsg.id
+  network_security_group_id = azurerm_network_security_group.mirror-nsg[0].id
 
   ip_configuration {
     name                          = "mirrorMasterNicConfiguration"
@@ -62,10 +71,13 @@ resource "azurerm_network_interface" "mirror-master-interface" {
   #image_reference_id    = "/Subscriptions/49b7f681-8efc-4689-8524-870fc0c1db09/Providers/Microsoft.Compute/Locations/westeurope/Publishers/Debian/ArtifactTypes/VMImage/Offers/debian-10/Skus/10"
 #}
 resource "azurerm_virtual_machine" "mirror-master" {
+  # disable this
+  count = 0
+
   name                  = "mirror-master"
   location              = "westeurope"
   resource_group_name   = "euwest-mirror-test"
-  network_interface_ids = [azurerm_network_interface.mirror-master-interface.id]
+  network_interface_ids = [azurerm_network_interface.mirror-master-interface[count.index].id]
   vm_size               = "Standard_B2ms"
 
 
@@ -117,7 +129,7 @@ resource "azurerm_virtual_machine" "mirror-master" {
     connection {
       type = "ssh"
       user = var.user_admin
-      host = azurerm_network_interface.mirror-master-interface.private_ip_address
+      host = azurerm_network_interface.mirror-master-interface[count.index].private_ip_address
     }
   }
 
@@ -128,10 +140,13 @@ resource "azurerm_virtual_machine" "mirror-master" {
 
 # the DB host
 resource "azurerm_network_interface" "mirror-db-interface" {
+  # disable this
+  count = 0
+
   name                = "mirror-db-interface"
   location            = "westeurope"
   resource_group_name = "euwest-mirror-test"
-  network_security_group_id = azurerm_network_security_group.mirror-nsg.id
+  network_security_group_id = azurerm_network_security_group.mirror-nsg[0].id
 
   ip_configuration {
     name                          = "mirrorDbNicConfiguration"
@@ -141,26 +156,35 @@ resource "azurerm_network_interface" "mirror-db-interface" {
   }
 }
 resource "azurerm_managed_disk" "mirror-db-storage" {
+  # disable this
+  count = 0
+
   name                 = "mirror-db-disk1"
-  location             = azurerm_resource_group.euwest-mirror-test.location
-  resource_group_name  = azurerm_resource_group.euwest-mirror-test.name
+  location             = azurerm_resource_group.euwest-mirror-test[0].location
+  resource_group_name  = azurerm_resource_group.euwest-mirror-test[0].name
   storage_account_type = "Standard_LRS"
   create_option        = "Empty"
   disk_size_gb         = 1024
 }
 
 resource "azurerm_virtual_machine_data_disk_attachment" "mirror-db-storage" {
-  managed_disk_id    = azurerm_managed_disk.mirror-db-storage.id
-  virtual_machine_id = azurerm_virtual_machine.mirror-db.id
+  # disable this
+  count = 0
+
+  managed_disk_id    = azurerm_managed_disk.mirror-db-storage[count.index].id
+  virtual_machine_id = azurerm_virtual_machine.mirror-db[count.index].id
   lun                = "10"
   caching            = "ReadWrite"
 }
 
 resource "azurerm_virtual_machine" "mirror-db" {
+  # disable this
+  count = 0
+
   name                  = "mirror-db"
   location              = "westeurope"
   resource_group_name   = "euwest-mirror-test"
-  network_interface_ids = [azurerm_network_interface.mirror-db-interface.id]
+  network_interface_ids = [azurerm_network_interface.mirror-db-interface[count.index].id]
   vm_size               = "Standard_F8s_v2"
   delete_os_disk_on_termination = true
 
@@ -202,7 +226,7 @@ resource "azurerm_virtual_machine" "mirror-db" {
     connection {
       type = "ssh"
       user = var.user_admin
-      host = azurerm_network_interface.mirror-db-interface.private_ip_address
+      host = azurerm_network_interface.mirror-db-interface[count.index].private_ip_address
     }
   }
 
@@ -217,8 +241,8 @@ resource "azurerm_network_interface" "mirror-replayer-interface" {
 
   name                = format("%s-interface", each.key)
   location            = "westeurope"
-  resource_group_name = azurerm_resource_group.euwest-mirror-test.name
-  network_security_group_id = azurerm_network_security_group.mirror-nsg.id
+  resource_group_name = azurerm_resource_group.euwest-mirror-test[0].name
+  network_security_group_id = azurerm_network_security_group.mirror-nsg[0].id
   #enable_accelerated_networking = true
 
   ip_configuration {
@@ -291,7 +315,7 @@ resource "azurerm_virtual_machine" "mirror-replayer" {
 # for the obj storage, if any
 #resource "azurerm_storage_account" "mirror-storage" {
 #  name                     = "mirror-storage"
-#  resource_group_name      = "${azurerm_resource_group.euwest-mirror-test.name}"
+#  resource_group_name      = "${azurerm_resource_group.euwest-mirror-test[0].name}"
 #  location                 = "westeurope"
 #  account_tier             = "Standard"
 #  account_replication_type = "LRS"
@@ -305,7 +329,7 @@ resource "azurerm_virtual_machine" "mirror-replayer" {
 # A container for the blob storage named 'contents' (as other blob storages)
 #resource "azurerm_storage_container" "mirror-graph-storage" {
 #  name                  = "mirror-graph-storage"
-#  resource_group_name   = "${azurerm_resource_group.euwest-mirror-test.name}"
+#  resource_group_name   = "${azurerm_resource_group.euwest-mirror-test[0].name}"
 #  storage_account_name  = "${azurerm_storage_account.mirror-storage.name}"
 #  container_access_type = "private"
 #}

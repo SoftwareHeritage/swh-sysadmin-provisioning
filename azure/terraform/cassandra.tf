@@ -89,7 +89,7 @@ resource "azurerm_virtual_machine" "cassandra-server" {
       name              = format("%s-%s", each.key, storage_data_disk.key)
       caching           = "None"
       create_option     = "Empty"
-      managed_disk_type = "Premium_LRS"
+      managed_disk_type = "Standard_LRS"
       disk_size_gb      = var.cassandra_disk_size
       lun               = storage_data_disk.value.lun
     }

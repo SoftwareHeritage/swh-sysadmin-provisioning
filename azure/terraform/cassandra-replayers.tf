@@ -1,8 +1,11 @@
 variable "cassandra_replay_servers" {
-  default = 4
+  default = 0
 }
 
 resource "azurerm_resource_group" "euwest-cassandra-replay" {
+  # Disable this
+  count    = 0
+
   name     = "euwest-cassandra-replay"
   location = "westeurope"
 
@@ -27,7 +30,7 @@ resource "azurerm_network_interface" "cassandra-replayer-interface" {
 
   name                          = format("%s-interface", each.key)
   location                      = "westeurope"
-  resource_group_name           = azurerm_resource_group.euwest-cassandra-replay.name
+  resource_group_name           = azurerm_resource_group.euwest-cassandra-replay[0].name
   network_security_group_id     = data.azurerm_network_security_group.worker-nsg.id
 
   enable_accelerated_networking = true
@@ -50,7 +53,7 @@ resource "azurerm_virtual_machine" "cassandra-replay-server" {
 
   name                  = each.key
   location              = "westeurope"
-  resource_group_name   = azurerm_resource_group.euwest-cassandra-replay.name
+  resource_group_name   = azurerm_resource_group.euwest-cassandra-replay[0].name
   network_interface_ids = [azurerm_network_interface.cassandra-replayer-interface[each.key].id]
   vm_size               = "Standard_F8s_v2"
 
