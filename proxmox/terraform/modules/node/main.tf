@@ -75,19 +75,26 @@ resource "proxmox_vm_qemu" "node" {
   }
 
   #### provisioning: (creation time only) connect through ssh
+
   # Let puppet do its install
   provisioner "remote-exec" {
     inline = concat(
       var.pre_provision_steps,
       [
+        # First install facts...
+        "mkdir -p /etc/facter/facts.d",
+        "echo deployment=${var.facter_deployment} > /etc/facter/facts.d/deployment.txt",
+        "echo subnet=${var.facter_subnet} > /etc/facter/facts.d/subnet.txt",
         "sed -i 's/127.0.1.1/${lookup(var.networks[0], "ip")}/g' /etc/hosts",
+        # so puppet agent installs the node's role
         "puppet agent --server ${var.config["puppet_master"]} --environment=${var.config["puppet_environment"]} --waitforcert 60 --test || echo 'Node provisionned!'",
-      ]
-    )
+      ])
+
     connection {
-      type = "ssh"
-      user = "root"
-      host = lookup(var.networks[0], "ip")
+      type        = "ssh"
+      user        = "root"
+      host        = lookup(var.networks[0], "ip")
+      private_key = "${file("~/.ssh/id-rsa-terraform-proxmox")}"  # <- something changed
     }
   }
 
