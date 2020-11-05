@@ -271,3 +271,29 @@ module "journal0" {
 output "journal0_summary" {
   value = module.journal0.summary
 }
+
+module "rp0" {
+  source = "../modules/node"
+  config = local.config
+  hypervisor = "branly"
+
+  vmid        = 129
+  hostname    = "rp0"
+  description = "Node to host the reverse proxy"
+  cores       = "2"
+  memory      = "2048"
+  balloon     = 1024
+  networks = [{
+    id      = 0
+    ip      = "192.168.130.20"
+    gateway = local.config["gateway_ip"]
+    macaddr = "4A:80:47:5D:DF:73"
+    bridge  = "vmbr443"
+  }]
+  # facter_subnet     = "sesi_rocquencourt_staging"
+  # factor_deployment = "staging"
+}
+
+output "rp0_summary" {
+  value = module.rp0.summary
+}
