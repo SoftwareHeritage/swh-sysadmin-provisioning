@@ -94,8 +94,9 @@ resource "proxmox_vm_qemu" "node" {
   lifecycle {
     ignore_changes = [
       bootdisk,
-        scsihw,
-        target_node
+      scsihw,
+      target_node,
+      clone
     ]
   }
 }
