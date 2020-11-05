@@ -26,7 +26,7 @@ A new template is available on the node if the build succeed:
 
 ## Create a tunnel for the http server
 
-The vm created to build the template needs to reach a webserver started by packer during the build process in order to retreive some elements like the preseed file or the init scripts.
+The vm created to build the template needs to reach a webserver started by packer during the build process in order to retrieve some elements like the preseed file or the init scripts.
 
 If it can't, you can create a tunnel to expose the http server port.
 
@@ -42,8 +42,8 @@ If not, the remote port will be bound on the loopback interface only.
 to check :
 ```
 % ss -tan | grep 8888
-LISTEN      0        128            127.0.0.1:8888              0.0.0.0:*       
-LISTEN      0        128                [::1]:8888                 [::]:*    
+LISTEN      0        128            127.0.0.1:8888              0.0.0.0:*
+LISTEN      0        128                [::1]:8888                 [::]:*
 ```
 Here, it's not working as the port is bound on `127.0.0.1`.
 
@@ -57,8 +57,8 @@ Note the `8889` port.
 
 ```
 % ss -tan | grep 8889
-LISTEN      0        128              0.0.0.0:8889              0.0.0.0:*       
-LISTEN      0        128                 [::]:8889                 [::]:*    
+LISTEN      0        128              0.0.0.0:8889              0.0.0.0:*
+LISTEN      0        128                 [::]:8889                 [::]:*
 ```
 
 **Last step**, Now, Configure your `env.sh` file with the url from the hypervisor point of view, the port must be ``8888`` for the first example, ``8889`` for the second :
