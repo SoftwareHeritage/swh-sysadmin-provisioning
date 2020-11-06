@@ -7,13 +7,14 @@
 # (There is no other way to avoid duplication)
 locals {
   config = {
-    dns                       = var.dns
-    domain                    = var.domain
-    puppet_environment        = var.puppet_environment
-    puppet_master             = var.puppet_master
-    gateway_ip                = var.gateway_ip
-    user_admin                = var.user_admin
-    user_admin_ssh_public_key = var.user_admin_ssh_public_key
+    dns                             = var.dns
+    domain                          = var.domain
+    puppet_environment              = var.puppet_environment
+    puppet_master                   = var.puppet_master
+    gateway_ip                      = var.gateway_ip
+    user_admin                      = var.user_admin
+    user_admin_ssh_public_key       = var.user_admin_ssh_public_key
+    user_admin_ssh_private_key_path = var.user_admin_ssh_private_key_path
   }
 }
 
