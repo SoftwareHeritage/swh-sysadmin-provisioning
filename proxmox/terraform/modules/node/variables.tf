@@ -14,9 +14,9 @@ variable "hypervisor" {
 }
 
 variable "template" {
-  description = "Template to use (template-debian-9, template-debian-10)"
+  description = "Template created by packer to use (template-debian-10, debian-buster-...)"
   type        = string
-  default     = "debian-buster-2020-10-16"
+  default     = "debian-buster-2020-11-06"
 }
 
 variable "sockets" {
