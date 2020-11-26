@@ -18,67 +18,6 @@ locals {
   }
 }
 
-module "storage0" {
-  source = "../modules/node"
-  config = local.config
-  hypervisor = "orsay"
-
-  vmid        = 114
-  hostname    = "storage0"
-  description = "swh storage services"
-  cores       = "4"
-  memory      = "8192"
-  balloon     = 1024
-  networks = [{
-    id      = 0
-    ip      = "192.168.130.40"
-    gateway = local.config["gateway_ip"]
-    macaddr = "CA:73:7F:ED:F9:01"
-    bridge  = "vmbr443"
-  }]
-  storages = [{
-    id           = 0
-    storage      = "orsay-ssd-2018"
-    size         = "32G"
-    storage_type = "ssd"
-  }, {
-    id           = 1
-    storage      = "orsay-ssd-2018"
-    size         = "812G"
-    storage_type = "ssd"
-  }]
-}
-
-module "db0" {
-  source = "../modules/node"
-  config = local.config
-  hypervisor = "orsay"
-
-  vmid        = 115
-  hostname    = "db0"
-  description = "Node to host storage/indexer/scheduler dbs"
-  cores       = "4"
-  memory      = "16384"
-  balloon     = 1024
-  networks = [{
-    id      = 0
-    ip      = "192.168.130.10"
-    gateway = local.config["gateway_ip"]
-    macaddr = "3A:65:31:7C:24:17"
-    bridge  = "vmbr443"
-  }]
-  storages = [{
-    id           = 0
-    storage      = "orsay-ssd-2018"
-    size         = "400G"
-    storage_type = "ssd"
-  }]
-
-}
-
-output "db0_summary" {
-  value = module.db0.summary
-}
 
 module "scheduler0" {
   source = "../modules/node"
