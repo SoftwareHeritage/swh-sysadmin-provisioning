@@ -94,7 +94,7 @@ resource "proxmox_vm_qemu" "node" {
       type        = "ssh"
       user        = "root"
       host        = lookup(var.networks[0], "ip")
-      private_key = "${file(var.config["user_admin_ssh_private_key_path"])}"
+      private_key = file(var.config["user_admin_ssh_private_key_path"])
     }
   }
 
