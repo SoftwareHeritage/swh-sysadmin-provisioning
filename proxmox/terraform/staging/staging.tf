@@ -196,7 +196,7 @@ module "journal0" {
   description = "Journal services node"
   hypervisor  = "beaubourg"
   cores       = "4"
-  memory      = "12288"
+  memory      = "20000"
   balloon     = 1024
   networks = [{
     id      = 0
@@ -204,6 +204,17 @@ module "journal0" {
     gateway = local.config["gateway_ip"]
     macaddr = "1E:98:C2:66:BF:33"
     bridge  = "vmbr443"
+  }]
+  storages = [{
+    id           = 0
+    storage      = "proxmox"
+    size         = "32G"
+    storage_type = "cephfs"
+  }, {
+    id           = 1
+    storage      = "proxmox"
+    size         = "500G"
+    storage_type = "cephfs"
   }]
 }
 
