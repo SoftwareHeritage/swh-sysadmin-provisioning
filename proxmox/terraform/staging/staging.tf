@@ -247,3 +247,28 @@ module "rp0" {
 output "rp0_summary" {
   value = module.rp0.summary
 }
+
+
+module "search-esnode0" {
+  source = "../modules/node"
+  config = local.config
+  hypervisor = "branly"
+
+  vmid        = 130
+  hostname    = "search-esnode0"
+  description = "Node to host the elasticsearch instance"
+  cores       = "2"
+  memory      = "16834"
+  balloon     = 1024
+  networks = [{
+    id      = 0
+    ip      = "192.168.130.80"
+    gateway = local.config["gateway_ip"]
+    macaddr = "96:74:49:BD:B5:08"
+    bridge  = "vmbr443"
+  }]
+}
+
+output "search-esnode0_summary" {
+  value = module.search-esnode0.summary
+}
