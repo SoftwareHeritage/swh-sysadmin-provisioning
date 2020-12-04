@@ -259,13 +259,24 @@ module "search-esnode0" {
   description = "Node to host the elasticsearch instance"
   cores       = "2"
   memory      = "16834"
-  balloon     = 1024
+  balloon     = 9216
   networks = [{
     id      = 0
     ip      = "192.168.130.80"
     gateway = local.config["gateway_ip"]
     macaddr = "96:74:49:BD:B5:08"
     bridge  = "vmbr443"
+  }]
+  storages = [{
+    id           = 0
+    storage      = "proxmox"
+    size         = "32G"
+    storage_type = "cephfs"
+  }, {
+    id           = 1
+    storage      = "proxmox"
+    size         = "100G"
+    storage_type = "cephfs"
   }]
 }
 
