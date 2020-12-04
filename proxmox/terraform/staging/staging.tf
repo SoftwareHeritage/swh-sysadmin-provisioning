@@ -283,3 +283,27 @@ module "search-esnode0" {
 output "search-esnode0_summary" {
   value = module.search-esnode0.summary
 }
+
+module "search0" {
+  source = "../modules/node"
+  config = local.config
+  hypervisor = "branly"
+
+  vmid        = 131
+  hostname    = "search0"
+  description = "Node to host the swh-search rpc backend service"
+  cores       = "2"
+  memory      = "4096"
+  balloon     = 1024
+  networks = [{
+    id      = 0
+    ip      = "192.168.130.90"
+    gateway = local.config["gateway_ip"]
+    macaddr = "EE:FA:76:55:CF:99"
+    bridge  = "vmbr443"
+  }]
+}
+
+output "search0_summary" {
+  value = module.search0.summary
+}
