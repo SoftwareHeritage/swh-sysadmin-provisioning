@@ -257,8 +257,8 @@ module "search-esnode0" {
   vmid        = 130
   hostname    = "search-esnode0"
   description = "Node to host the elasticsearch instance"
-  cores       = "2"
-  memory      = "16834"
+  cores       = "4"
+  memory      = "32768"
   balloon     = 9216
   networks = [{
     id      = 0
@@ -275,7 +275,7 @@ module "search-esnode0" {
   }, {
     id           = 1
     storage      = "proxmox"
-    size         = "100G"
+    size         = "200G"
     storage_type = "cephfs"
   }]
 }
