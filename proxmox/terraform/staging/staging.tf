@@ -307,3 +307,39 @@ module "search0" {
 output "search0_summary" {
   value = module.search0.summary
 }
+
+
+module "clearly-defined" {
+  source = "../modules/node"
+  config = local.config
+  hypervisor = "branly"
+
+  vmid        = 132
+  hostname    = "clearly-defined"
+  description = "Node to host development for clearly defined"
+  cores       = "2"
+  memory      = "8192"
+  balloon     = 1024
+  networks = [{
+    id      = 0
+    ip      = "192.168.130.200"
+    gateway = local.config["gateway_ip"]
+    macaddr = "B6:C6:2E:D3:60:B2"
+    bridge  = "vmbr443"
+  }]
+  storages = [{
+    id           = 0
+    storage      = "proxmox"
+    size         = "32G"
+    storage_type = "cephfs"
+  }, {
+    id           = 1
+    storage      = "proxmox"
+    size         = "100G"
+    storage_type = "cephfs"
+  }]
+}
+
+output "clearly-defined_summary" {
+  value = module.clearly-defined.summary
+}
