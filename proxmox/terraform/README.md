@@ -26,6 +26,7 @@ source setup.sh
 ## provision infra
 
 ```
+cd production  # or staging
 terraform init
 terraform apply
 ```

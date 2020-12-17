@@ -1,5 +1,5 @@
 module "kelvingrove" {
-  source = "./modules/node"
+  source = "../modules/node"
   config = local.config
 
   hostname    = "kelvingrove"
