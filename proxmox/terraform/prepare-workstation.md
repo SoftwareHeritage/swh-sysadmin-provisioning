@@ -1,5 +1,16 @@
 This is the required tooling for the following to work.
 
+# proxmox
+
+Current supported version is 13.5 from debian stable
+
+```
+$ cat /etc/apt/preferences.d/terraform
+Package: terraform
+Pin: version 0.13.*
+Pin-Priority: 999
+```
+
 # terraform-provider-proxmox
 
 go module to install
