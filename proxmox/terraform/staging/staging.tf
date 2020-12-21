@@ -343,3 +343,28 @@ module "clearly-defined" {
 output "clearly-defined_summary" {
   value = module.clearly-defined.summary
 }
+
+
+module "objstorage0" {
+  source = "../modules/node"
+  config = local.config
+  hypervisor = "pompidou"
+
+  vmid        = 102
+  hostname    = "objstorage0"
+  description = "Node to host a read-only objstorage for mirrors"
+  cores       = "2"
+  memory      = "4096"
+  balloon     = 1024
+  networks = [{
+    id      = 0
+    ip      = "192.168.130.110"
+    gateway = local.config["gateway_ip"]
+    macaddr = "5E:28:EA:7D:50:0D"
+    bridge  = "vmbr443"
+  }]
+}
+
+output "objstorage0_summary" {
+  value = module.objstorage0.summary
+}
