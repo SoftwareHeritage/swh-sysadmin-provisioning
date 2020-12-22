@@ -3,6 +3,8 @@ locals {
     dns                             = var.dns
     domain                          = "internal.softwareheritage.org"
     puppet_environment              = "production"
+    facter_deployment               = "production"
+    facter_subnet                   = "sesi_rocquencourt"
     puppet_master                   = var.puppet_master
     gateway_ip                      = "192.168.100.1"
     user_admin                      = var.user_admin

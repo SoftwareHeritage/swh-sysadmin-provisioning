@@ -10,6 +10,8 @@ locals {
     dns                             = var.dns
     domain                          = var.domain
     puppet_environment              = var.puppet_environment
+    facter_deployment               = "staging"
+    facter_subnet                   = "sesi_rocquencourt_staging"
     puppet_master                   = var.puppet_master
     gateway_ip                      = var.gateway_ip
     user_admin                      = var.user_admin

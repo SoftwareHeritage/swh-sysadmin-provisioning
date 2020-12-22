@@ -3,18 +3,6 @@ variable "hostname" {
   type        = string
 }
 
-variable "facter_subnet" {
-  description = "Subnet custom fact (e.g sesi_rocquencourt_staging, ...)"
-  type        = string
-  default     = "sesi_rocquencourt_staging"
-}
-
-variable "facter_deployment" {
-  description = "Deployment custom fact (e.g staging, production)"
-  type        = string
-  default     = "staging"
-}
-
 variable "description" {
   description = "Node's description"
   type        = string
