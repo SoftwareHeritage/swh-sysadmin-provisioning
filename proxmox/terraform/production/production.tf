@@ -146,3 +146,23 @@ module "search-esnode3" {
     storage_type = "cephfs"
   }]
 }
+
+module "search1" {
+  source = "../modules/node"
+  config = local.config
+
+  hostname    = "search1"
+  description = "swh-search node"
+  hypervisor  = "branly"
+  vmid        = 136
+  cores       = "4"
+  memory      = "3072"
+  balloon     = 1024
+  networks = [{
+    id      = 0
+    ip      = "192.168.100.85"
+    gateway = local.config["gateway_ip"]
+    macaddr = "3E:46:D3:88:44:F4"
+    bridge  = "vmbr0"
+  }]
+}
