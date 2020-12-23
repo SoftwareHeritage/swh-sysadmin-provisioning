@@ -33,3 +33,23 @@ module "kelvingrove" {
     bridge  = "vmbr0"
   }]
 }
+
+module "webapp1" {
+  source = "../modules/node"
+  config = local.config
+
+  hostname    = "webapp1"
+  description = "Webapp for swh-search tests"
+  hypervisor  = "branly"
+  vmid        = 125
+  cores       = "2"
+  memory      = "8192"
+  balloon     = 1024
+  networks = [{
+    id      = 0
+    ip      = "192.168.100.71"
+    gateway = local.config["gateway_ip"]
+    macaddr = "06:FF:02:95:31:CF"
+    bridge  = "vmbr0"
+  }]
+}
