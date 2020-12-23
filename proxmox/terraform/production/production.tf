@@ -53,3 +53,96 @@ module "webapp1" {
     bridge  = "vmbr0"
   }]
 }
+
+module "search-esnode1" {
+  source = "../modules/node"
+  config = local.config
+
+  hostname    = "search-esnode1"
+  description = "Elasticsearch node for swh-search"
+  hypervisor  = "branly"
+  vmid        = 133
+  cores       = "4"
+  memory      = "16384"
+  balloon     = 9216
+  networks = [{
+    id      = 0
+    ip      = "192.168.100.81"
+    gateway = local.config["gateway_ip"]
+    macaddr = "42:31:70:6A:D7:F9"
+    bridge  = "vmbr0"
+  }]
+  storages = [{
+    id           = 0
+    storage      = "proxmox"
+    size         = "32G"
+    storage_type = "cephfs"
+  }, {
+    id           = 1
+    storage      = "proxmox"
+    size         = "200G"
+    storage_type = "cephfs"
+  }]
+}
+
+module "search-esnode2" {
+  source = "../modules/node"
+  config = local.config
+
+  hostname    = "search-esnode2"
+  description = "Elasticsearch node for swh-search"
+  hypervisor  = "branly"
+  vmid        = 134
+  cores       = "4"
+  memory      = "16384"
+  balloon     = 9216
+  networks = [{
+    id      = 0
+    ip      = "192.168.100.82"
+    gateway = local.config["gateway_ip"]
+    macaddr = "AA:86:8C:84:59:B5"
+    bridge  = "vmbr0"
+  }]
+  storages = [{
+    id           = 0
+    storage      = "proxmox"
+    size         = "32G"
+    storage_type = "cephfs"
+  }, {
+    id           = 1
+    storage      = "proxmox"
+    size         = "200G"
+    storage_type = "cephfs"
+  }]
+}
+
+module "search-esnode3" {
+  source = "../modules/node"
+  config = local.config
+
+  hostname    = "search-esnode3"
+  description = "Elasticsearch node for swh-search"
+  hypervisor  = "beaubourg"
+  vmid        = 135
+  cores       = "4"
+  memory      = "16384"
+  balloon     = 9216
+  networks = [{
+    id      = 0
+    ip      = "192.168.100.83"
+    gateway = local.config["gateway_ip"]
+    macaddr = "36:E4:58:9B:EA:E4"
+    bridge  = "vmbr0"
+  }]
+  storages = [{
+    id           = 0
+    storage      = "proxmox"
+    size         = "32G"
+    storage_type = "cephfs"
+  }, {
+    id           = 1
+    storage      = "proxmox"
+    size         = "200G"
+    storage_type = "cephfs"
+  }]
+}
