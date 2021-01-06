@@ -63,8 +63,8 @@ module "search-esnode1" {
   hypervisor  = "branly"
   vmid        = 133
   cores       = "4"
-  memory      = "16384"
-  balloon     = 9216
+  memory      = "24576"
+  balloon     = 16384
   networks = [{
     id      = 0
     ip      = "192.168.100.81"
@@ -94,8 +94,8 @@ module "search-esnode2" {
   hypervisor  = "branly"
   vmid        = 134
   cores       = "4"
-  memory      = "16384"
-  balloon     = 9216
+  memory      = "24576"
+  balloon     = 16384
   networks = [{
     id      = 0
     ip      = "192.168.100.82"
@@ -125,8 +125,8 @@ module "search-esnode3" {
   hypervisor  = "beaubourg"
   vmid        = 135
   cores       = "4"
-  memory      = "16384"
-  balloon     = 9216
+  memory      = "24576"
+  balloon     = 16384
   networks = [{
     id      = 0
     ip      = "192.168.100.83"
