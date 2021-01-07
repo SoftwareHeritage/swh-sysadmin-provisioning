@@ -3,7 +3,7 @@ locals {
     dns                             = var.dns
     domain                          = "internal.admin.swh.network"
     puppet_environment              = "production"
-    facter_deployment               = "production"
+    facter_deployment               = "admin"
     facter_subnet                   = "sesi_rocquencourt_admin"
     puppet_master                   = var.puppet_master
     gateway_ip                      = "192.168.50.1"
