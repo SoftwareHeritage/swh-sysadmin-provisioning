@@ -10,6 +10,7 @@ locals {
     user_admin                      = var.user_admin
     user_admin_ssh_public_key       = var.user_admin_ssh_public_key
     user_admin_ssh_private_key_path = var.user_admin_ssh_private_key_path
+    vlan                            = "vmbr442"
   }
 }
 
@@ -29,6 +30,27 @@ module "bardo" {
     ip      = "192.168.50.10"
     gateway = local.config["gateway_ip"]
     macaddr = "7A:CE:A2:72:FA:E8"
-    bridge  = "vmbr442"
+    bridge  = local.config["vlan"]
   }]
+}
+
+
+module "rp1" {
+  source = "../modules/node"
+  config = local.config
+
+  hostname    = "rp1"
+  description = "reverse-proxy"
+  hypervisor  = "branly"
+  vmid        = 115
+  cores       = "2"
+  memory      = "4096"
+  balloon     = 1024
+  networks = [{
+    id      = 0
+    ip      = "192.168.50.20"
+    gateway = local.config["gateway_ip"]
+    macaddr = "4E:42:20:E0:B6:65"
+    bridge  = local.config["vlan"]
+   }]
 }
