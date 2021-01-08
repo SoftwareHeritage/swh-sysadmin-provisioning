@@ -337,7 +337,7 @@ module "clearly-defined" {
   }, {
     id           = 1
     storage      = "proxmox"
-    size         = "100G"
+    size         = "512G"
     storage_type = "cephfs"
   }]
 }
