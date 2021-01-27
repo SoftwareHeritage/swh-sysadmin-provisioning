@@ -156,7 +156,7 @@ module "search1" {
   hypervisor  = "branly"
   vmid        = 136
   cores       = "4"
-  memory      = "3072"
+  memory      = "6144"
   balloon     = 1024
   networks = [{
     id      = 0
