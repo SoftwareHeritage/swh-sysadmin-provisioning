@@ -370,3 +370,26 @@ module "objstorage0" {
 output "objstorage0_summary" {
   value = module.objstorage0.summary
 }
+
+module "worker3" {
+  source = "../modules/node"
+  config = local.config
+  vmid        = 137
+  hostname    = "worker3"
+  description = "Indexer worker"
+  hypervisor = "pompidou"
+  cores       = "4"
+  memory      = "12288"
+  balloon     = 1024
+  networks = [{
+    id      = 0
+    ip      = "192.168.130.103"
+    gateway = local.config["gateway_ip"]
+    macaddr = "1A:F8:1A:2C:12:E1"
+    bridge  = "vmbr443"
+  }]
+}
+
+output "worker3_summary" {
+  value = module.worker3.summary
+}
