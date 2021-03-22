@@ -393,3 +393,26 @@ module "worker3" {
 output "worker3_summary" {
   value = module.worker3.summary
 }
+
+module "counters0" {
+  source = "../modules/node"
+  config = local.config
+  vmid        = 138
+  hostname    = "counters0"
+  description = "Counters server"
+  hypervisor  = "pompidou"
+  cores       = "4"
+  memory      = "6096"
+  balloon     = 2048
+  networks = [{
+    id      = 0
+    ip      = "192.168.130.95"
+    gateway = local.config["gateway_ip"]
+    macaddr = "E2:6E:12:C7:3E:A4"
+    bridge  = "vmbr443"
+  }]
+}
+
+output "counters0_summary" {
+  value = module.counters0.summary
+}
