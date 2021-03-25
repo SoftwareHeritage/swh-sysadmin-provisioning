@@ -166,3 +166,23 @@ module "search1" {
     bridge  = "vmbr0"
   }]
 }
+
+module "counters1" {
+  source = "../modules/node"
+  config = local.config
+
+  hostname    = "counters1"
+  description = "swh-counters node"
+  hypervisor  = "branly"
+  vmid        = 139
+  cores       = "4"
+  memory      = "2048"
+  balloon     = 1024
+  networks = [{
+    id      = 0
+    ip      = "192.168.100.95"
+    gateway = local.config["gateway_ip"]
+    macaddr = "26:8E:7F:D1:F7:99"
+    bridge  = "vmbr0"
+  }]
+}
