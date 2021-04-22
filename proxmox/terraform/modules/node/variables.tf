@@ -94,3 +94,9 @@ variable "pre_provision_steps" {
     type        = list(string)
     default     = []
 }
+
+variable "cicustom" {
+    description = "custom ci parameter"
+    type        = string
+    default     = ""
+}

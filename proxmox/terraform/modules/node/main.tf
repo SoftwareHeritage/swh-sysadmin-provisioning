@@ -30,6 +30,7 @@ resource "proxmox_vm_qemu" "node" {
 
   # ciuser - User name to change to use when connecting
   ciuser   = var.config["user_admin"]
+  cicustom = var.cicustom
   ssh_user = var.config["user_admin"]
 
   # sshkeys - public ssh key to use when connecting

@@ -218,6 +218,7 @@ module "journal0" {
     size         = "500G"
     storage_type = "cephfs"
   }]
+  cicustom = "user=proxmox-cephfs:snippets/journal0.ciconfig.user.yml"
 }
 
 output "journal0_summary" {
