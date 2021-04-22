@@ -382,3 +382,29 @@ module "counters0" {
 output "counters0_summary" {
   value = module.counters0.summary
 }
+
+module "mirror-test" {
+  source = "../modules/node"
+  config = local.config
+  vmid        = 132
+  hostname    = "mirror-test"
+  description = "Sandbox VM to test the mirror environment"
+  hypervisor  = "uffizi"
+  sockets     = "2"
+  cores       = "4"
+
+  memory      = "65536"
+  balloon     = "20480"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.130.160"
+    gateway = local.config["gateway_ip"]
+    macaddr = ""
+    bridge  = "vmbr443"
+  }]
+}
+
+output "mirror-tests_summary" {
+  value = module.mirror-test.summary
+}
