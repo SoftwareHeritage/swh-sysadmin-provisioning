@@ -44,7 +44,7 @@ module "webapp1" {
   vmid        = 125
   cores       = "2"
   memory      = "8192"
-  balloon     = 1024
+  balloon     = 2048
   networks = [{
     id      = 0
     ip      = "192.168.100.71"
