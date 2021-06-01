@@ -186,3 +186,23 @@ module "counters1" {
     bridge  = "vmbr0"
   }]
 }
+
+module "worker17" {
+  source = "../modules/node"
+  config = local.config
+
+  hostname    = "worker17"
+  description = "swh-worker node (temporary)"
+  hypervisor  = "uffizi"
+  vmid        = 143
+  cores       = "4"
+  memory      = "32768"
+  balloon     = 1024
+  networks = [{
+    id      = 0
+    ip      = "192.168.100.43"
+    gateway = local.config["gateway_ip"]
+    macaddr = "36:E0:2D:70:7C:52"
+    bridge  = "vmbr0"
+  }]
+}
