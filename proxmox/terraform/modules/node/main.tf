@@ -37,7 +37,7 @@ resource "proxmox_vm_qemu" "node" {
   sshkeys = var.config["user_admin_ssh_public_key"]
 
   # searchdomain - Sets DNS search domains for a container.
-  searchdomain = var.config["domain"]
+  searchdomain = var.domainname != "" ? var.domainname : var.config["domain"]
 
   # nameserver - Sets DNS server IP address for a container.
   nameserver = var.config["dns"]

@@ -192,6 +192,7 @@ module "worker17" {
   config = local.config
 
   hostname    = "worker17"
+  domainname  = "softwareheritage.org"
   description = "swh-worker node (temporary)"
   hypervisor  = "uffizi"
   vmid        = 143

@@ -3,6 +3,12 @@ variable "hostname" {
   type        = string
 }
 
+variable "domainname" {
+  description = "Domain name. If empty the config domain is used as fallback."
+  type        = string
+  default     = ""
+}
+
 variable "description" {
   description = "Node's description"
   type        = string
