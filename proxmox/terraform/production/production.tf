@@ -197,7 +197,7 @@ module "worker17" {
   hypervisor  = "uffizi"
   vmid        = 143
   cores       = "4"
-  memory      = "32768"
+  memory      = "65536"
   balloon     = 1024
   networks = [{
     id      = 0
