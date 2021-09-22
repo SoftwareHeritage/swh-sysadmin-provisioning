@@ -435,3 +435,57 @@ module "poc-rancher" {
 output "poc-rancher_summary" {
   value = module.poc-rancher.summary
 }
+
+module "poc-rancher-sw0" {
+  source = "../modules/node"
+  template = "debian-bullseye-11.0-2021-09-09"  # otherwise to use more recent template
+  config = local.config
+  vmid        = 135
+  hostname    = "poc-rancher-sw0"
+  description = "Sandbox staging-worker VM to run containers"
+  hypervisor  = "uffizi"
+  sockets     = "2"
+  cores       = "5"
+
+  memory      = "65536"
+  balloon     = "65536"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.130.163"
+    gateway = local.config["gateway_ip"]
+    macaddr = "2A:F4:DE:3A:26:7C"
+    bridge  = "vmbr443"
+  }]
+}
+
+output "poc-rancher-sw0_summary" {
+  value = module.poc-rancher-sw0.summary
+}
+
+module "poc-rancher-sw1" {
+  source = "../modules/node"
+  template = "debian-bullseye-11.0-2021-09-09"  # otherwise to use more recent template
+  config = local.config
+  vmid        = 134
+  hostname    = "poc-rancher-sw1"
+  description = "Sandbox staging-worker VM to run containers"
+  hypervisor  = "uffizi"
+  sockets     = "2"
+  cores       = "5"
+
+  memory      = "65536"
+  balloon     = "65536"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.130.164"
+    gateway = local.config["gateway_ip"]
+    macaddr = "4A:31:28:30:9F:C8"
+    bridge  = "vmbr443"
+  }]
+}
+
+output "poc-rancher-sw1_summary" {
+  value = module.poc-rancher-sw1.summary
+}
