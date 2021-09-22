@@ -400,7 +400,7 @@ module "mirror-test" {
     id      = 0
     ip      = "192.168.130.160"
     gateway = local.config["gateway_ip"]
-    macaddr = ""
+    macaddr = "E6:3C:8A:B7:26:5D"
     bridge  = "vmbr443"
   }]
 }
