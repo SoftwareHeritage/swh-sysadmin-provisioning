@@ -408,3 +408,30 @@ module "mirror-test" {
 output "mirror-tests_summary" {
   value = module.mirror-test.summary
 }
+
+module "poc-rancher" {
+  source = "../modules/node"
+  template = "debian-bullseye-11.0-2021-09-09"  # otherwise to use more recent template
+  config = local.config
+  vmid        = 114
+  hostname    = "poc-rancher"
+  description = "Sandbox VM to poc the rancher/kubernetes"
+  hypervisor  = "uffizi"
+  sockets     = "1"
+  cores       = "2"
+
+  memory      = "8192"
+  balloon     = "8192"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.130.162"
+    gateway = local.config["gateway_ip"]
+    macaddr = "4A:82:7C:6D:56:77"
+    bridge  = "vmbr443"
+  }]
+}
+
+output "poc-rancher_summary" {
+  value = module.poc-rancher.summary
+}
