@@ -115,3 +115,29 @@ module "worker17" {
     bridge  = "vmbr0"
   }]
 }
+
+module "worker18" {
+  source = "../modules/node"
+  config = local.config
+
+  hostname    = "worker18"
+  domainname  = "softwareheritage.org"
+  description = "swh-worker node (temporary)"
+  hypervisor  = "uffizi"
+  vmid        = 141
+  cores       = "5"
+  sockets     = "2"
+  memory      = "32768"
+  balloon     = 1024
+  networks = [{
+    id      = 0
+    ip      = "192.168.100.44"
+    gateway = local.config["gateway_ip"]
+    macaddr = "C6:29:D9:ED:9C:6B"
+    bridge  = "vmbr0"
+  }]
+}
+
+output "worker18_summary" {
+  value = module.worker18.summary
+}
