@@ -103,7 +103,8 @@ module "worker17" {
   description = "swh-worker node (temporary)"
   hypervisor  = "uffizi"
   vmid        = 143
-  cores       = "4"
+  cores       = "10"
+  sockets     = "2"
   memory      = "65536"
   balloon     = 1024
   networks = [{
