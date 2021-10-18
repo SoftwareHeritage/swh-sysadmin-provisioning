@@ -189,41 +189,6 @@ output "vault_summary" {
   value = module.vault.summary
 }
 
-module "journal0" {
-  source = "../modules/node"
-  config = local.config
-
-  vmid        = 122
-  hostname    = "journal0"
-  description = "Journal services node"
-  hypervisor  = "beaubourg"
-  cores       = "4"
-  memory      = "20000"
-  balloon     = 1024
-  networks = [{
-    id      = 0
-    ip      = "192.168.130.70"
-    gateway = local.config["gateway_ip"]
-    macaddr = "1E:98:C2:66:BF:33"
-    bridge  = "vmbr443"
-  }]
-  storages = [{
-    id           = 0
-    storage      = "proxmox"
-    size         = "32G"
-    storage_type = "cephfs"
-  }, {
-    id           = 1
-    storage      = "proxmox"
-    size         = "500G"
-    storage_type = "cephfs"
-  }]
-  cicustom = "user=proxmox-cephfs:snippets/journal0.ciconfig.user.yml"
-}
-
-output "journal0_summary" {
-  value = module.journal0.summary
-}
 
 module "rp0" {
   source = "../modules/node"
