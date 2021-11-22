@@ -287,7 +287,7 @@ module "objstorage0" {
   hostname    = "objstorage0"
   description = "Node to host a read-only objstorage for mirrors"
   cores       = "2"
-  memory      = "4096"
+  memory      = "8192"
   balloon     = 1024
   networks = [{
     id      = 0
