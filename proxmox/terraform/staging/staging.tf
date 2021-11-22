@@ -409,17 +409,17 @@ module "poc-rancher-sw0" {
   hostname    = "poc-rancher-sw0"
   description = "Sandbox staging-worker VM to run containers"
   hypervisor  = "uffizi"
-  sockets     = "2"
-  cores       = "5"
+  sockets     = "1"
+  cores       = "4"
 
-  memory      = "65536"
-  balloon     = "65536"
+  memory      = "4096"
+  balloon     = "1024"
 
   networks = [{
     id      = 0
     ip      = "192.168.130.163"
     gateway = local.config["gateway_ip"]
-    macaddr = "2A:F4:DE:3A:26:7C"
+    macaddr = "5A:32:B6:FC:8D:F4"
     bridge  = "vmbr443"
   }]
 }
@@ -436,17 +436,17 @@ module "poc-rancher-sw1" {
   hostname    = "poc-rancher-sw1"
   description = "Sandbox staging-worker VM to run containers"
   hypervisor  = "uffizi"
-  sockets     = "2"
-  cores       = "5"
+  sockets     = "1"
+  cores       = "4"
 
-  memory      = "65536"
-  balloon     = "65536"
+  memory      = "4096"
+  balloon     = "1024"
 
   networks = [{
     id      = 0
     ip      = "192.168.130.164"
     gateway = local.config["gateway_ip"]
-    macaddr = "4A:31:28:30:9F:C8"
+    macaddr = "06:32:6D:D8:9A:0B"
     bridge  = "vmbr443"
   }]
 }
