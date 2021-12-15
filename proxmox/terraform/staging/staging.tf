@@ -59,8 +59,11 @@ module "worker0" {
   cores       = "4"
   memory      = "12288"
   balloon     = 1024
+
   # to match the real vm configuration in proxmox
   # to remove
+  args = "-device virtio-rng-pci"
+
   onboot      = false
 
   networks = [{
@@ -89,6 +92,8 @@ module "worker1" {
   balloon     = 1024
   # to match the real vm configuration in proxmox
   # to remove
+  args = "-device virtio-rng-pci"
+
   onboot      = false
 
   networks = [{
