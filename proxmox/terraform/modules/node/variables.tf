@@ -119,3 +119,9 @@ variable "cpu" {
   type        = string
   default     = "host"
 }
+
+variable "onboot" {
+  description = "Start the vm on hypervisor boot"
+  type        = bool
+  default     = true
+}

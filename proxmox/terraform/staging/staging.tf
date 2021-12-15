@@ -31,10 +31,10 @@ module "scheduler0" {
   hypervisor  = "beaubourg"
   # to match the real vm configuration in proxmox
   # to remove
-  args        = "-device virtio-rng-pci"
-  cores       = 4
-  memory      = 8192
-  balloon     = 1024
+  args    = "-device virtio-rng-pci"
+  cores   = 4
+  memory  = 8192
+  balloon = 1024
   networks = [{
     id      = 0
     ip      = "192.168.130.50"
@@ -61,7 +61,8 @@ module "worker0" {
   balloon     = 1024
   # to match the real vm configuration in proxmox
   # to remove
-  args        = "-device virtio-rng-pci"
+  onboot      = false
+
   networks = [{
     id      = 0
     ip      = "192.168.130.100"
@@ -88,7 +89,8 @@ module "worker1" {
   balloon     = 1024
   # to match the real vm configuration in proxmox
   # to remove
-  args        = "-device virtio-rng-pci"
+  onboot      = false
+
   networks = [{
     id      = 0
     ip      = "192.168.130.101"
@@ -113,6 +115,8 @@ module "worker2" {
   cores       = 4
   memory      = 12288
   balloon     = 1024
+  onboot      = false
+
   networks = [{
     id      = 0
     ip      = "192.168.130.102"
@@ -139,7 +143,7 @@ module "webapp" {
   balloon     = 1024
   # to match the real vm configuration in proxmox
   # to remove
-  args        = "-device virtio-rng-pci"
+  args = "-device virtio-rng-pci"
   networks = [{
     id      = 0
     ip      = "192.168.130.30"
@@ -166,7 +170,7 @@ module "deposit" {
   balloon     = 1024
   # to match the real vm configuration in proxmox
   # to remove
-  args        = "-device virtio-rng-pci"
+  args = "-device virtio-rng-pci"
   networks = [{
     id      = 0
     ip      = "192.168.130.31"
@@ -193,7 +197,7 @@ module "vault" {
   balloon     = 1024
   # to match the real vm configuration in proxmox
   # to remove
-  args        = "-device virtio-rng-pci"
+  args = "-device virtio-rng-pci"
   networks = [{
     id      = 0
     ip      = "192.168.130.60"
@@ -254,13 +258,13 @@ module "search-esnode0" {
     bridge  = "vmbr443"
   }]
   storages = [{
-    id           = 0
-    storage      = "proxmox"
-    size         = "32G"
+    id      = 0
+    storage = "proxmox"
+    size    = "32G"
     }, {
-    id           = 1
-    storage      = "proxmox"
-    size         = "200G"
+    id      = 1
+    storage = "proxmox"
+    size    = "200G"
   }]
 }
 
@@ -328,6 +332,8 @@ module "worker3" {
   cores       = 4
   memory      = 12288
   balloon     = 1024
+  onboot      = false
+
   networks = [{
     id      = 0
     ip      = "192.168.130.103"
@@ -400,6 +406,7 @@ module "poc-rancher" {
   hypervisor  = "uffizi"
   sockets     = "1"
   cores       = "2"
+  onboot      = false
 
   memory  = "8192"
   balloon = "8192"
@@ -426,6 +433,7 @@ module "poc-rancher-sw0" {
   hypervisor  = "uffizi"
   sockets     = "1"
   cores       = "4"
+  onboot      = false
 
   memory  = "4096"
   balloon = "1024"
@@ -457,6 +465,7 @@ module "poc-rancher-sw1" {
   hypervisor  = "uffizi"
   sockets     = "1"
   cores       = "4"
+  onboot      = false
 
   memory  = "4096"
   balloon = "1024"

@@ -23,7 +23,7 @@ resource "proxmox_vm_qemu" "node" {
   memory  = var.memory
 
   # boot machine when hypervirsor starts
-  onboot = true
+  onboot = var.onboot
 
   cpu = var.cpu
   args = var.args
