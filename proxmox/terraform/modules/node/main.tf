@@ -4,12 +4,12 @@ resource "proxmox_vm_qemu" "node" {
   vmid = var.vmid
 
   balloon = var.balloon
-  full_clone = false
   # hypervisor onto which make the vm
   target_node = var.hypervisor
 
   # See init-template.md to see the template vm bootstrap
   clone = var.template
+  full_clone = var.full_clone
 
   boot = "c"
 
@@ -24,6 +24,9 @@ resource "proxmox_vm_qemu" "node" {
 
   # boot machine when hypervirsor starts
   onboot = true
+
+  cpu = var.cpu
+  args = var.args
 
   #### cloud-init setup
   os_type = "cloud-init"
@@ -55,12 +58,9 @@ resource "proxmox_vm_qemu" "node" {
     for_each = var.storages
 
     content {
-      id           = disk.value["id"]
       storage      = disk.value["storage"]
       size         = disk.value["size"]
       type         = "virtio"
-      # storage_type: https://pve.proxmox.com/wiki/Storage
-      storage_type = lookup(disk.value, "storage_type", "cephfs")
     }
   }
 
@@ -68,7 +68,6 @@ resource "proxmox_vm_qemu" "node" {
     for_each = var.networks
 
     content {
-      id      = lookup(network.value, "id", 0)
       macaddr = lookup(network.value, "macaddr", "")
       bridge  = lookup(network.value, "bridge", "vmbr443")
       model   = "virtio"

@@ -127,7 +127,7 @@ module "worker18" {
   vmid        = 141
   cores       = "5"
   sockets     = "2"
-  memory      = "32768"
+  memory      = "49152"
   balloon     = 1024
   networks = [{
     id      = 0

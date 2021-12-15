@@ -29,8 +29,11 @@ module "scheduler0" {
   hostname    = "scheduler0"
   description = "Scheduler api services"
   hypervisor  = "beaubourg"
-  cores       = "4"
-  memory      = "8192"
+  # to match the real vm configuration in proxmox
+  # to remove
+  args        = "-device virtio-rng-pci"
+  cores       = 4
+  memory      = 8192
   balloon     = 1024
   networks = [{
     id      = 0
@@ -56,6 +59,9 @@ module "worker0" {
   cores       = "4"
   memory      = "12288"
   balloon     = 1024
+  # to match the real vm configuration in proxmox
+  # to remove
+  args        = "-device virtio-rng-pci"
   networks = [{
     id      = 0
     ip      = "192.168.130.100"
@@ -80,6 +86,9 @@ module "worker1" {
   cores       = "4"
   memory      = "12288"
   balloon     = 1024
+  # to match the real vm configuration in proxmox
+  # to remove
+  args        = "-device virtio-rng-pci"
   networks = [{
     id      = 0
     ip      = "192.168.130.101"
@@ -100,9 +109,9 @@ module "worker2" {
   vmid        = 112
   hostname    = "worker2"
   description = "Loader/lister service node"
-  hypervisor = "branly"
-  cores       = "4"
-  memory      = "12288"
+  hypervisor  = "branly"
+  cores       = 4
+  memory      = 12288
   balloon     = 1024
   networks = [{
     id      = 0
@@ -125,9 +134,12 @@ module "webapp" {
   hostname    = "webapp"
   description = "Archive/Webapp service node"
   hypervisor  = "branly"
-  cores       = "4"
-  memory      = "16384"
+  cores       = 4
+  memory      = 16384
   balloon     = 1024
+  # to match the real vm configuration in proxmox
+  # to remove
+  args        = "-device virtio-rng-pci"
   networks = [{
     id      = 0
     ip      = "192.168.130.30"
@@ -152,6 +164,9 @@ module "deposit" {
   cores       = "4"
   memory      = "8192"
   balloon     = 1024
+  # to match the real vm configuration in proxmox
+  # to remove
+  args        = "-device virtio-rng-pci"
   networks = [{
     id      = 0
     ip      = "192.168.130.31"
@@ -176,6 +191,9 @@ module "vault" {
   cores       = "4"
   memory      = "8192"
   balloon     = 1024
+  # to match the real vm configuration in proxmox
+  # to remove
+  args        = "-device virtio-rng-pci"
   networks = [{
     id      = 0
     ip      = "192.168.130.60"
@@ -191,15 +209,15 @@ output "vault_summary" {
 
 
 module "rp0" {
-  source = "../modules/node"
-  config = local.config
+  source     = "../modules/node"
+  config     = local.config
   hypervisor = "branly"
 
   vmid        = 129
   hostname    = "rp0"
   description = "Node to host the reverse proxy"
-  cores       = "2"
-  memory      = "2048"
+  cores       = 2
+  memory      = 2048
   balloon     = 1024
   networks = [{
     id      = 0
@@ -218,8 +236,8 @@ output "rp0_summary" {
 
 
 module "search-esnode0" {
-  source = "../modules/node"
-  config = local.config
+  source     = "../modules/node"
+  config     = local.config
   hypervisor = "branly"
 
   vmid        = 130
@@ -239,12 +257,10 @@ module "search-esnode0" {
     id           = 0
     storage      = "proxmox"
     size         = "32G"
-    storage_type = "cephfs"
-  }, {
+    }, {
     id           = 1
     storage      = "proxmox"
     size         = "200G"
-    storage_type = "cephfs"
   }]
 }
 
@@ -253,15 +269,15 @@ output "search-esnode0_summary" {
 }
 
 module "search0" {
-  source = "../modules/node"
-  config = local.config
+  source     = "../modules/node"
+  config     = local.config
   hypervisor = "branly"
 
   vmid        = 131
   hostname    = "search0"
   description = "Node to host the swh-search rpc backend service"
-  cores       = "2"
-  memory      = "4096"
+  cores       = 2
+  memory      = 4096
   balloon     = 1024
   networks = [{
     id      = 0
@@ -279,8 +295,8 @@ output "search0_summary" {
 
 
 module "objstorage0" {
-  source = "../modules/node"
-  config = local.config
+  source     = "../modules/node"
+  config     = local.config
   hypervisor = "pompidou"
 
   vmid        = 102
@@ -303,14 +319,14 @@ output "objstorage0_summary" {
 }
 
 module "worker3" {
-  source = "../modules/node"
-  config = local.config
+  source      = "../modules/node"
+  config      = local.config
   vmid        = 137
   hostname    = "worker3"
   description = "Indexer worker"
-  hypervisor = "pompidou"
-  cores       = "4"
-  memory      = "12288"
+  hypervisor  = "pompidou"
+  cores       = 4
+  memory      = 12288
   balloon     = 1024
   networks = [{
     id      = 0
@@ -326,8 +342,8 @@ output "worker3_summary" {
 }
 
 module "counters0" {
-  source = "../modules/node"
-  config = local.config
+  source      = "../modules/node"
+  config      = local.config
   vmid        = 138
   hostname    = "counters0"
   description = "Counters server"
@@ -349,8 +365,8 @@ output "counters0_summary" {
 }
 
 module "mirror-test" {
-  source = "../modules/node"
-  config = local.config
+  source      = "../modules/node"
+  config      = local.config
   vmid        = 132
   hostname    = "mirror-test"
   description = "Sandbox VM to test the mirror environment"
@@ -358,8 +374,8 @@ module "mirror-test" {
   sockets     = "2"
   cores       = "4"
 
-  memory      = "65536"
-  balloon     = "20480"
+  memory  = "65536"
+  balloon = "20480"
 
   networks = [{
     id      = 0
@@ -375,9 +391,9 @@ output "mirror-tests_summary" {
 }
 
 module "poc-rancher" {
-  source = "../modules/node"
-  template = "debian-bullseye-11.0-2021-09-09"  # otherwise to use more recent template
-  config = local.config
+  source      = "../modules/node"
+  template    = "debian-bullseye-11.0-2021-09-09" # otherwise to use more recent template
+  config      = local.config
   vmid        = 114
   hostname    = "poc-rancher"
   description = "Sandbox VM to poc the rancher/kubernetes"
@@ -385,8 +401,8 @@ module "poc-rancher" {
   sockets     = "1"
   cores       = "2"
 
-  memory      = "8192"
-  balloon     = "8192"
+  memory  = "8192"
+  balloon = "8192"
 
   networks = [{
     id      = 0
@@ -402,9 +418,8 @@ output "poc-rancher_summary" {
 }
 
 module "poc-rancher-sw0" {
-  source = "../modules/node"
-  template = "debian-bullseye-11.0-2021-09-09"  # otherwise to use more recent template
-  config = local.config
+  source      = "../modules/node"
+  config      = local.config
   vmid        = 135
   hostname    = "poc-rancher-sw0"
   description = "Sandbox staging-worker VM to run containers"
@@ -412,8 +427,8 @@ module "poc-rancher-sw0" {
   sockets     = "1"
   cores       = "4"
 
-  memory      = "4096"
-  balloon     = "1024"
+  memory  = "4096"
+  balloon = "1024"
 
   networks = [{
     id      = 0
@@ -422,6 +437,11 @@ module "poc-rancher-sw0" {
     macaddr = "5A:32:B6:FC:8D:F4"
     bridge  = "vmbr443"
   }]
+
+  storages = [{
+    storage = "local"
+    size    = "32G"
+  }]
 }
 
 output "poc-rancher-sw0_summary" {
@@ -429,9 +449,8 @@ output "poc-rancher-sw0_summary" {
 }
 
 module "poc-rancher-sw1" {
-  source = "../modules/node"
-  template = "debian-bullseye-11.0-2021-09-09"  # otherwise to use more recent template
-  config = local.config
+  source      = "../modules/node"
+  config      = local.config
   vmid        = 134
   hostname    = "poc-rancher-sw1"
   description = "Sandbox staging-worker VM to run containers"
@@ -439,8 +458,8 @@ module "poc-rancher-sw1" {
   sockets     = "1"
   cores       = "4"
 
-  memory      = "4096"
-  balloon     = "1024"
+  memory  = "4096"
+  balloon = "1024"
 
   networks = [{
     id      = 0
@@ -448,6 +467,11 @@ module "poc-rancher-sw1" {
     gateway = local.config["gateway_ip"]
     macaddr = "06:32:6D:D8:9A:0B"
     bridge  = "vmbr443"
+  }]
+
+  storages = [{
+    storage = "local"
+    size    = "32G"
   }]
 }
 

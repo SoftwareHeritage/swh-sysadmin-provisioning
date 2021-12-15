@@ -27,20 +27,20 @@ variable "template" {
 
 variable "sockets" {
   description = "Number of sockets"
-  type        = string
-  default     = "1"
+  type        = number
+  default     = 1
 }
 
 variable "cores" {
   description = "Number of cores"
-  type        = string
-  default     = "1"
+  type        = number
+  default     = 1
 }
 
 variable "memory" {
   description = "Memory in Mb"
-  type        = string
-  default     = "1024"
+  type        = number
+  default     = 1024
 }
 
 variable "networks" {
@@ -69,23 +69,19 @@ variable "balloon" {
 }
 
 variable "numa" {
-  type = bool
+  type    = bool
   default = false
 }
 
 variable "storages" {
-  description = "Default disks configuration (id, storage, size, storage_type)"
+  description = "Default disks configuration (storage, size)"
   type = list(object({
-    id           = number
-    storage      = string
-    size         = string
-    storage_type = string
+    storage = string
+    size    = string
   }))
   default = [{
-    id           = 0
-    storage      = "proxmox"
-    size         = "32G"
-    storage_type = "cephfs"
+    storage = "proxmox"
+    size    = "32G"
   }]
 }
 
@@ -94,15 +90,32 @@ variable "config" {
   type        = map(string)
 }
 
+variable "args" {
+  description = "args to pass to the qemu command. should not be used in most cases"
+  type        = string
+  default     = ""
+}
 
 variable "pre_provision_steps" {
-    description = "List of sequential provisioning steps to apply"
-    type        = list(string)
-    default     = []
+  description = "List of sequential provisioning steps to apply"
+  type        = list(string)
+  default     = []
 }
 
 variable "cicustom" {
-    description = "custom ci parameter"
-    type        = string
-    default     = ""
+  description = "custom ci parameter"
+  type        = string
+  default     = ""
+}
+
+variable "full_clone" {
+  description = "Full clone the template"
+  type        = bool
+  default     = false
+}
+
+variable "cpu" {
+  description = "CPU type possible values (not exhaustive): kvm64, host, ... The default is kvm64 and must be specified to avoid issues on refresh"
+  type        = string
+  default     = "host"
 }
