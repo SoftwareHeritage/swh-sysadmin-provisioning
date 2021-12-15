@@ -26,7 +26,6 @@ module "bardo" {
   memory      = "8192"
   balloon     = 1024
   full_clone  = true
-  cpu         = "kvm64"
   networks = [{
     id      = 0
     ip      = "192.168.50.10"
@@ -49,7 +48,6 @@ module "rp1" {
   memory      = "4096"
   balloon     = 1024
   full_clone  = true
-  cpu         = "kvm64"
   networks = [{
     id      = 0
     ip      = "192.168.50.20"

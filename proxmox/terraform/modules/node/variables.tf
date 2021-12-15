@@ -117,7 +117,7 @@ variable "full_clone" {
 variable "cpu" {
   description = "CPU type possible values (not exhaustive): kvm64, host, ... The default is kvm64 and must be specified to avoid issues on refresh"
   type        = string
-  default     = "host"
+  default     = "kvm64"
 }
 
 variable "onboot" {
