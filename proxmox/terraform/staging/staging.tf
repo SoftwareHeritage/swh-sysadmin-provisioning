@@ -311,9 +311,9 @@ module "objstorage0" {
   vmid        = 102
   hostname    = "objstorage0"
   description = "Node to host a read-only objstorage for mirrors"
-  cores       = "2"
-  memory      = "8192"
-  balloon     = 1024
+  cores       = 2
+  memory      = 12288
+  balloon     = 3072
   networks = [{
     id      = 0
     ip      = "192.168.130.110"
