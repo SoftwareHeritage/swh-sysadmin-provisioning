@@ -56,3 +56,41 @@ module "rp1" {
     bridge  = local.config["vlan"]
    }]
 }
+
+
+module "dali" {
+  source = "../modules/node"
+  config = local.config
+
+  template    = "debian-bullseye-11.2-2022-01-03"
+  hostname    = "dali"
+  description = "admin databases host"
+  hypervisor  = "branly"
+  vmid        = 144
+  cores       = "4"
+  memory      = "16384"
+  balloon     = 8192
+  networks = [{
+    id      = 0
+    ip      = "192.168.50.50"
+    gateway = local.config["gateway_ip"]
+    macaddr = "C2:7C:85:D0:E8:7C"
+    bridge  = local.config["vlan"]
+   }]
+  storages = [
+    {
+      id      = 0
+      storage = "proxmox"
+      size    = "32G"
+    },
+    {
+      id      = 1
+      storage = "proxmox"
+      size    = "200G"
+    }
+  ]
+}
+
+output "dali_summary" {
+  value = module.dali.summary
+}
