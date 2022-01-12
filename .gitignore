@@ -4,3 +4,4 @@ plan
 plan.*
 env.sh
 packer_cache
+.terraform.lock.hcl
