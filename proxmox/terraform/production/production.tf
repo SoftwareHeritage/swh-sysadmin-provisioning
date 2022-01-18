@@ -23,6 +23,7 @@ module "kelvingrove" {
   vmid        = 123
   cores       = "4"
   memory      = "8192"
+  cpu         = "host"
   numa        = true
   balloon     = 0
   networks = [{
