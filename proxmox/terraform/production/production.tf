@@ -20,7 +20,6 @@ module "kelvingrove" {
   hostname    = "kelvingrove"
   description = "Keycloak server"
   hypervisor  = "hypervisor3"
-  vmid        = 123
   cores       = "4"
   memory      = "8192"
   cpu         = "host"
@@ -42,7 +41,6 @@ module "webapp1" {
   hostname    = "webapp1"
   description = "Webapp for swh-search tests"
   hypervisor  = "branly"
-  vmid        = 125
   cores       = "2"
   memory      = "8192"
   balloon     = 2048
@@ -62,7 +60,6 @@ module "search1" {
   hostname    = "search1"
   description = "swh-search node"
   hypervisor  = "branly"
-  vmid        = 136
   cores       = "4"
   memory      = "6144"
   balloon     = 1024
@@ -82,7 +79,6 @@ module "counters1" {
   hostname    = "counters1"
   description = "swh-counters node"
   hypervisor  = "branly"
-  vmid        = 139
   cores       = "4"
   memory      = "2048"
   balloon     = 1024
@@ -103,7 +99,6 @@ module "worker17" {
   domainname  = "softwareheritage.org"
   description = "swh-worker node (temporary)"
   hypervisor  = "uffizi"
-  vmid        = 143
   cores       = "10"
   sockets     = "2"
   memory      = "65536"
@@ -125,7 +120,6 @@ module "worker18" {
   domainname  = "softwareheritage.org"
   description = "swh-worker node (temporary)"
   hypervisor  = "uffizi"
-  vmid        = 141
   cores       = "5"
   sockets     = "2"
   memory      = "49152"

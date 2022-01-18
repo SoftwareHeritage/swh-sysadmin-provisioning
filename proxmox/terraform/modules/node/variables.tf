@@ -59,7 +59,7 @@ variable "networks" {
 variable "vmid" {
   description = "virtual machine id"
   type        = number
-  default     = 0
+  default     = null
 }
 
 variable "balloon" {
