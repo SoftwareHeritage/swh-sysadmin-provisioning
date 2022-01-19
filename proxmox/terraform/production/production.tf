@@ -136,3 +136,25 @@ module "worker18" {
 output "worker18_summary" {
   value = module.worker18.summary
 }
+
+
+module "provenance-client01" {
+  source = "../modules/node"
+  config = local.config
+
+  hostname    = "provenance-client01"
+  description = "Provenance client"
+  template    = "debian-bullseye-11.2-2022-01-03"
+  hypervisor  = "uffizi"
+  cores       = "4"
+  sockets     = "4"
+  memory      = "131072"
+  balloon     = 32768
+  networks = [{
+    id      = 0
+    ip      = "192.168.100.111"
+    gateway = local.config["gateway_ip"]
+    macaddr = null
+    bridge  = "vmbr0"
+  }]
+}
