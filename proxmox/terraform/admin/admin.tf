@@ -95,7 +95,6 @@ output "dali_summary" {
   value = module.dali.summary
 }
 
-
 module "grafana0" {
   source = "../modules/node"
   config = local.config
@@ -119,4 +118,36 @@ module "grafana0" {
 
 output "grafana0_summary" {
   value = module.grafana0.summary
+}
+
+module "bojimans" {
+  source = "../modules/node"
+  config = local.config
+
+  # template    = "debian-bullseye-11.2-2022-01-03"
+  hostname    = "bojimans"
+  description = "Inventory server (netbox)"
+  hypervisor  = "branly"
+  cpu         = "kvm64"
+  vmid        = 127
+  sockets     = "2"
+  cores       = "1"
+  memory      = "4096"
+  balloon     = 2048
+  networks = [{
+    id      = 0
+    ip      = "192.168.50.60"
+    gateway = "192.168.50.1"
+    macaddr = "EE:ED:A6:A0:78:9F"
+    bridge  = local.config["vlan"]
+  }]
+  storages = [{
+    id      = 0
+    storage = "proxmox"
+    size    = "20G"
+  }]
+}
+
+output "bojimans_summary" {
+  value = module.bojimans.summary
 }
