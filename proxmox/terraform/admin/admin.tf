@@ -44,8 +44,8 @@ module "rp1" {
   description = "reverse-proxy"
   hypervisor  = "branly"
   vmid        = 115
-  cores       = "2"
-  memory      = "4096"
+  cores       = 2
+  memory      = 4096
   balloon     = 1024
   full_clone  = true
   networks = [{
@@ -67,8 +67,8 @@ module "dali" {
   description = "admin databases host"
   hypervisor  = "branly"
   vmid        = 144
-  cores       = "4"
-  memory      = "16384"
+  cores       = 4
+  memory      = 16384
   balloon     = 8192
   networks = [{
     id      = 0
@@ -124,15 +124,15 @@ module "bojimans" {
   source = "../modules/node"
   config = local.config
 
-  # template    = "debian-bullseye-11.2-2022-01-03"
+  template    = "debian-bullseye-11.2-2022-01-03"
   hostname    = "bojimans"
   description = "Inventory server (netbox)"
   hypervisor  = "branly"
   cpu         = "kvm64"
   vmid        = 127
-  sockets     = "2"
-  cores       = "1"
-  memory      = "4096"
+  sockets     = 2
+  cores       = 1
+  memory      = 4096
   balloon     = 2048
   networks = [{
     id      = 0
