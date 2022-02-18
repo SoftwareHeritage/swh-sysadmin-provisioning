@@ -11,10 +11,9 @@ resource "azurerm_resource_group" "euwest-vault" {
 }
 
 resource "azurerm_network_interface" "vangogh-interface" {
-  name                      = "vangogh-interface"
-  location                  = "westeurope"
-  resource_group_name       = "euwest-vault"
-  network_security_group_id = data.azurerm_network_security_group.worker-nsg.id
+  name                = "vangogh-interface"
+  location            = "westeurope"
+  resource_group_name = "euwest-vault"
 
   ip_configuration {
     name                          = "vaultNicConfiguration"
@@ -22,6 +21,11 @@ resource "azurerm_network_interface" "vangogh-interface" {
     public_ip_address_id          = ""
     private_ip_address_allocation = "Dynamic"
   }
+}
+
+resource "azurerm_network_interface_security_group_association" "vangogh-interface-sga" {
+  network_interface_id      = azurerm_network_interface.vangogh-interface.id
+  network_security_group_id = data.azurerm_network_security_group.worker-nsg.id
 }
 
 # Blobstorage as defined in task

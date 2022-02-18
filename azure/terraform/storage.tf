@@ -10,10 +10,10 @@ variable "storage_disk_size" {
 
 locals {
   storage_servers = {
-    for i in range(var.storage_servers):
-      format("storage%02d", i + 1) => {
-        datadisks = {}
-      }
+    for i in range(var.storage_servers) :
+    format("storage%02d", i + 1) => {
+      datadisks = {}
+    }
   }
 }
 
@@ -21,10 +21,9 @@ locals {
 resource "azurerm_network_interface" "storage-interface" {
   for_each = local.storage_servers
 
-  name                      = format("%s-interface", each.key)
-  location                  = "westeurope"
-  resource_group_name       = "euwest-servers"
-  network_security_group_id = data.azurerm_network_security_group.worker-nsg.id
+  name                = format("%s-interface", each.key)
+  location            = "westeurope"
+  resource_group_name = "euwest-servers"
 
   ip_configuration {
     name                          = "storageNicConfiguration"
@@ -32,6 +31,13 @@ resource "azurerm_network_interface" "storage-interface" {
     public_ip_address_id          = ""
     private_ip_address_allocation = "Dynamic"
   }
+}
+
+resource "azurerm_network_interface_security_group_association" "storage-interface-sga" {
+  for_each = local.storage_servers
+
+  network_interface_id      = azurerm_network_interface.storage-interface[each.key].id
+  network_security_group_id = data.azurerm_network_security_group.worker-nsg.id
 }
 
 resource "azurerm_virtual_machine" "storage-server" {
@@ -94,12 +100,12 @@ resource "azurerm_virtual_machine" "storage-server" {
   }
 
   provisioner "file" {
-    content     = templatefile("templates/firstboot.sh.tpl", {
-      hostname   = each.key
-      fqdn       = format("%s.euwest.azure.internal.softwareheritage.org", each.key),
-      ip_address = azurerm_network_interface.storage-interface[each.key].private_ip_address,
+    content = templatefile("templates/firstboot.sh.tpl", {
+      hostname        = each.key
+      fqdn            = format("%s.euwest.azure.internal.softwareheritage.org", each.key),
+      ip_address      = azurerm_network_interface.storage-interface[each.key].private_ip_address,
       facter_location = "azure_euwest"
-      disk_setup = {}
+      disk_setup      = {}
     })
     destination = var.firstboot_script
 
@@ -115,7 +121,7 @@ resource "azurerm_virtual_machine" "storage-server" {
       "userdel -f ${var.user_admin}",
       "chmod +x ${var.firstboot_script}",
       "cat ${var.firstboot_script}",
-      "${var.firstboot_script}",
+      var.firstboot_script,
     ]
     connection {
       type = "ssh"

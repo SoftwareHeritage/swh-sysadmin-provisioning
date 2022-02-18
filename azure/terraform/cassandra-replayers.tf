@@ -4,7 +4,7 @@ variable "cassandra_replay_servers" {
 
 resource "azurerm_resource_group" "euwest-cassandra-replay" {
   # Disable this
-  count    = 0
+  count = 0
 
   name     = "euwest-cassandra-replay"
   location = "westeurope"
@@ -16,22 +16,19 @@ resource "azurerm_resource_group" "euwest-cassandra-replay" {
 
 locals {
   cassandra_replay_servers = {
-    for i in range(var.cassandra_replay_servers):
-      format("cassandra-replay%02d", i + 1) => {
-        datadisks = {}
-      }
+    for i in range(var.cassandra_replay_servers) :
+    format("cassandra-replay%02d", i + 1) => {
+      datadisks = {}
+    }
   }
 }
 
-
-
 resource "azurerm_network_interface" "cassandra-replayer-interface" {
-  for_each                      = local.cassandra_replay_servers
+  for_each = local.cassandra_replay_servers
 
-  name                          = format("%s-interface", each.key)
-  location                      = "westeurope"
-  resource_group_name           = azurerm_resource_group.euwest-cassandra-replay[0].name
-  network_security_group_id     = data.azurerm_network_security_group.worker-nsg.id
+  name                = format("%s-interface", each.key)
+  location            = "westeurope"
+  resource_group_name = azurerm_resource_group.euwest-cassandra-replay[0].name
 
   enable_accelerated_networking = true
 
@@ -42,14 +39,20 @@ resource "azurerm_network_interface" "cassandra-replayer-interface" {
     private_ip_address_allocation = "Dynamic"
   }
 
-  depends_on                = [azurerm_resource_group.euwest-cassandra-replay]
+  depends_on = [azurerm_resource_group.euwest-cassandra-replay]
 }
 
+resource "azurerm_network_interface_security_group_association" "cassandra-replayer-interface-sga" {
+  for_each = local.cassandra_replay_servers
+
+  network_interface_id      = azurerm_network_interface.cassandra-replayer-interface[each.key].id
+  network_security_group_id = data.azurerm_network_security_group.worker-nsg.id
+}
 
 resource "azurerm_virtual_machine" "cassandra-replay-server" {
-  for_each              = local.cassandra_replay_servers
+  for_each = local.cassandra_replay_servers
 
-  depends_on            = [azurerm_resource_group.euwest-cassandra-replay]
+  depends_on = [azurerm_resource_group.euwest-cassandra-replay]
 
   name                  = each.key
   location              = "westeurope"
@@ -107,12 +110,12 @@ resource "azurerm_virtual_machine" "cassandra-replay-server" {
   }
 
   provisioner "file" {
-    content     = templatefile("templates/firstboot.sh.tpl", {
-      hostname   = self.name
-      fqdn       = format("%s.euwest.azure.internal.softwareheritage.org", self.name)
-      ip_address = azurerm_network_interface.cassandra-replayer-interface[self.name].private_ip_address
+    content = templatefile("templates/firstboot.sh.tpl", {
+      hostname        = self.name
+      fqdn            = format("%s.euwest.azure.internal.softwareheritage.org", self.name)
+      ip_address      = azurerm_network_interface.cassandra-replayer-interface[self.name].private_ip_address
       facter_location = "azure_euwest"
-      disk_setup = {}
+      disk_setup      = {}
     })
     destination = var.firstboot_script
 
@@ -128,7 +131,7 @@ resource "azurerm_virtual_machine" "cassandra-replay-server" {
       "userdel -f ${var.user_admin}",
       "chmod +x ${var.firstboot_script}",
       "cat ${var.firstboot_script}",
-      "${var.firstboot_script}",
+      var.firstboot_script,
     ]
     connection {
       type = "ssh"

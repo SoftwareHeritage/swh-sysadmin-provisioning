@@ -4,18 +4,25 @@
 # - resource: Define resource and create/update
 
 terraform {
+  required_version = ">= 0.13"
   backend "azurerm" {
     resource_group_name  = "euwest-admin"
     storage_account_name = "swhterraform"
     container_name       = "tfstate"
     key                  = "prod.azure.terraform.tfstate"
   }
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "=2.97.0"
+    }
+  }
 }
 
 # Configure the Microsoft Azure Provider
 # Empty if using the `az login` tool
 provider "azurerm" {
-  version = "=1.43.0"
+  features {}
 }
 
 # Reuse the network security group as defined currently
@@ -37,7 +44,7 @@ data "azurerm_resource_group" "euwest-servers" {
 }
 
 variable "firstboot_script" {
-  type = string
+  type    = string
   default = "/root/firstboot.sh"
 }
 

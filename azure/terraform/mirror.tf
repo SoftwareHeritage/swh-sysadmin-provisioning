@@ -20,7 +20,7 @@ resource "azurerm_resource_group" "euwest-mirror-test" {
   location = "westeurope"
 
   tags = {
-      environment = "SWH Mirror"
+    environment = "SWH Mirror"
   }
 }
 
@@ -35,10 +35,10 @@ resource "azurerm_network_security_group" "mirror-nsg" {
 
 locals {
   mirror_replay_servers = {
-    for i in range(var.mirror_replay_servers):
-      format("mirror-replay%02d", i + 1) => {
-        datadisks = {}
-      }
+    for i in range(var.mirror_replay_servers) :
+    format("mirror-replay%02d", i + 1) => {
+      datadisks = {}
+    }
   }
 }
 
@@ -52,7 +52,6 @@ resource "azurerm_network_interface" "mirror-master-interface" {
   name                = "mirror-master-interface"
   location            = "westeurope"
   resource_group_name = "euwest-mirror-test"
-  network_security_group_id = azurerm_network_security_group.mirror-nsg[0].id
 
   ip_configuration {
     name                          = "mirrorMasterNicConfiguration"
@@ -61,6 +60,13 @@ resource "azurerm_network_interface" "mirror-master-interface" {
     private_ip_address_allocation = "Dynamic"
   }
 }
+
+resource "azurerm_network_interface_security_group_association" "mirror-master-interface-sga" {
+  count                     = 0
+  network_interface_id      = azurerm_network_interface.mirror-master-interface[0].id
+  network_security_group_id = azurerm_network_security_group.mirror-nsg[0].id
+}
+
 #resource "azurerm_managed_disk" "mirror-master-osdisk" {
 #  name                  = "mirror-master-osdisk"
 #  create_option         = "FromImage"
@@ -68,7 +74,7 @@ resource "azurerm_network_interface" "mirror-master-interface" {
 #  resource_group_name   = "euwest-mirror-test"
 #  storage_account_type  = "Premium_LRS"
 #  image_reference_id    = data.azurerm_platform_image.debian10.id
-  #image_reference_id    = "/Subscriptions/49b7f681-8efc-4689-8524-870fc0c1db09/Providers/Microsoft.Compute/Locations/westeurope/Publishers/Debian/ArtifactTypes/VMImage/Offers/debian-10/Skus/10"
+#image_reference_id    = "/Subscriptions/49b7f681-8efc-4689-8524-870fc0c1db09/Providers/Microsoft.Compute/Locations/westeurope/Publishers/Debian/ArtifactTypes/VMImage/Offers/debian-10/Skus/10"
 #}
 resource "azurerm_virtual_machine" "mirror-master" {
   # disable this
@@ -83,13 +89,13 @@ resource "azurerm_virtual_machine" "mirror-master" {
 
   delete_os_disk_on_termination = true
 
-#  storage_os_disk {
-#	create_option      = "attach"
-#    name               = "mirror-master-osdisk"
-#    caching            = "ReadWrite"
-#	managed_disk_id    = azurerm_managed_disk.mirror-master-osdisk.id
-#	os_type            = "Linux"
-#  }
+  #  storage_os_disk {
+  #	create_option      = "attach"
+  #    name               = "mirror-master-osdisk"
+  #    caching            = "ReadWrite"
+  #	managed_disk_id    = azurerm_managed_disk.mirror-master-osdisk.id
+  #	os_type            = "Linux"
+  #  }
 
   storage_os_disk {
     name              = "mirror-master-osdisk"
@@ -113,7 +119,7 @@ resource "azurerm_virtual_machine" "mirror-master" {
   os_profile_linux_config {
     disable_password_authentication = true
     ssh_keys {
-      path = "/home/${var.user_admin}/.ssh/authorized_keys"
+      path     = "/home/${var.user_admin}/.ssh/authorized_keys"
       key_data = var.ssh_key_data_douardda
     }
   }
@@ -134,7 +140,7 @@ resource "azurerm_virtual_machine" "mirror-master" {
   }
 
   tags = {
-      environment = "SWH Mirror"
+    environment = "SWH Mirror"
   }
 }
 
@@ -146,7 +152,7 @@ resource "azurerm_network_interface" "mirror-db-interface" {
   name                = "mirror-db-interface"
   location            = "westeurope"
   resource_group_name = "euwest-mirror-test"
-  network_security_group_id = azurerm_network_security_group.mirror-nsg[0].id
+  # network_security_group_id = azurerm_network_security_group.mirror-nsg[0].id
 
   ip_configuration {
     name                          = "mirrorDbNicConfiguration"
@@ -155,6 +161,15 @@ resource "azurerm_network_interface" "mirror-db-interface" {
     private_ip_address_allocation = "Dynamic"
   }
 }
+
+resource "azurerm_network_interface_security_group_association" "mirror-db-interface-sga" {
+  count = 0
+
+  network_interface_id      = azurerm_network_interface.mirror-db-interface[0].id
+  network_security_group_id = azurerm_network_security_group.mirror-nsg[0].id
+}
+
+
 resource "azurerm_managed_disk" "mirror-db-storage" {
   # disable this
   count = 0
@@ -181,11 +196,11 @@ resource "azurerm_virtual_machine" "mirror-db" {
   # disable this
   count = 0
 
-  name                  = "mirror-db"
-  location              = "westeurope"
-  resource_group_name   = "euwest-mirror-test"
-  network_interface_ids = [azurerm_network_interface.mirror-db-interface[count.index].id]
-  vm_size               = "Standard_F8s_v2"
+  name                          = "mirror-db"
+  location                      = "westeurope"
+  resource_group_name           = "euwest-mirror-test"
+  network_interface_ids         = [azurerm_network_interface.mirror-db-interface[count.index].id]
+  vm_size                       = "Standard_F8s_v2"
   delete_os_disk_on_termination = true
 
   storage_os_disk {
@@ -210,7 +225,7 @@ resource "azurerm_virtual_machine" "mirror-db" {
   os_profile_linux_config {
     disable_password_authentication = true
     ssh_keys {
-      path = "/home/${var.user_admin}/.ssh/authorized_keys"
+      path     = "/home/${var.user_admin}/.ssh/authorized_keys"
       key_data = var.ssh_key_data_douardda
     }
   }
@@ -231,18 +246,17 @@ resource "azurerm_virtual_machine" "mirror-db" {
   }
 
   tags = {
-      environment = "SWH Mirror"
+    environment = "SWH Mirror"
   }
 }
 
 # replayer machines
 resource "azurerm_network_interface" "mirror-replayer-interface" {
-  for_each            = local.mirror_replay_servers
+  for_each = local.mirror_replay_servers
 
   name                = format("%s-interface", each.key)
   location            = "westeurope"
   resource_group_name = azurerm_resource_group.euwest-mirror-test[0].name
-  network_security_group_id = azurerm_network_security_group.mirror-nsg[0].id
   #enable_accelerated_networking = true
 
   ip_configuration {
@@ -254,9 +268,17 @@ resource "azurerm_network_interface" "mirror-replayer-interface" {
 
   depends_on = [azurerm_resource_group.euwest-mirror-test]
 }
+
+resource "azurerm_network_interface_security_group_association" "mirror-replayer-interface-sga" {
+  for_each = local.mirror_replay_servers
+
+  network_interface_id      = azurerm_network_interface.mirror-replayer-interface[each.key].id
+  network_security_group_id = azurerm_network_security_group.mirror-nsg[0].id
+}
+
 resource "azurerm_virtual_machine" "mirror-replayer" {
-  for_each             = local.mirror_replay_servers
-  name                 = each.key
+  for_each              = local.mirror_replay_servers
+  name                  = each.key
   location              = "westeurope"
   resource_group_name   = "euwest-mirror-test"
   network_interface_ids = [azurerm_network_interface.mirror-replayer-interface[each.key].id]
@@ -287,7 +309,7 @@ resource "azurerm_virtual_machine" "mirror-replayer" {
   os_profile_linux_config {
     disable_password_authentication = true
     ssh_keys {
-      path = "/home/${var.user_admin}/.ssh/authorized_keys"
+      path     = "/home/${var.user_admin}/.ssh/authorized_keys"
       key_data = var.ssh_key_data_douardda
     }
   }
@@ -308,7 +330,7 @@ resource "azurerm_virtual_machine" "mirror-replayer" {
   }
 
   tags = {
-      environment = "SWH Mirror"
+    environment = "SWH Mirror"
   }
 }
 
