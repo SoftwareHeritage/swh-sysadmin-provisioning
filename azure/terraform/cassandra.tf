@@ -1,5 +1,5 @@
 variable "cassandra_servers" {
-  default = 5
+  default = 0
 }
 
 variable "cassandra_disk_size" {
