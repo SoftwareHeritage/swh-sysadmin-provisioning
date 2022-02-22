@@ -12,7 +12,8 @@ PUPPET_MASTER=pergamon.internal.softwareheritage.org
 HOSTNAME=${hostname}
 FQDN=${fqdn}
 IP=${ip_address}
-FACTER_LOCATION=${facter_location}
+FACTER_DEPLOYMENT=${facter_deployment}
+FACTER_SUBNET=${facter_subnet}
 
 
 # Handle base system configuration
@@ -113,7 +114,9 @@ systemctl disable puppet.service
 
 # Install the location fact as that is needed by our puppet manifests
 mkdir -p /etc/facter/facts.d
-echo location=$FACTER_LOCATION > /etc/facter/facts.d/location.txt
+echo deployment=$FACTER_DEPLOYMENT > /etc/facter/facts.d/deployment.txt
+echo subnet=$FACTER_SUBNET > /etc/facter/facts.d/subnet.txt
+echo 
 
 # first time around, this will:
 # - update the node's puppet agent configuration defining the puppet master

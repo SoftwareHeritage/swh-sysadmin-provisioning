@@ -63,6 +63,11 @@ variable "ssh_key_data_olasd" {
   default = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDZ1TCpfzrvxLhEMhxjbxqPDCwY0nazIr1cyIbhGD2bUdAbZqVMdNtr7MeDnlLIKrIPJWuvltauvLNkYU0iLc1jMntdBCBM3hgXjmTyDtc8XvXseeBp5tDqccYNR/cnDUuweNcL5tfeu5kzaAg3DFi5Dsncs5hQK5KQ8CPKWcacPjEk4ir9gdFrtKG1rZmg/wi7YbfxrJYWzb171hdV13gSgyXdsG5UAFsNyxsKSztulcLKxvbmDgYbzytr38FK2udRk7WuqPbtEAW1zV4yrBXBSB/uw8EAMi+wwvLTwyUcEl4u0CTlhREljUx8LhYrsQUCrBcmoPAmlnLCD5Q9XrGH nicolasd@darboux id_rsa.inria.pub"
 }
 
+variable "ssh_key_data_vsellier" {
+  type    = string
+  default = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDL2n3ayVSz7zyG89lsdPS4EyIf29FSNX6XwFEz03xoLuHTOPoyq4z2gkuIaBuIWIPJCwhrhJJvn0KqEIJ2yIOF565zjTI/121VTjSZrwpLFBO5QQFGQB1fY4wVg8VYeVxZLeqbGQAdSAvVrpAAJdoMF0Hwv+i/dVC1SVLj3QrAMft6l5G9iz9OM3DwmoNkCPf+rxbqiiJB2ojMbzSIUfOiE5svL5+z811JOYz62ZAEmVAY22H96Ez0R5uCMQi3pdHvr16DogsXXlhA6zBg0p8sFKOLpfHDjah9pnpI+twX14//2ydw303M3W/4FcXZ1bD4kSjEBjCky6GkrM9MCW6f vsellier@swh-vs1"
+}
+
 variable "user_admin" {
   type    = string
   default = "tmpadmin"
