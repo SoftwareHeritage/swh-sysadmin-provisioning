@@ -131,7 +131,7 @@ resource "azurerm_virtual_machine" "backup-server" {
     inline = [
       "sudo mkdir -p /root/.ssh", # just in case
       # Remove the content populated by the azure provisionning
-      # blocking the conneciont as root
+      # blocking the connection as root
       "sudo rm -v /root/.ssh/authorized_keys",
       "echo ${var.ssh_key_data_ardumont} | sudo tee -a /root/.ssh/authorized_keys",
       "echo ${var.ssh_key_data_olasd} | sudo tee -a /root/.ssh/authorized_keys",
