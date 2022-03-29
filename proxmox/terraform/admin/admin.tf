@@ -151,3 +151,35 @@ module "bojimans" {
 output "bojimans_summary" {
   value = module.bojimans.summary
 }
+
+module "money" {
+  source = "../modules/node"
+  config = local.config
+
+  template    = "debian-bullseye-11.2-2022-01-03"
+  hostname    = "money"
+  description = "Azure billing reporting server"
+  hypervisor  = "branly"
+  cpu         = "kvm64"
+  vmid        = 140
+  sockets     = 2
+  cores       = 1
+  memory      = 2048
+  balloon     = 1024
+  networks = [{
+    id      = 0
+    ip      = "192.168.50.65"
+    gateway = "192.168.50.1"
+    macaddr = ""
+    bridge  = local.config["vlan"]
+  }]
+  storages = [{
+    id      = 0
+    storage = "proxmox"
+    size    = "20G"
+  }]
+}
+
+output "money_summary" {
+  value = module.money.summary
+}
