@@ -1,12 +1,12 @@
-
 resource "azurerm_kubernetes_cluster" "aks_cluster" {
   name                = var.cluster_name
   resource_group_name = data.azurerm_resource_group.aks_rg.name
   location            = data.azurerm_resource_group.aks_rg.location
   dns_prefix          = var.cluster_name
+  node_resource_group = "${var.cluster_name}-internal"
 
   default_node_pool {
-    name                = "default"
+    name = "default"
     # node_count          = 1
     vm_size             = var.node_type
     enable_auto_scaling = true
@@ -30,8 +30,9 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
   private_cluster_enabled = true
 
   network_profile {
-    network_plugin = "kubenet"
-    network_policy = "calico"
+    network_plugin    = "kubenet"
+    network_policy    = "calico"
+    load_balancer_sku = "Standard" # needed to assign a private ip address
   }
 }
 
@@ -47,4 +48,12 @@ resource "azurerm_private_endpoint" "aks_cluster_endpoint" {
     private_connection_resource_id = azurerm_kubernetes_cluster.aks_cluster.id
     subresource_names              = ["management"]
   }
+}
+
+resource "azurerm_public_ip" "aks_cluster_public_ip" {
+  name                = "${var.cluster_name}_ip"
+  resource_group_name = azurerm_kubernetes_cluster.aks_cluster.node_resource_group
+  location            = data.azurerm_resource_group.aks_rg.location
+  allocation_method   = "Static"
+  sku                 = "Standard"
 }

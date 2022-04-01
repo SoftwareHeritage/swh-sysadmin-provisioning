@@ -3,6 +3,7 @@ output "summary" {
 
 name: ${azurerm_kubernetes_cluster.aks_cluster.name}
 internal_ip: ${azurerm_private_endpoint.aks_cluster_endpoint.private_service_connection.0.private_ip_address}
+public_ip: ${azurerm_public_ip.aks_cluster_public_ip.ip_address}
 
 Execute the following command to add the credentials in your .kube/config:
 az aks get-credentials --resource-group ${data.azurerm_resource_group.aks_rg.name} --name ${azurerm_kubernetes_cluster.aks_cluster.name} 
