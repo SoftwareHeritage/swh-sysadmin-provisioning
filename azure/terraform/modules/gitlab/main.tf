@@ -44,7 +44,8 @@ resource "azurerm_storage_account" "gitlab_storage" {
 }
 
 resource "azurerm_storage_container" "gitlab_storage_container" {
-  name                  = "gitlab-content"
+  count                 = length(var.blob_storage_containers)
+  name                  = var.blob_storage_containers[count.index]
   storage_account_name  = azurerm_storage_account.gitlab_storage.name
   container_access_type = "private"
 }
