@@ -492,3 +492,40 @@ module "poc-rancher-sw1" {
 output "poc-rancher-sw1_summary" {
   value = module.poc-rancher-sw1.summary
 }
+
+module "maven-exporter0" {
+  source      = "../modules/node"
+  template    = "debian-bullseye-11.0-2021-09-09" # otherwise to use more recent template
+  vmid        = 122
+  config      = local.config
+  hostname    = "maven-exporter0"
+  description = "Maven index exporter to run containers and expose export.fld files"
+  hypervisor  = "pompidou"
+  sockets     = "1"
+  cores       = "4"
+  onboot      = true
+
+  memory  = "4096"
+  balloon = "1024"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.130.70"
+    gateway = local.config["gateway_ip"]
+    macaddr = "36:86:F6:F9:2A:5D"
+    bridge  = "vmbr443"
+  }]
+
+  storages = [{
+    storage = "proxmox"
+    size    = "20G"
+    }, {
+    storage = "proxmox"
+    size    = "50G"
+    }
+  ]
+}
+
+output "maven-exporter0_summary" {
+  value = module.maven-exporter0.summary
+}
