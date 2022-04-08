@@ -13,10 +13,16 @@
 # }
 
 module "gitlab-staging" {
-  source = "./modules/gitlab"
-  name   = "euwest-gitlab-staging"
+  source            = "./modules/gitlab"
+  name              = "euwest-gitlab-staging"
+  blob_storage_name = "swheuwestgitlabstaging"
 }
 
-output "gitlab-staging_summary" {
-  value = module.gitlab-staging.summary
+output "gitlab-staging_aks_summary" {
+  value = module.gitlab-staging.aks_summary
+}
+
+output "gitlab-staging_storage_summary" {
+  value     = module.gitlab-staging.blob_storage_summary
+  sensitive = true
 }
