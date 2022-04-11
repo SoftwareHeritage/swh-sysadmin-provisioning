@@ -36,6 +36,9 @@ resource "azurerm_storage_account" "gitlab_storage" {
     delete_retention_policy {
       days = 7
     }
+    container_delete_retention_policy {
+      days = 7
+    }
   }
 
   tags = {
