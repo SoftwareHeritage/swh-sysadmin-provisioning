@@ -51,6 +51,7 @@ resource "azurerm_private_endpoint" "aks_cluster_endpoint" {
 }
 
 resource "azurerm_public_ip" "aks_cluster_public_ip" {
+  count               = var.public_ip_provisioning ? 1 : 0
   name                = "${var.cluster_name}_ip"
   resource_group_name = azurerm_kubernetes_cluster.aks_cluster.node_resource_group
   location            = data.azurerm_resource_group.aks_rg.location

@@ -38,3 +38,9 @@ variable "internal_vnet_rg" {
   default     = "swh-resource"
 }
 
+variable "public_ip_provisioning" {
+  description = "Should a public ip should be provisionned?"
+  type        = bool
+  default     = true
+}
+
