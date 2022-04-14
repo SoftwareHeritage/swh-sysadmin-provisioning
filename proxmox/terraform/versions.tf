@@ -5,6 +5,10 @@ terraform {
       source = "telmate/proxmox"
       version = "2.9.3"
     }
+    rancher2 = {
+      source = "rancher/rancher2"
+      version = "1.23.0"
+    }
   }
 }
 
