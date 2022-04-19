@@ -437,3 +437,36 @@ module "maven-exporter0" {
 output "maven-exporter0_summary" {
   value = module.maven-exporter0.summary
 }
+
+module "scrubber0" {
+  source      = "../modules/node"
+  vmid        = 142
+  config      = local.config
+  hostname    = "scrubber0"
+  description = "Scrubber checker services"
+  hypervisor  = "pompidou"
+  sockets     = "1"
+  cores       = "4"
+  onboot      = true
+
+  memory  = "4096"
+  balloon = "1024"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.130.120"
+    gateway = local.config["gateway_ip"]
+    macaddr = "86:09:0A:61:AB:C1"
+    bridge  = "vmbr443"
+  }]
+
+  storages = [{
+    storage = "proxmox"
+    size    = "30G"
+    }
+  ]
+}
+
+output "scrubber0_summary" {
+  value = module.scrubber0.summary
+}
