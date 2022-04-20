@@ -89,7 +89,9 @@ resource "proxmox_vm_qemu" "node" {
         "sed -i 's/127.0.1.1/${lookup(var.networks[0], "ip")}/g' /etc/hosts",
         # so puppet agent installs the node's role
         "puppet agent --server ${var.config["puppet_master"]} --environment=${var.config["puppet_environment"]} --waitforcert 60 --test || echo 'Node provisionned!'",
-      ])
+      ],
+      var.post_provision_steps,
+      )
 
     connection {
       type        = "ssh"

@@ -54,7 +54,7 @@ variable "networks" {
     id      = number
     ip      = string
     gateway = string
-    macaddr = string
+    macaddr = optional(string)
     bridge  = string
   }))
   default = []
@@ -102,7 +102,13 @@ variable "args" {
 }
 
 variable "pre_provision_steps" {
-  description = "List of sequential provisioning steps to apply"
+  description = "Sequential provisioning steps to apply *before* common provision steps"
+  type        = list(string)
+  default     = []
+}
+
+variable "post_provision_steps" {
+  description = "Sequential provisioning steps to apply *after* common provision steps"
   type        = list(string)
   default     = []
 }
