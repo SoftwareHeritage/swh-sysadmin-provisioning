@@ -1,0 +1,125 @@
+{
+  "variables": {
+    "home": "{{ env `HOME` }}",
+    "username": "{{ env `PROXMOX_USER` }}",
+    "password": "{{ env `PROXMOX_PASSWORD` }}",
+    "proxmox_server": "{{ env `PROXMOX_URL` }}",
+    "proxmox_node": "{{env `PROXMOX_NODE` }}",
+    "http_server" : "{{ env `HTTP_SERVER_URL` }}",
+    "ip": "{{ env `TEMPLATE_IP` }}",
+    "netmask": "{{ env `TEMPLATE_NETMASK` }}",
+    "gw": "{{ env `TEMPLATE_GW` }}",
+    "nameserver": "{{ env `TEMPLATE_NS` }}",
+    "template-date": "{{ isotime \"2006-01-02T15:04:05Z\" }}",
+    "template-suffix" : "{{ isotime \"2006-01-02\" }}"
+  },
+  "sensitive-variables": [ "password" ],
+  "builders": [
+    {
+      "type": "proxmox",
+      "proxmox_url": "{{ user `proxmox_server` }}",
+      "insecure_skip_tls_verify": true,
+      "username": "{{ user `username` }}",
+      "password": "{{ user `password` }}",
+      "node": "{{ user `proxmox_node` }}",
+      "vm_id": 10008,
+      "memory": 1024,
+      "sockets": "1",
+      "cores": 2,
+      "network_adapters": [
+        {
+          "bridge": "vmbr0",
+          "model": "virtio"
+        }
+      ],
+      "scsi_controller": "virtio-scsi-pci",
+      "disks": [
+        {
+          "type": "virtio",
+          "disk_size": "20G",
+          "storage_pool": "proxmox",
+          "storage_pool_type": "cephfs"
+        }
+      ],
+      "qemu_agent": "true",
+      "cloud_init": "true",
+      "cloud_init_storage_pool": "proxmox",
+
+      "iso_url": "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-11.3.0-amd64-netinst.iso",
+      "iso_checksum": "7892981e1da216e79fb3a1536ce5ebab157afdd20048fe458f2ae34fbc26c19b",
+      "iso_storage_pool": "proxmox-cephfs",
+      "unmount_iso": "true",
+
+      "http_directory": "config",
+      "http_port_min": "8888",
+      "http_port_max": "8888",
+
+      "boot_wait": "10s",
+      "boot_command": [
+          "<esc><wait>",
+          "install <wait>",
+          "preseed/url={{ user `http_server` }}/preseed.cfg <wait>",
+          "debian-installer=en_US.UTF-8 <wait>",
+          "auto <wait>",
+          "locale=en_US.UTF-8 <wait>",
+          "kbd-chooser/method=us <wait>",
+          "keyboard-configuration/xkb-keymap=us <wait>",
+          "fb=false <wait>",
+          "netcfg/disable_autoconfig=true <wait>",
+          "netcfg/get_hostname=base-template <wait>",
+          "netcfg/get_domain=swh.network <wait>",
+          "netcfg/get_ipaddress={{ user `ip` }} <wait>",
+          "netcfg/get_netmask={{ user `netmask` }} <wait>",
+          "netcfg/get_gateway={{ user `gw` }} <wait>",
+          "netcfg/get_nameservers={{ user `nameserver` }} <wait>",
+          "debconf/frontend=noninteractive <wait>",
+          "DEBCONF_DEBUG=5 <wait>",
+          "console-setup/ask_detect=false <wait>",
+          "console-keymaps-at/keymap=us <wait>",
+          "grub-installer/bootdev=/dev/vda <wait>",
+          "<enter><wait>"
+      ],
+
+      "ssh_host": "{{ user `ip` }}",
+
+      "ssh_username": "installer",
+      "ssh_timeout": "15m",
+      "ssh_password": "installer",
+      "template_name": "debian-bullseye-11.3-zfs-{{ user `template-suffix` }}",
+      "template_description": "debian bullseye, generated on {{ user `template-date` }}"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "expect_disconnect": "false",
+      "execute_command": "echo 'installer'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "scripts": [
+        "scripts/post-install.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "expect_disconnect": "false",
+      "execute_command": "echo 'installer'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "scripts": [
+        "scripts/post-install-extra.sh"
+      ]
+    },    {
+      "type": "shell",
+      "expect_disconnect": "true",
+      "execute_command": "echo 'installer'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "scripts": [
+        "scripts/proxmox.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "expect_disconnect": "false",
+      "execute_command": "echo 'installer'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "scripts": [
+        "scripts/cleanup.sh"
+      ]
+    }
+  ]
+}
