@@ -39,5 +39,6 @@ output "rancher2_cluster_summary" {
 }
 
 output "rancher2_cluster_command" {
+  sensitive = true
   value = rancher2_cluster.staging-workers.cluster_registration_token[0].node_command
 }
