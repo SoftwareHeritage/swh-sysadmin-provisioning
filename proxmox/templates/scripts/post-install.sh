@@ -16,7 +16,9 @@ EOF
 export DEBIAN_FRONTEND=noninteractive
 
 apt-get update
-apt-get install -y man wget curl telnet net-tools dnsutils traceroute unbound gpg aptitude
+apt-get upgrade -y
+apt-get install -y man wget curl telnet net-tools dnsutils traceroute unbound \
+        gpg aptitude
 aptitude -y install "?priority(standard)!~i?archive(stable)"
 
 ####

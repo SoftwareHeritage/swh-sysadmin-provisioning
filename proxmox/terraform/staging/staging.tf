@@ -403,7 +403,7 @@ output "mirror-tests_summary" {
 
 module "maven-exporter0" {
   source      = "../modules/node"
-  template    = "debian-bullseye-11.0-2021-09-09" # otherwise to use more recent template
+  template    = "debian-bullseye-11.3-2022-04-21"
   vmid        = 122
   config      = local.config
   hostname    = "maven-exporter0"

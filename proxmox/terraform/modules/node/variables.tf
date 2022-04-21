@@ -20,9 +20,14 @@ variable "hypervisor" {
 }
 
 variable "template" {
-  description = "Template created by packer to use (template-debian-10, debian-buster-...)"
+  description = "Debian image template created by packer"
+  # Note: use "buster" template for node with swh services (storage, objstorage, ...).
+  # You can use latest "bullseye" templates otherwise.
   type        = string
-  default     = "debian-buster-2020-11-06"
+  default     = "debian-buster-10.10-2021-09-09"
+  # other possible template values:
+  # - debian-bullseye-2022-04-21
+  # - debian-bullseye-zfs-2022-04-21 (for extra zfs dependencies)
 }
 
 variable "sockets" {
