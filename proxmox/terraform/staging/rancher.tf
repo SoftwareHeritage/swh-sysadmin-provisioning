@@ -179,3 +179,17 @@ prometheus:
 EOF
 }
 
+resource "rancher2_catalog_v2" "keda" {
+  cluster_id = rancher2_cluster.staging-workers.id
+  name       = "keda"
+  url        = "https://kedacore.github.io/charts/"
+}
+
+# resource "rancher2_app_v2" "keda" {
+#   cluster_id = rancher2_cluster.staging-workers.id
+#   name = "keda"
+#   namespace = "kedacore"
+#   repo_name = "charts"
+#   chart_name = "keda"
+#   chart_version = "2.6.2"
+# }
