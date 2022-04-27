@@ -57,13 +57,8 @@ module "worker0" {
   description = "Loader/lister service node"
   hypervisor  = "beaubourg"
   cores       = "4"
-  memory      = "12288"
-  balloon     = 1024
-
-  # to match the real vm configuration in proxmox
-  # to remove
-  args = "-device virtio-rng-pci"
-
+  memory      = 24576
+  balloon     = 4096
   onboot      = false
 
   networks = [{
@@ -88,12 +83,8 @@ module "worker1" {
   description = "Loader/lister service node"
   hypervisor  = "beaubourg"
   cores       = "4"
-  memory      = "12288"
-  balloon     = 1024
-  # to match the real vm configuration in proxmox
-  # to remove
-  args = "-device virtio-rng-pci"
-
+  memory      = 24576
+  balloon     = 4096
   onboot      = false
 
   networks = [{
@@ -118,8 +109,8 @@ module "worker2" {
   description = "Loader/lister service node"
   hypervisor  = "branly"
   cores       = 4
-  memory      = 12288
-  balloon     = 1024
+  memory      = 24576
+  balloon     = 4096
   onboot      = false
 
   networks = [{
@@ -335,8 +326,8 @@ module "worker3" {
   description = "Indexer worker"
   hypervisor  = "pompidou"
   cores       = 4
-  memory      = 12288
-  balloon     = 1024
+  memory      = 24576
+  balloon     = 4096
   onboot      = false
 
   networks = [{
