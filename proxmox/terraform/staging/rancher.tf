@@ -161,3 +161,21 @@ module "elastic-worker2" {
 output "elastic-worker2_summary" {
   value = module.elastic-worker2.summary
 }
+
+resource "rancher2_app_v2" "rancher-monitoring" {
+  cluster_id = rancher2_cluster.staging-workers.id
+  name = "rancher-monitoring"
+  namespace = "cattle-monitoring-system"
+  repo_name = "rancher-charts"
+  chart_name = "rancher-monitoring"
+  # chart_version = "9.4.200"
+  chart_version = "100.1.0+up19.0.3"
+  values = <<EOF
+prometheus:
+  prometheusSpec:
+    requests:
+      cpu: "250m"
+      memory: "250Mi"
+EOF
+}
+
