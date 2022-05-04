@@ -10,7 +10,7 @@ variable "backup_disks_per_server" {
 
 # Size in gb
 variable "backup_disk_size" {
-  default = 200
+  default = 256
 }
 
 locals {
@@ -177,6 +177,10 @@ resource "azurerm_virtual_machine" "backup-server" {
       user = "root"
       host = azurerm_network_interface.backup-interface[each.key].private_ip_address
     }
+  }
+
+  lifecycle {
+    ignore_changes = [ storage_data_disk[0].create_option ]
   }
 
   tags = {
