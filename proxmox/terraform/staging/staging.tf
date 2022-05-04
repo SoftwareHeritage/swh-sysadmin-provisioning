@@ -60,6 +60,7 @@ module "worker0" {
   memory      = 24576
   balloon     = 4096
   onboot      = false
+  args        = "-device virtio-rng-pci"
 
   networks = [{
     id      = 0
@@ -86,6 +87,7 @@ module "worker1" {
   memory      = 24576
   balloon     = 4096
   onboot      = false
+  args        = "-device virtio-rng-pci"
 
   networks = [{
     id      = 0
