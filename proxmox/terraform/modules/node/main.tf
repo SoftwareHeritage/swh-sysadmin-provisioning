@@ -87,6 +87,9 @@ resource "proxmox_vm_qemu" "node" {
         "echo subnet=${var.config["facter_subnet"]} > /etc/facter/facts.d/subnet.txt",
         "echo cloudinit_enabled=true > /etc/facter/facts.d/cloud-init.txt",
         "sed -i 's/127.0.1.1/${lookup(var.networks[0], "ip")}/g' /etc/hosts",
+        # Wait for cloud-init to finish its work to avoid
+        # concurrency on apt
+        "cloud-init status -w",
         # so puppet agent installs the node's role
         "puppet agent --server ${var.config["puppet_master"]} --environment=${var.config["puppet_environment"]} --waitforcert 60 --test || echo 'Node provisionned!'",
       ],
