@@ -54,8 +54,8 @@ module "elastic-worker0" {
   sockets     = "1"
   cores       = "4"
   onboot      = true
-  memory      = "6144"
-  balloon     = "2048"
+  memory      = "8192"
+  balloon     = "4096"
 
   networks = [{
     id      = 0
@@ -94,8 +94,8 @@ module "elastic-worker1" {
   sockets     = "1"
   cores       = "4"
   onboot      = true
-  memory      = "6144"
-  balloon     = "2048"
+  memory      = "8192"
+  balloon     = "4096"
 
   networks = [{
     id      = 0
@@ -133,8 +133,8 @@ module "elastic-worker2" {
   sockets     = "1"
   cores       = "4"
   onboot      = true
-  memory      = "6144"
-  balloon     = "2048"
+  memory      = "8192"
+  balloon     = "4096"
 
   networks = [{
     id      = 0
@@ -172,8 +172,8 @@ module "elastic-worker3" {
   sockets     = "1"
   cores       = "4"
   onboot      = true
-  memory      = "6144"
-  balloon     = "2048"
+  memory      = "8192"
+  balloon     = "4096"
 
   networks = [{
     id      = 0
