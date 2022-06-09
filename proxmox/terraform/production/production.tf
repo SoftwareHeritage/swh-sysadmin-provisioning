@@ -99,9 +99,9 @@ module "worker17" {
   domainname  = "softwareheritage.org"
   description = "swh-worker node (temporary)"
   hypervisor  = "uffizi"
-  cores       = "10"
+  cores       = "5"
   sockets     = "2"
-  memory      = "65536"
+  memory      = "49152"
   balloon     = 1024
   networks = [{
     id      = 0
