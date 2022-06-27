@@ -4,7 +4,7 @@ terraform {
   required_providers {
     proxmox = {
       source = "telmate/proxmox"
-      version = "2.9.3"
+      version = "2.9.10"
     }
     rancher2 = {
       source = "rancher/rancher2"

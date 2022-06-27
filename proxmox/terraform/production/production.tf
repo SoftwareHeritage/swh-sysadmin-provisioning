@@ -137,7 +137,6 @@ output "worker18_summary" {
   value = module.worker18.summary
 }
 
-
 module "provenance-client01" {
   source = "../modules/node"
   config = local.config
@@ -157,4 +156,31 @@ module "provenance-client01" {
     macaddr = null
     bridge  = "vmbr0"
   }]
+}
+
+module "scrubber1" {
+  source      = "../modules/node"
+  config      = local.config
+  vmid        = 153
+  onboot      = true
+
+  hostname    = "scrubber1"
+  description = "Scrubber checker services"
+  hypervisor  = "branly"
+  sockets     = "1"
+  cores       = "4"
+  memory  = "4096"
+  balloon = "1024"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.100.90"
+    gateway = local.config["gateway_ip"]
+    macaddr = "B2:E5:3F:E2:77:13"
+    bridge  = "vmbr0"
+  }]
+}
+
+output "scrubber1_summary" {
+  value = module.scrubber1.summary
 }
