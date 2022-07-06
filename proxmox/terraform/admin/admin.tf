@@ -183,3 +183,31 @@ module "money" {
 output "money_summary" {
   value = module.money.summary
 }
+
+module "thanos" {
+  source      = "../modules/node"
+  config      = local.config
+  vmid        = 158
+  onboot      = true
+  template    = "debian-bullseye-11.2-2022-01-03"
+
+  hostname    = "thanos"
+  description = "Thanos query service"
+  hypervisor  = "branly"
+  sockets     = "1"
+  cores       = "4"
+  memory  = "4096"
+  balloon = "1024"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.50.90"
+    gateway = local.config["gateway_ip"]
+    macaddr = "2E:84:64:00:78:C8"
+    bridge  = local.config["vlan"]
+  }]
+}
+
+output "thanos_summary" {
+  value = module.thanos.summary
+}
