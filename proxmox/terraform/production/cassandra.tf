@@ -64,7 +64,7 @@ module "rancher_node_cassandra1" {
 
   post_provision_steps = [
     "systemctl restart docker", # workaround
-    "${rancher2_cluster.production_cassandra.cluster_registration_token[0].node_command} --etcd --controlplane"
+    "${rancher2_cluster.production_cassandra.cluster_registration_token[0].node_command} --etcd --controlplane --worker"
   ]
 }
 
@@ -106,7 +106,7 @@ module "rancher_node_cassandra2" {
 
   post_provision_steps = [
     "systemctl restart docker", # workaround
-    "${rancher2_cluster.production_cassandra.cluster_registration_token[0].node_command} --etcd --controlplane"
+    "${rancher2_cluster.production_cassandra.cluster_registration_token[0].node_command} --etcd --controlplane --worker"
   ]
 }
 
@@ -148,7 +148,7 @@ module "rancher_node_cassandra3" {
 
   post_provision_steps = [
     "systemctl restart docker", # workaround
-    "${rancher2_cluster.production_cassandra.cluster_registration_token[0].node_command} --etcd --controlplane"
+    "${rancher2_cluster.production_cassandra.cluster_registration_token[0].node_command} --etcd --controlplane --worker"
   ]
 }
 
