@@ -17,6 +17,13 @@ resource "rancher2_cluster" "production_cassandra" {
     network {
       plugin = "canal"
     }
+    services {
+      kubelet {
+        extra_binds = [
+          "/srv/prometheus:/srv/prometheus" # prometheus datastore on mngmt nodes
+        ]
+      }
+    }
   }
 }
 
@@ -155,3 +162,22 @@ module "rancher_node_cassandra3" {
 output "rancher_node_cassandra3_summary" {
   value = module.rancher_node_cassandra3.summary
 }
+
+# Install the cassandra operator
+# https://github.com/k8ssandra/cass-operator
+resource "rancher2_catalog_v2" "k8ssandra" {
+  cluster_id = rancher2_cluster.production_cassandra.id
+  name       = "k8ssandra"
+  url        = "https://helm.k8ssandra.io/stable"
+}
+
+resource "rancher2_app_v2" "cass_operator" {
+  cluster_id = rancher2_cluster.production_cassandra.id
+  name = "cass-operator"
+  namespace = "cass-operator"
+  repo_name = "k8ssandra"
+  chart_name = "cass-operator"
+  chart_version = "0.37.0"
+  values = "replicaCount: 2"
+}
+
