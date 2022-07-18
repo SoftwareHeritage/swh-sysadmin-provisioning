@@ -1,6 +1,6 @@
 # will start from 1 vault-worker01...
 variable "vault-workers" {
-  default = 1
+  default = 2
 }
 
 locals {
@@ -34,59 +34,43 @@ resource "azurerm_network_interface_security_group_association" "vault-worker-sg
   network_security_group_id = data.azurerm_network_security_group.worker-nsg.id
 }
 
-resource "azurerm_virtual_machine" "vault-worker" {
+resource "azurerm_linux_virtual_machine" "vault-worker" {
   for_each = local.vault-workers
 
   name                  = each.key
+  computer_name         = "${each.key}.euwest.azure.internal.softwareheritage.org"
   location              = "westeurope"
   resource_group_name   = "euwest-workers"
   network_interface_ids = [azurerm_network_interface.vault-worker-interface[each.key].id]
-  vm_size               = "Standard_B2ms"
+  size                  = "Standard_B2ms"
+  admin_username        = var.user_admin
 
   boot_diagnostics {
-    enabled     = true
-    storage_uri = var.boot_diagnostics_uri
+    storage_account_uri = var.boot_diagnostics_uri
   }
 
-  storage_os_disk {
-    name              = format("%s-osdisk", each.key)
-    caching           = "ReadWrite"
-    create_option     = "FromImage"
-    managed_disk_type = "Premium_LRS"
+  os_disk {
+    name                 = format("%s-osdisk", each.key)
+    caching              = "ReadWrite"
+    storage_account_type = "Premium_LRS"
   }
 
-  storage_image_reference {
+  source_image_reference {
     publisher = "debian"
     offer     = "debian-10"
     sku       = "10"
     version   = "latest"
   }
 
-  os_profile {
-    computer_name  = each.key
-    admin_username = var.user_admin
-  }
-
-  os_profile_linux_config {
-    disable_password_authentication = true
-    ssh_keys {
-      path     = "/home/${var.user_admin}/.ssh/authorized_keys"
-      key_data = var.ssh_key_data_ardumont
-    }
-    ssh_keys {
-      path     = "/home/${var.user_admin}/.ssh/authorized_keys"
-      key_data = var.ssh_key_data_olasd
-    }
-    ssh_keys {
-      path     = "/home/${var.user_admin}/.ssh/authorized_keys"
-      key_data = var.ssh_key_data_vsellier
-    }
+  admin_ssh_key {
+    username = var.user_admin
+    public_key = file("ssh-keys/id-rsa-ardumont.pub")
   }
 
   provisioner "remote-exec" {
     inline = [
       "sudo mkdir -p /root/.ssh",
-      "echo ${var.ssh_key_data_ardumont} | sudo tee -a /root/.ssh/authorized_keys",
+      "echo ${var.ssh_key_data_ardumont} | sudo tee /root/.ssh/authorized_keys",
       "echo ${var.ssh_key_data_olasd} | sudo tee -a /root/.ssh/authorized_keys",
       "echo ${var.ssh_key_data_vsellier} | sudo tee -a /root/.ssh/authorized_keys",
     ]
@@ -112,7 +96,7 @@ resource "azurerm_virtual_machine" "vault-worker" {
 
     connection {
       type = "ssh"
-      user = "root"
+      user = var.user_admin
       host = azurerm_network_interface.vault-worker-interface[each.key].private_ip_address
     }
   }
@@ -121,7 +105,6 @@ resource "azurerm_virtual_machine" "vault-worker" {
     inline = [
       "userdel -f ${var.user_admin}",
       "chmod +x ${var.firstboot_script}",
-      "cat ${var.firstboot_script}",
       var.firstboot_script,
     ]
     connection {

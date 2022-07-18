@@ -45,7 +45,7 @@ data "azurerm_resource_group" "euwest-servers" {
 
 variable "firstboot_script" {
   type    = string
-  default = "/root/firstboot.sh"
+  default = "/tmp/firstboot.sh"
 }
 
 variable "ssh_key_data_ardumont" {

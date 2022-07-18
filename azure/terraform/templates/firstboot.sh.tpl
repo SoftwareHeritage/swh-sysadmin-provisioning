@@ -116,7 +116,7 @@ systemctl disable puppet.service
 mkdir -p /etc/facter/facts.d
 echo deployment=$FACTER_DEPLOYMENT > /etc/facter/facts.d/deployment.txt
 echo subnet=$FACTER_SUBNET > /etc/facter/facts.d/subnet.txt
-echo 
+echo
 
 # first time around, this will:
 # - update the node's puppet agent configuration defining the puppet master
