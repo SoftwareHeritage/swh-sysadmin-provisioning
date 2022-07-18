@@ -32,7 +32,7 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
   network_profile {
     network_plugin    = "kubenet"
     network_policy    = "calico"
-    load_balancer_sku = "Standard" # needed to assign a private ip address
+    load_balancer_sku = "standard" # needed to assign a private ip address
   }
 }
 
