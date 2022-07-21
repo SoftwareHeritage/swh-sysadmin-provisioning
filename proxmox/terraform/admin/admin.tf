@@ -187,7 +187,6 @@ output "money_summary" {
 module "thanos" {
   source      = "../modules/node"
   config      = local.config
-  vmid        = 158
   onboot      = true
   template    = "debian-bullseye-11.2-2022-01-03"
 
@@ -203,7 +202,7 @@ module "thanos" {
     id      = 0
     ip      = "192.168.50.90"
     gateway = local.config["gateway_ip"]
-    macaddr = "2E:84:64:00:78:C8"
+    macaddr = "16:3C:72:26:70:34"
     bridge  = local.config["vlan"]
   }]
 }
