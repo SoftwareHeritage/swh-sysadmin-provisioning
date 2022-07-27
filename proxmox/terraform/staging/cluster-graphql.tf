@@ -41,7 +41,7 @@ output "rancher2_cluster_graphql_command" {
 module "graphql-worker0" {
   source      = "../modules/node"
   vmid        = 162
-  template    = "debian-bullseye-11.3-zfs-2022-04-21"
+  template    = var.templates["stable-zfs"]
   config      = local.config
   hostname    = "graphql-worker0"
   description = "elastic worker running in rancher cluster"
@@ -81,7 +81,7 @@ output "graphql-worker0_summary" {
 module "graphql-worker1" {
   source      = "../modules/node"
   vmid        = 163
-  template    = "debian-bullseye-11.3-zfs-2022-04-21"
+  template    = var.templates["stable-zfs"]
   config      = local.config
   hostname    = "graphql-worker1"
   description = "graphql worker running in rancher cluster"
@@ -121,7 +121,7 @@ output "graphql-worker1_summary" {
 module "graphql-worker2" {
   source      = "../modules/node"
   vmid        = 164
-  template    = "debian-bullseye-11.3-zfs-2022-04-21"
+  template    = var.templates["stable-zfs"]
   config      = local.config
   hostname    = "graphql-worker2"
   description = "graphql worker running in rancher cluster"

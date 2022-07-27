@@ -396,7 +396,7 @@ output "mirror-tests_summary" {
 
 module "maven-exporter0" {
   source      = "../modules/node"
-  template    = "debian-bullseye-11.3-2022-04-21"
+  template    = var.templates["stable-zfs"]
   vmid        = 122
   config      = local.config
   hostname    = "maven-exporter0"

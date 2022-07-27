@@ -26,7 +26,7 @@ output "rancher2_cluster_staging_worker_command" {
 
 module "elastic-worker0" {
   source      = "../modules/node"
-  template    = "debian-bullseye-11.3-zfs-2022-04-21"
+  template    = var.templates["stable-zfs"]
   vmid        = 146
   config      = local.config
   hostname    = "elastic-worker0"
@@ -67,7 +67,7 @@ output "elastic-worker0_summary" {
 
 module "elastic-worker1" {
   source      = "../modules/node"
-  template    = "debian-bullseye-11.3-zfs-2022-04-21"
+  template    = var.templates["stable-zfs"]
   config      = local.config
   hostname    = "elastic-worker1"
   description = "elastic worker running in rancher cluster"
@@ -106,7 +106,7 @@ output "elastic-worker1_summary" {
 
 module "elastic-worker2" {
   source      = "../modules/node"
-  template    = "debian-bullseye-11.3-zfs-2022-04-21"
+  template    = var.templates["stable-zfs"]
   config      = local.config
   hostname    = "elastic-worker2"
   description = "elastic worker running in rancher cluster"
@@ -145,7 +145,7 @@ output "elastic-worker2_summary" {
 
 module "elastic-worker3" {
   source      = "../modules/node"
-  template    = "debian-bullseye-11.3-zfs-2022-04-21"
+  template    = var.templates["stable-zfs"]
   config      = local.config
   hostname    = "elastic-worker3"
   description = "elastic worker running in rancher cluster"

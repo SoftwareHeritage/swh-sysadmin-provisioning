@@ -143,7 +143,7 @@ module "provenance-client01" {
 
   hostname    = "provenance-client01"
   description = "Provenance client"
-  template    = "debian-bullseye-11.2-2022-01-03"
+  template    = var.templates["stable"]
   hypervisor  = "uffizi"
   cores       = "4"
   sockets     = "4"

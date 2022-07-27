@@ -43,7 +43,7 @@ module "rancher_node_cassandra1" {
   hostname = "rancher-node-cassandra1"
 
   source      = "../modules/node"
-  template    = "debian-bullseye-11.3-zfs-2022-04-21"
+  template    = var.templates["stable-zfs"]
   config      = local.config
   description = "Kubernetes management node for cassandra cluster"
   hypervisor  = "beaubourg"
@@ -85,7 +85,7 @@ module "rancher_node_cassandra2" {
   hostname = "rancher-node-cassandra2"
 
   source      = "../modules/node"
-  template    = "debian-bullseye-11.3-zfs-2022-04-21"
+  template    = var.templates["stable-zfs"]
   config      = local.config
   description = "Kubernetes management node for cassandra cluster"
   hypervisor  = "branly"
@@ -127,7 +127,7 @@ module "rancher_node_cassandra3" {
   hostname = "rancher-node-cassandra3"
 
   source      = "../modules/node"
-  template    = "debian-bullseye-11.3-zfs-2022-04-21"
+  template    = var.templates["stable-zfs"]
   config      = local.config
   description = "Kubernetes management node for cassandra cluster"
   hypervisor  = "hypervisor3"

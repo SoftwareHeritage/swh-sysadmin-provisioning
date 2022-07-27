@@ -47,3 +47,15 @@ variable "user_admin_ssh_private_key_path" {
   type    = string
   default = "~/.ssh/id-rsa-terraform-proxmox-root"
 }
+
+# Hashmap of debian release to our associated vm templates
+# This should be maintained up-to-date with most recent built templates
+variable "templates" {
+  description = "Debian image templates created by packer"
+  type = map(string)
+  default = {
+    oldstable  = "debian-buster-10.10-2021-09-09"
+    stable     = "debian-bullseye-11.4-2022-07-27"
+    stable-zfs = "debian-bullseye-11.4-zfs-2022-07-27"
+  }
+}

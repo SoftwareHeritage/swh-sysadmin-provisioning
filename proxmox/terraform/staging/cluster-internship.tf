@@ -26,7 +26,7 @@ module "rancher_node_internship0" {
   hostname = "rancher-node-intership0"
 
   source      = "../modules/node"
-  template    = "debian-bullseye-11.3-zfs-2022-04-21"
+  template    = var.templates["stable-zfs"]
   config      = local.config
   description = "Rancher node for the internship"
   hypervisor  = "uffizi"
@@ -67,7 +67,7 @@ module "rancher_node_internship1" {
   hostname = "rancher-node-intership1"
 
   source      = "../modules/node"
-  template    = "debian-bullseye-11.3-zfs-2022-04-21"
+  template    = var.templates["stable-zfs"]
   config      = local.config
   description = "Rancher node for the internship"
   hypervisor  = "uffizi"
@@ -108,7 +108,7 @@ module "rancher_node_internship2" {
   hostname = "rancher-node-intership2"
 
   source      = "../modules/node"
-  template    = "debian-bullseye-11.3-zfs-2022-04-21"
+  template    = var.templates["stable-zfs"]
   config      = local.config
   description = "Rancher node for the internship"
   hypervisor  = "uffizi"
