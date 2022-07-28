@@ -191,7 +191,7 @@ module "graphql-worker0" {
 
   post_provision_steps = [
     "systemctl restart docker",  # workaround
-    "${rancher2_cluster.cluster-graphql.cluster_registration_token[0].node_command} --worker"
+    "${rancher2_cluster.cluster-graphql3.cluster_registration_token[0].node_command} --worker"
   ]
 }
 
