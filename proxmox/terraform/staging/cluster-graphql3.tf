@@ -79,42 +79,82 @@ output "graphql-worker3_summary" {
   value = module.graphql-worker3.summary
 }
 
-# module "graphql-worker2" {
-#   source      = "../modules/node"
-#   vmid        = 164
-#   template    = var.templates["stable-zfs"]
-#   config      = local.config
-#   hostname    = "graphql-worker2"
-#   description = "graphql worker running in rancher cluster"
-#   hypervisor  = "uffizi"
-#   sockets     = "1"
-#   cores       = "4"
-#   onboot      = true
-#   memory      = "8192"
-#   balloon     = "4096"
+module "graphql-worker2" {
+  source      = "../modules/node"
+  vmid        = 164
+  template    = var.templates["stable-zfs"]
+  config      = local.config
+  hostname    = "graphql-worker2"
+  description = "graphql worker running in rancher cluster"
+  hypervisor  = "uffizi"
+  sockets     = "1"
+  cores       = "4"
+  onboot      = true
+  memory      = "8192"
+  balloon     = "4096"
 
-#   networks = [{
-#     id      = 0
-#     ip      = "192.168.130.152"
-#     gateway = local.config["gateway_ip"]
-#     bridge  = "vmbr443"
-#   }]
+  networks = [{
+    id      = 0
+    ip      = "192.168.130.152"
+    gateway = local.config["gateway_ip"]
+    bridge  = "vmbr443"
+  }]
 
-#   storages = [{
-#     storage = "proxmox"
-#     size    = "20G"
-#     }, {
-#     storage = "proxmox"
-#     size    = "50G"
-#     }
-#   ]
+  storages = [{
+    storage = "proxmox"
+    size    = "20G"
+    }, {
+    storage = "proxmox"
+    size    = "50G"
+    }
+  ]
 
-#   post_provision_steps = [
-#     "systemctl restart docker",  # workaround
-#     "${rancher2_cluster.cluster-graphql3.cluster_registration_token[0].node_command} --controlplane"
-#   ]
-# }
+  post_provision_steps = [
+    "systemctl restart docker",  # workaround
+    "${rancher2_cluster.cluster-graphql3.cluster_registration_token[0].node_command} --worker"
+  ]
+}
 
-# output "graphql-worker2_summary" {
-#   value = module.graphql-worker2.summary
-# }
+output "graphql-worker2_summary" {
+  value = module.graphql-worker2.summary
+}
+
+module "graphql-worker1" {
+  source      = "../modules/node"
+  vmid        = 163
+  template    = var.templates["stable-zfs"]
+  config      = local.config
+  hostname    = "graphql-worker1"
+  description = "graphql worker running in rancher cluster"
+  hypervisor  = "uffizi"
+  sockets     = "1"
+  cores       = "4"
+  onboot      = true
+  memory      = "8192"
+  balloon     = "4096"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.130.151"
+    gateway = local.config["gateway_ip"]
+    bridge  = "vmbr443"
+  }]
+
+  storages = [{
+    storage = "proxmox"
+    size    = "20G"
+    }, {
+    storage = "proxmox"
+    size    = "50G"
+    }
+  ]
+
+  post_provision_steps = [
+    "systemctl restart docker",  # workaround
+    "${rancher2_cluster.cluster-graphql3.cluster_registration_token[0].node_command} --worker"
+  ]
+}
+
+output "graphql-worker1_summary" {
+  value = module.graphql-worker1.summary
+}
