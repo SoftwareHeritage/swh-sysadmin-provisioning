@@ -18,25 +18,25 @@
 # - Retrieve the registration command (out of the cluster creation step) to provide new
 #   node
 
-resource "rancher2_cluster" "cluster-graphql2" {
-  name = "cluster-graphql2"
-  description = "2nd graphql staging cluster"
+resource "rancher2_cluster" "cluster-graphql3" {
+  name = "cluster-graphql3"
+  description = "3rd (tryout) graphql staging cluster"
   rke_config {
-    kubernetes_version = "v1.22.10-rancher1-1"
+    kubernetes_version = "v1.21.12-rancher1-1"
     network {
       plugin = "canal"
     }
   }
 }
 
-output "rancher2_cluster_graphql2_summary" {
+output "rancher2_cluster_graphql3_summary" {
   sensitive = true
-  value = rancher2_cluster.cluster-graphql2.kube_config
+  value = rancher2_cluster.cluster-graphql3.kube_config
 }
 
-output "rancher2_cluster_graphql2_command" {
+output "rancher2_cluster_graphql3_command" {
   sensitive = true
-  value = rancher2_cluster.cluster-graphql2.cluster_registration_token[0].node_command
+  value = rancher2_cluster.cluster-graphql3.cluster_registration_token[0].node_command
 }
 
 module "graphql-worker3" {
@@ -71,10 +71,50 @@ module "graphql-worker3" {
 
   post_provision_steps = [
     "systemctl restart docker",  # workaround
-    "${rancher2_cluster.cluster-graphql2.cluster_registration_token[0].node_command} --etcd --controlplane --worker"
+    "${rancher2_cluster.cluster-graphql3.cluster_registration_token[0].node_command} --etcd --controlplane --worker"
   ]
 }
 
 output "graphql-worker3_summary" {
   value = module.graphql-worker3.summary
 }
+
+# module "graphql-worker2" {
+#   source      = "../modules/node"
+#   vmid        = 164
+#   template    = var.templates["stable-zfs"]
+#   config      = local.config
+#   hostname    = "graphql-worker2"
+#   description = "graphql worker running in rancher cluster"
+#   hypervisor  = "uffizi"
+#   sockets     = "1"
+#   cores       = "4"
+#   onboot      = true
+#   memory      = "8192"
+#   balloon     = "4096"
+
+#   networks = [{
+#     id      = 0
+#     ip      = "192.168.130.152"
+#     gateway = local.config["gateway_ip"]
+#     bridge  = "vmbr443"
+#   }]
+
+#   storages = [{
+#     storage = "proxmox"
+#     size    = "20G"
+#     }, {
+#     storage = "proxmox"
+#     size    = "50G"
+#     }
+#   ]
+
+#   post_provision_steps = [
+#     "systemctl restart docker",  # workaround
+#     "${rancher2_cluster.cluster-graphql3.cluster_registration_token[0].node_command} --controlplane"
+#   ]
+# }
+
+# output "graphql-worker2_summary" {
+#   value = module.graphql-worker2.summary
+# }
