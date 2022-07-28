@@ -27,7 +27,7 @@ module "argo-worker01" {
   source      = "../modules/node"
   template    = var.templates["stable-zfs"]
   config      = local.config
-  description = "Argo worker"
+  description = "Argo node with etcd, controlplane and worker roles"
   hypervisor  = "uffizi"
   sockets     = "1"
   cores       = "4"
@@ -54,5 +54,42 @@ module "argo-worker01" {
   post_provision_steps = [
     "systemctl restart docker", # workaround
     "${rancher2_cluster.cluster-argo.cluster_registration_token[0].node_command} --etcd --controlplane --worker"
+  ]
+}
+
+module "argo-worker02" {
+  hostname = "argo-worker02"
+  vmid     = 167
+
+  source      = "../modules/node"
+  template    = var.templates["stable-zfs"]
+  config      = local.config
+  description = "Argo worker"
+  hypervisor  = "pompidou"
+  sockets     = "1"
+  cores       = "4"
+  onboot      = true
+  memory      = "8192"
+  balloon     = "4096"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.50.41"
+    gateway = local.config["gateway_ip"]
+    bridge  = local.config["vlan"]
+  }]
+
+  storages = [{
+    storage = "proxmox"
+    size    = "20G"
+    }, {
+    storage = "proxmox"
+    size    = "50G"
+    }
+  ]
+
+  post_provision_steps = [
+    "systemctl restart docker", # workaround
+    "${rancher2_cluster.cluster-argo.cluster_registration_token[0].node_command} --worker"
   ]
 }
