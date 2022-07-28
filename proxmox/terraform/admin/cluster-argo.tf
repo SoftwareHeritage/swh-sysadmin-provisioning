@@ -10,12 +10,12 @@ resource "rancher2_cluster" "cluster-argo" {
   }
 }
 
-output "cluster-argo-cluster-summary" {
+output "cluster-argo-config-summary" {
   sensitive = true
   value     = rancher2_cluster.cluster-argo.kube_config
 }
 
-output "cluster-argo-cluster-command" {
+output "cluster-argo-register-command" {
   sensitive = true
   value     = rancher2_cluster.cluster-argo.cluster_registration_token[0].node_command
 }

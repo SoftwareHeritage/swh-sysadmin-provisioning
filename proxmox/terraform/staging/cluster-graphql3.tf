@@ -29,12 +29,12 @@ resource "rancher2_cluster" "cluster-graphql3" {
   }
 }
 
-output "rancher2_cluster_graphql3_summary" {
+output "cluster-graphql3-config-summary" {
   sensitive = true
   value = rancher2_cluster.cluster-graphql3.kube_config
 }
 
-output "rancher2_cluster_graphql3_command" {
+output "cluster-graphql3-register-command" {
   sensitive = true
   value = rancher2_cluster.cluster-graphql3.cluster_registration_token[0].node_command
 }
