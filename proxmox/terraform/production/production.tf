@@ -170,7 +170,7 @@ module "scrubber1" {
   sockets     = "1"
   cores       = "4"
   memory  = "4096"
-  balloon = "1024"
+  balloon = "2048"
 
   networks = [{
     id      = 0
