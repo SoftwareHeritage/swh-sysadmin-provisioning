@@ -169,8 +169,7 @@ module "scrubber1" {
   hypervisor  = "branly"
   sockets     = "1"
   cores       = "4"
-  memory  = "4096"
-  balloon = "2048"
+  memory      = "4096"
 
   networks = [{
     id      = 0
