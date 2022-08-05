@@ -101,8 +101,8 @@ module "worker17" {
   hypervisor  = "uffizi"
   cores       = "5"
   sockets     = "2"
-  memory      = "49152"
-  balloon     = 1024
+  memory      = "65536"
+  balloon     = "32768"
   networks = [{
     id      = 0
     ip      = "192.168.100.43"
@@ -122,8 +122,8 @@ module "worker18" {
   hypervisor  = "uffizi"
   cores       = "5"
   sockets     = "2"
-  memory      = "49152"
-  balloon     = 1024
+  memory      = "65536"
+  balloon     = "32768"
   networks = [{
     id      = 0
     ip      = "192.168.100.44"
