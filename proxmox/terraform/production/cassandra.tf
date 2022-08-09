@@ -52,7 +52,6 @@ module "rancher_node_cassandra1" {
   cores       = "4"
   onboot      = true
   memory      = "8192"
-  balloon     = "4096"
 
   networks = [{
     id      = 0
@@ -94,7 +93,6 @@ module "rancher_node_cassandra2" {
   cores       = "4"
   onboot      = true
   memory      = "8192"
-  balloon     = "4096"
 
   networks = [{
     id      = 0
@@ -136,7 +134,6 @@ module "rancher_node_cassandra3" {
   cores       = "4"
   onboot      = true
   memory      = "8192"
-  balloon     = "4096"
 
   networks = [{
     id      = 0
