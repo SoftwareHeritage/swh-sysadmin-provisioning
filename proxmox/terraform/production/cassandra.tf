@@ -21,9 +21,9 @@ resource "rancher2_cluster" "production_cassandra" {
       kubelet {
         extra_binds = [
           "/srv/prometheus:/srv/prometheus", # prometheus datastore on mngmt nodes
-          "/srv/cassandra_commitlog:/srv/cassandra_commitlog", # writeintensive disks
-          "/srv/cassandra_data:/srv/cassandra_data", # mixeduse disks
-          "/srv/cassandra_logs:/srv/cassandra_logs", # mixeduse disks
+          # "/srv/cassandra_commitlog:/srv/cassandra_commitlog", # writeintensive disks
+          # "/srv/cassandra_data:/srv/cassandra_data", # mixeduse disks
+          # "/srv/cassandra_logs:/srv/cassandra_logs", # mixeduse disks
         ]
       }
     }
