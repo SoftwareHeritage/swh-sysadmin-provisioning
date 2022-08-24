@@ -143,45 +143,6 @@ output "elastic-worker2_summary" {
   value = module.elastic-worker2.summary
 }
 
-module "elastic-worker3" {
-  source      = "../modules/node"
-  template    = var.templates["stable-zfs"]
-  config      = local.config
-  hostname    = "elastic-worker3"
-  description = "elastic worker running in rancher cluster"
-  hypervisor  = "pompidou"
-  sockets     = "1"
-  cores       = "4"
-  onboot      = true
-  memory      = "8192"
-  balloon     = "4096"
-
-  networks = [{
-    id      = 0
-    ip      = "192.168.130.133"
-    gateway = local.config["gateway_ip"]
-    bridge  = "vmbr443"
-  }]
-
-  storages = [{
-    storage = "proxmox"
-    size    = "20G"
-    }, {
-    storage = "proxmox"
-    size    = "50G"
-    }
-  ]
-
-  post_provision_steps = [
-    "systemctl restart docker",  # workaround
-    "${rancher2_cluster.staging-workers.cluster_registration_token[0].node_command} --worker"
-  ]
-}
-
-output "elastic-worker3_summary" {
-  value = module.elastic-worker3.summary
-}
-
 resource "rancher2_app_v2" "rancher-monitoring" {
   cluster_id = rancher2_cluster.staging-workers.id
   name = "rancher-monitoring"
