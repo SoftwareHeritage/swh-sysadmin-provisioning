@@ -3,7 +3,7 @@ resource "rancher2_cluster" "cluster-argo" {
   description = "cluster for argo tools (cd, worfklows)"
 
   rke_config {
-    kubernetes_version = "v1.21.12-rancher1-1"
+    kubernetes_version = "v1.22.11-rancher1-1"
     network {
       plugin = "canal"
     }
