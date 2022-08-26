@@ -13,7 +13,7 @@ resource "rancher2_cluster" "production_cassandra" {
   name = "production-cassandra"
   description = "Production - Cassandra cluster"
   rke_config {
-    kubernetes_version = "v1.22.10-rancher1-1"
+    kubernetes_version = "v1.22.11-rancher1-1"
     network {
       plugin = "canal"
     }
