@@ -42,8 +42,8 @@ module "webapp1" {
   description = "Webapp for swh-search tests"
   hypervisor  = "branly"
   cores       = "2"
-  memory      = "8192"
-  balloon     = 2048
+  memory      = "12288"
+  balloon     = 8192
   networks = [{
     id      = 0
     ip      = "192.168.100.71"
