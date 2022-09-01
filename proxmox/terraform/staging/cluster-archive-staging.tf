@@ -194,9 +194,34 @@ resource "rancher2_app_v2" "archive-staging-rancher-monitoring" {
   chart_version = "100.1.3+up19.0.3"
   values = <<EOF
 prometheus:
+  enabled: true
   prometheusSpec:
     requests:
-      cpu: "250m"
-      memory: "250Mi"
+      cpu: 250m
+      memory: 250Mi
+    # mark metrics with discriminative information, check official doc for details
+    # see https://thanos.io/tip/thanos/quick-tutorial.md/#external-labels
+    externalLabels:
+      environment: staging
+      infrastructure: kubernetes
+      domain: staging
+      cluster_name: ${rancher2_cluster.archive-staging.name}
+    thanos:
+      # thanos-objstore-config-secret is installed in namespace cattle-monitoring-system
+      # see k8s-private-data:archive-staging/thanos-objstore-config-secret.yaml. And
+      # https://prometheus-operator.dev/docs/operator/thanos/#configuring-thanos-object-storage
+      objectStorageConfig:
+        key: thanos.yaml
+        name: thanos-objstore-config-secret
+  # thanos sidecar
+  thanosService:
+    enabled: false
+  # thanos ingress sidecar
+  thanosIngress:
+    enabled: false
+  thanosServiceMonitor:
+    enabled: false
+  thanosServiceExternal:
+    enabled: false
 EOF
 }
