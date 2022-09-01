@@ -191,8 +191,7 @@ resource "rancher2_app_v2" "archive-staging-rancher-monitoring" {
   namespace = "cattle-monitoring-system"
   repo_name = "rancher-charts"
   chart_name = "rancher-monitoring"
-  # chart_version = "9.4.200"
-  chart_version = "100.1.0+up19.0.3"
+  chart_version = "100.1.3+up19.0.3"
   values = <<EOF
 prometheus:
   prometheusSpec:
