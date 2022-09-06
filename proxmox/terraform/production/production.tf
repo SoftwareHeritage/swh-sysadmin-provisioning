@@ -1,4 +1,3 @@
-
 module "kelvingrove" {
   source = "../modules/node"
   config = local.config
@@ -168,4 +167,35 @@ module "scrubber1" {
 
 output "scrubber1_summary" {
   value = module.scrubber1.summary
+}
+
+module "maven-exporter" {
+  source      = "../modules/node"
+  template    = var.templates["stable-zfs"]
+  config      = local.config
+  hostname    = "maven-exporter"
+  description = "Maven index exporter to run containers and expose export.fld files"
+  hypervisor  = "pompidou"
+  sockets     = "1"
+  cores       = "4"
+  onboot      = true
+  memory      = "4096"
+  balloon     = "2048"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.100.10"
+    gateway = local.config["gateway_ip"]
+    bridge  = local.config["bridge"]
+    macaddr = "D2:7E:0B:35:89:FF"
+  }]
+
+  storages = [{
+    storage = "proxmox"
+    size    = "20G"
+    }, {
+    storage = "proxmox"
+    size    = "50G"
+    }
+  ]
 }
