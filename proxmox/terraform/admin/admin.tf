@@ -160,7 +160,9 @@ module "money" {
   hostname    = "money"
   description = "Azure billing reporting server"
   hypervisor  = "branly"
-  cpu         = "kvm64"
+  # chromium (used by selenium to download the azure data) needs sse3 instructions not available
+  # by default n kvm64
+  cpu         = "host"
   vmid        = 140
   sockets     = 2
   cores       = 1
