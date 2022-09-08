@@ -207,6 +207,17 @@ module "thanos" {
     macaddr = "16:3C:72:26:70:34"
     bridge  = local.config["vlan"]
   }]
+
+  storages = [{
+    id      = 0
+    storage = "proxmox"
+    size    = "32G"
+  },
+  {
+    id      = 1
+    storage = "scratch"
+    size    = "256G"
+  }]
 }
 
 output "thanos_summary" {
