@@ -197,8 +197,8 @@ module "thanos" {
   hypervisor  = "branly"
   sockets     = "1"
   cores       = "4"
-  memory  = "4096"
-  balloon = "1024"
+  memory  = "8192"
+  balloon = "4096"
 
   networks = [{
     id      = 0
