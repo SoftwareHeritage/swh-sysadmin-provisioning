@@ -180,6 +180,45 @@ output "rancher-node-production-worker03_summary" {
   value = module.rancher-node-production-worker03.summary
 }
 
+module "rancher-node-production-worker04" {
+  source      = "../modules/node"
+  template    = var.templates["stable-zfs"]
+  config      = local.config
+  hostname    = "rancher-node-production-worker04"
+  description = "Generic worker node"
+  hypervisor  = "hypervisor3"
+  sockets     = "2"
+  cores       = "3"
+  onboot      = true
+  memory      = "16384"
+  balloon     = "8192"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.100.124"
+    gateway = local.config["gateway_ip"]
+    bridge  = local.config["bridge"]
+  }]
+
+  storages = [{
+    storage = "proxmox"
+    size    = "20G"
+    }, {
+    storage = "proxmox"
+    size    = "20G"
+    }
+  ]
+
+  post_provision_steps = [
+    "systemctl restart docker",  # workaround
+    "${rancher2_cluster.archive-production.cluster_registration_token[0].node_command} --worker"
+  ]
+}
+
+output "rancher-node-production-worker04_summary" {
+  value = module.rancher-node-production-worker04.summary
+}
+
 resource "rancher2_app_v2" "archive-production-rancher-monitoring" {
   cluster_id = rancher2_cluster.archive-production.id
   name = "rancher-monitoring"
