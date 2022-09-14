@@ -97,7 +97,7 @@ module "rancher-node-staging-worker1" {
 
   post_provision_steps = [
     "systemctl restart docker",  # workaround
-    "${rancher2_cluster.archive-staging.cluster_registration_token[0].node_command} --worker --label node_type=generic"
+    "${rancher2_cluster.archive-staging.cluster_registration_token[0].node_command} --worker --label node_type=generic --label swh/rpc=true"
   ]
 }
 
@@ -105,6 +105,7 @@ output "rancher-node-staging-worker1_summary" {
   value = module.rancher-node-staging-worker1.summary
 }
 
+# loader nodes must have the 2d disk on a local storage to not generate too much traffic on ceph
 module "rancher-node-staging-worker2" {
   source      = "../modules/node"
   vmid        = 148
@@ -130,14 +131,14 @@ module "rancher-node-staging-worker2" {
     storage = "proxmox"
     size    = "20G"
     }, {
-    storage = "proxmox"
+    storage = "uffizi-scratch"
     size    = "50G"
     }
   ]
 
   post_provision_steps = [
     "systemctl restart docker",  # workaround
-    "${rancher2_cluster.archive-staging.cluster_registration_token[0].node_command} --worker --label node_type=worker --label swh/loader=true"
+    "${rancher2_cluster.archive-staging.cluster_registration_token[0].node_command} --worker --label node_type=worker  --label swh/rpc=true --label swh/loader=true --label swh/lister=true"
   ]
 }
 
@@ -145,6 +146,7 @@ output "rancher-node-staging-worker2_summary" {
   value = module.rancher-node-staging-worker2.summary
 }
 
+# loader nodes must have the 2d disk on a local storage to not generate too much traffic on ceph
 module "rancher-node-staging-worker3" {
   source      = "../modules/node"
   vmid        = 149
@@ -170,14 +172,14 @@ module "rancher-node-staging-worker3" {
     storage = "proxmox"
     size    = "20G"
     }, {
-    storage = "proxmox"
+    storage = "uffizi-scratch"
     size    = "50G"
     }
   ]
 
   post_provision_steps = [
     "systemctl restart docker",  # workaround
-    "${rancher2_cluster.archive-staging.cluster_registration_token[0].node_command} --worker --label node_type=worker --label swh/loader=true"
+    "${rancher2_cluster.archive-staging.cluster_registration_token[0].node_command} --worker --label node_type=worker  --label swh/rpc=true --label swh/loader=true --label swh/lister=true"
   ]
 }
 
