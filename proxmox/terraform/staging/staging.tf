@@ -295,31 +295,6 @@ output "objstorage0_summary" {
   value = module.objstorage0.summary
 }
 
-module "worker3" {
-  source      = "../modules/node"
-  config      = local.config
-  vmid        = 137
-  hostname    = "worker3"
-  description = "Indexer worker"
-  hypervisor  = "pompidou"
-  cores       = 4
-  memory      = 24576
-  balloon     = 4096
-  onboot      = false
-
-  networks = [{
-    id      = 0
-    ip      = "192.168.130.103"
-    gateway = local.config["gateway_ip"]
-    macaddr = "1A:F8:1A:2C:12:E1"
-    bridge  = local.config["vlan"]
-  }]
-}
-
-output "worker3_summary" {
-  value = module.worker3.summary
-}
-
 module "counters0" {
   source      = "../modules/node"
   config      = local.config
