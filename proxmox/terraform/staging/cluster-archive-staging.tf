@@ -65,6 +65,8 @@ output "rancher-node-staging-mgmt0_summary" {
   value = module.rancher-node-staging-mgmt0.summary
 }
 
+# loader nodes must have the 2nd disk on a local storage to not generate too much
+# traffic on ceph
 module "rancher-node-staging-worker1" {
   source      = "../modules/node"
   vmid        = 147
@@ -105,7 +107,8 @@ output "rancher-node-staging-worker1_summary" {
   value = module.rancher-node-staging-worker1.summary
 }
 
-# loader nodes must have the 2d disk on a local storage to not generate too much traffic on ceph
+# loader nodes must have the 2nd disk on a local storage to not generate too much
+# traffic on ceph
 module "rancher-node-staging-worker2" {
   source      = "../modules/node"
   vmid        = 148
@@ -138,7 +141,7 @@ module "rancher-node-staging-worker2" {
 
   post_provision_steps = [
     "systemctl restart docker",  # workaround
-    "${rancher2_cluster.archive-staging.cluster_registration_token[0].node_command} --worker --label node_type=worker  --label swh/rpc=true --label swh/loader=true --label swh/lister=true"
+    "${rancher2_cluster.archive-staging.cluster_registration_token[0].node_command} --worker --label node_type=worker --label swh/rpc=true --label swh/loader=true --label swh/lister=true"
   ]
 }
 
@@ -146,7 +149,8 @@ output "rancher-node-staging-worker2_summary" {
   value = module.rancher-node-staging-worker2.summary
 }
 
-# loader nodes must have the 2d disk on a local storage to not generate too much traffic on ceph
+# loader nodes must have the 2nd disk on a local storage to not generate too much
+# traffic on ceph
 module "rancher-node-staging-worker3" {
   source      = "../modules/node"
   vmid        = 149
@@ -179,13 +183,56 @@ module "rancher-node-staging-worker3" {
 
   post_provision_steps = [
     "systemctl restart docker",  # workaround
-    "${rancher2_cluster.archive-staging.cluster_registration_token[0].node_command} --worker --label node_type=worker  --label swh/rpc=true --label swh/loader=true --label swh/lister=true"
+    "${rancher2_cluster.archive-staging.cluster_registration_token[0].node_command} --worker --label node_type=worker --label swh/rpc=true --label swh/loader=true --label swh/lister=true"
   ]
 }
 
 output "rancher-node-staging-worker3_summary" {
   value = module.rancher-node-staging-worker3.summary
 }
+
+# loader nodes must have the 2nd disk on a local storage to not generate too much
+# traffic on ceph
+module "rancher-node-staging-worker4" {
+  source      = "../modules/node"
+  vmid        = 137
+  template    = var.templates["stable-zfs"]
+  config      = local.config
+  hostname    = "rancher-node-staging-worker4"
+  description = "elastic worker running in rancher cluster (loader, lister, ...)"
+  hypervisor  = "pompidou"
+  sockets     = "1"
+  cores       = "8"
+  onboot      = true
+  memory      = "16384"
+  balloon     = "8192"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.130.134"
+    gateway = local.config["gateway_ip"]
+    bridge  = local.config["vlan"]
+  }]
+
+  storages = [{
+    storage = "proxmox"
+    size    = "20G"
+    }, {
+    storage = "scratch"
+    size    = "20G"
+    }
+  ]
+
+  post_provision_steps = [
+    "systemctl restart docker",  # workaround
+    "${rancher2_cluster.archive-staging.cluster_registration_token[0].node_command} --worker --label node_type=worker  --label swh/rpc=true --label swh/loader=true --label swh/lister=true"
+  ]
+}
+
+output "rancher-node-staging-worker4_summary" {
+  value = module.rancher-node-staging-worker4.summary
+}
+
 
 resource "rancher2_app_v2" "archive-staging-rancher-monitoring" {
   cluster_id = rancher2_cluster.archive-staging.id
