@@ -158,7 +158,7 @@ module "rancher-node-staging-worker3" {
   config      = local.config
   hostname    = "rancher-node-staging-worker3"
   description = "elastic worker running in rancher cluster (loader, lister, ...)"
-  hypervisor  = "uffizi"
+  hypervisor  = "pompidou"
   sockets     = "1"
   cores       = "4"
   onboot      = true
@@ -176,7 +176,7 @@ module "rancher-node-staging-worker3" {
     storage = "proxmox"
     size    = "20G"
     }, {
-    storage = "uffizi-scratch"
+    storage = "scratch"
     size    = "50G"
     }
   ]
