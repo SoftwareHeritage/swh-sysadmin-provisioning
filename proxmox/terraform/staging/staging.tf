@@ -79,32 +79,6 @@ output "worker1_summary" {
   value = module.worker1.summary
 }
 
-module "worker2" {
-  source = "../modules/node"
-  config = local.config
-
-  vmid        = 112
-  hostname    = "worker2"
-  description = "Loader/lister service node"
-  hypervisor  = "branly"
-  cores       = 4
-  memory      = 24576
-  balloon     = 4096
-  onboot      = false
-
-  networks = [{
-    id      = 0
-    ip      = "192.168.130.102"
-    gateway = local.config["gateway_ip"]
-    macaddr = "AA:57:27:51:75:18"
-    bridge  = local.config["vlan"]
-  }]
-}
-
-output "worker2_summary" {
-  value = module.worker2.summary
-}
-
 module "webapp" {
   source = "../modules/node"
   config = local.config
