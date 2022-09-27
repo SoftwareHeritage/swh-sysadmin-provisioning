@@ -11,6 +11,9 @@ resource "rancher2_cluster" "archive-production" {
     network {
       plugin = "canal"
     }
+    ingress {
+      provider = "none"
+    }
   }
 }
 
