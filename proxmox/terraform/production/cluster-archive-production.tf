@@ -87,7 +87,7 @@ module "rancher-node-production-worker01" {
     storage = "proxmox"
     size    = "20G"
     }, {
-    storage = "proxmox"
+    storage = "uffizi-scratch"
     size    = "20G"
     }
   ]
@@ -126,7 +126,7 @@ module "rancher-node-production-worker02" {
     storage = "proxmox"
     size    = "20G"
     }, {
-    storage = "proxmox"
+    storage = "uffizi-scratch"
     size    = "20G"
     }
   ]
@@ -165,7 +165,7 @@ module "rancher-node-production-worker03" {
     storage = "proxmox"
     size    = "20G"
     }, {
-    storage = "proxmox"
+    storage = "uffizi-scratch"
     size    = "20G"
     }
   ]
@@ -204,7 +204,7 @@ module "rancher-node-production-worker04" {
     storage = "proxmox"
     size    = "20G"
     }, {
-    storage = "proxmox"
+    storage = "scratch"
     size    = "20G"
     }
   ]
