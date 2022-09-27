@@ -52,33 +52,6 @@ output "worker0_summary" {
   value = module.worker0.summary
 }
 
-module "worker1" {
-  source = "../modules/node"
-  config = local.config
-
-  vmid        = 118
-  hostname    = "worker1"
-  description = "Loader/lister service node"
-  hypervisor  = "beaubourg"
-  cores       = "4"
-  memory      = 24576
-  balloon     = 4096
-  onboot      = false
-  args        = "-device virtio-rng-pci"
-
-  networks = [{
-    id      = 0
-    ip      = "192.168.130.101"
-    gateway = local.config["gateway_ip"]
-    macaddr = "D6:A9:6F:02:E3:66"
-    bridge  = local.config["vlan"]
-  }]
-}
-
-output "worker1_summary" {
-  value = module.worker1.summary
-}
-
 module "webapp" {
   source = "../modules/node"
   config = local.config
