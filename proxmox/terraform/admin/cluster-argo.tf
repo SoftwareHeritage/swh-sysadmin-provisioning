@@ -7,7 +7,10 @@ resource "rancher2_cluster" "cluster-argo" {
     network {
       plugin = "canal"
     }
-  }
+    ingress {
+      provider = "none"
+    }
+ }
 }
 
 output "cluster-argo-config-summary" {
