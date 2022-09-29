@@ -33,9 +33,9 @@ module "worker0" {
   hostname    = "worker0"
   description = "Loader/lister service node"
   hypervisor  = "beaubourg"
-  cores       = "4"
-  memory      = 24576
-  balloon     = 4096
+  cores       = "2"
+  memory      = 4096
+  balloon     = 1024
   onboot      = false
   args        = "-device virtio-rng-pci"
 
