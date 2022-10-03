@@ -254,13 +254,14 @@ prometheus:
   # thanos sidecar
   thanosService:
     enabled: false
-  # thanos ingress sidecar
   thanosIngress:
     enabled: false
   thanosServiceMonitor:
     enabled: false
   thanosServiceExternal:
-    enabled: false
+    enabled: true
+    loadBalancerIP: 192.168.100.119
+    annotations:
+      metallb.universe.tf/allow-shared-ip: clusterIP
 EOF
 }
-
