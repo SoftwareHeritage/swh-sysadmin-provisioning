@@ -255,11 +255,17 @@ prometheus:
   thanosService:
     enabled: false
   thanosIngress:
-    enabled: false
+    enabled: true
+    hosts: ["k8s-archive-production-thanos.internal.softwareheritage.org"]
+    loadBalancerIP: 192.168.100.119
+    pathType: Prefix
+    annotations:
+      metallb.universe.tf/allow-shared-ip: clusterIP
+      nginx.ingress.kubernetes.io/backend-protocol: GRPC
   thanosServiceMonitor:
     enabled: false
   thanosServiceExternal:
-    enabled: true
+    enabled: false
     loadBalancerIP: 192.168.100.119
     annotations:
       metallb.universe.tf/allow-shared-ip: clusterIP
