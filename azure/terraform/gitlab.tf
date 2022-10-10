@@ -3,15 +3,27 @@
 # The cluster is deployed in its own resource group
 # suffixed by the environment
 
-# module "gitlab-production" {
-#     source = "./modules/gitlab"
-#     name   = "euwest-gitlab-production"
-# }
+#######
+# Production instance
+#######
+module "gitlab-production" {
+    source = "./modules/gitlab"
+    name   = "euwest-gitlab-production"
+    blob_storage_name = "swheuwestgitlabprod" #can only consist of lowercase letters and numbers, and must be between 3 and 24 characters long
+}
 
-# output "gitlab-production_summary" {
-#   value = module.gitlab-production.summary
-# }
+output "gitlab-production_aks_summary" {
+  value = module.gitlab-production.aks_summary
+}
 
+output "gitlab-production_storage_summary" {
+  value     = module.gitlab-production.blob_storage_summary
+  sensitive = true
+}
+
+#######
+# Staging instance
+#######
 module "gitlab-staging" {
   source            = "./modules/gitlab"
   name              = "euwest-gitlab-staging"

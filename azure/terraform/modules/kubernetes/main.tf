@@ -57,4 +57,5 @@ resource "azurerm_public_ip" "aks_cluster_public_ip" {
   location            = data.azurerm_resource_group.aks_rg.location
   allocation_method   = "Static"
   sku                 = "Standard"
+  zones               = ["1", "2", "3"]
 }
