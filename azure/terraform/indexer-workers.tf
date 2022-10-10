@@ -80,6 +80,7 @@ resource "azurerm_linux_virtual_machine" "indexer-worker" {
       user = var.user_admin
       host = azurerm_network_interface.indexer-worker-interface[each.key].private_ip_address
     }
+
   }
 
   provisioner "file" {
@@ -112,6 +113,10 @@ resource "azurerm_linux_virtual_machine" "indexer-worker" {
       user = "root"
       host = azurerm_network_interface.indexer-worker-interface[each.key].private_ip_address
     }
+  }
+
+  lifecycle {
+    ignore_changes = [ user_data ]
   }
 
   tags = {
