@@ -97,31 +97,6 @@ module "worker17" {
   }]
 }
 
-module "worker18" {
-  source = "../modules/node"
-  config = local.config
-
-  hostname    = "worker18"
-  domainname  = "softwareheritage.org"
-  description = "swh-worker node (temporary)"
-  hypervisor  = "uffizi"
-  cores       = "5"
-  sockets     = "2"
-  memory      = "65536"
-  balloon     = "32768"
-  networks = [{
-    id      = 0
-    ip      = "192.168.100.44"
-    gateway = local.config["gateway_ip"]
-    macaddr = "C6:29:D9:ED:9C:6B"
-    bridge  = local.config["bridge"]
-  }]
-}
-
-output "worker18_summary" {
-  value = module.worker18.summary
-}
-
 module "provenance-client01" {
   source = "../modules/node"
   config = local.config
