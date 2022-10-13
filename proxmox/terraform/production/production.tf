@@ -76,27 +76,6 @@ module "counters1" {
   }]
 }
 
-module "worker17" {
-  source = "../modules/node"
-  config = local.config
-
-  hostname    = "worker17"
-  domainname  = "softwareheritage.org"
-  description = "swh-worker node (temporary)"
-  hypervisor  = "uffizi"
-  cores       = "5"
-  sockets     = "2"
-  memory      = "65536"
-  balloon     = "32768"
-  networks = [{
-    id      = 0
-    ip      = "192.168.100.43"
-    gateway = local.config["gateway_ip"]
-    macaddr = "36:E0:2D:70:7C:52"
-    bridge  = local.config["bridge"]
-  }]
-}
-
 module "provenance-client01" {
   source = "../modules/node"
   config = local.config
