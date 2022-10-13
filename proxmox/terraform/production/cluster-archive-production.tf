@@ -232,8 +232,7 @@ module "rancher-node-production-worker05" {
   sockets     = "2"
   cores       = "5"
   onboot      = true
-  memory      = "32768"
-  balloon     = "16384"
+  memory      = "65536"
 
   networks = [{
     id      = 0
@@ -247,7 +246,7 @@ module "rancher-node-production-worker05" {
     size    = "20G"
     }, {
     storage = "uffizi-scratch"
-    size    = "30G"
+    size    = "50G"
     }
   ]
 
