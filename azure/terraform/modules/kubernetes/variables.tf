@@ -44,3 +44,8 @@ variable "public_ip_provisioning" {
   default     = true
 }
 
+variable "kubernetes_version" {
+  description = "The kubernetes version to use, must match https://docs.gitlab.com/operator/installation.html#kubernetes"
+  type        = string
+  default     = null
+}

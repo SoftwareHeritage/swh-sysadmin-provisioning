@@ -5,6 +5,8 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
   dns_prefix          = var.cluster_name
   node_resource_group = "${var.cluster_name}-internal"
 
+  kubernetes_version = "${var.kubernetes_version}"
+
   default_node_pool {
     name = "default"
     # node_count          = 1

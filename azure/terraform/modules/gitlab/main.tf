@@ -17,13 +17,15 @@ module "gitlab_aks_cluster" {
   maximal_pool_count = 5
   node_type          = "Standard_B2ms"
 
+  kubernetes_version = var.kubernetes_version
+
   depends_on = [
     azurerm_resource_group.gitlab_rg
   ]
 }
 
 # Storage account for the assets
-# git lfs / backups / artifacts / pages 
+# git lfs / backups / artifacts / pages
 # terraform states / registry / ...
 resource "azurerm_storage_account" "gitlab_storage" {
   name                     = var.blob_storage_name

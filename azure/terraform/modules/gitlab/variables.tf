@@ -18,7 +18,13 @@ variable "blob_storage_containers" {
   description = "Blob storage containers to create on the storage account"
   type        = list(string)
   default = [
-    "artifacts", "registry", "external-diffs", "lfs-objects", "uploads", 
+    "artifacts", "registry", "external-diffs", "lfs-objects", "uploads",
     "packages", "dependency-proxy", "terraform", "pages",
   ]
+}
+
+variable "kubernetes_version" {
+  description = "The kubernetes version to use, must match https://docs.gitlab.com/operator/installation.html#kubernetes"
+  type        = string
+  default     = "1.22"
 }
