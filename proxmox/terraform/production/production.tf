@@ -123,6 +123,40 @@ output "scrubber1_summary" {
   value = module.scrubber1.summary
 }
 
+
+module "migration" {
+  source      = "../modules/node"
+  config      = local.config
+  template    = var.templates["stable-zfs"]
+
+  hostname    = "migration"
+  description = "Migration"
+  hypervisor  = "branly"
+  sockets     = "1"
+  cores       = "4"
+  memory      = "16192"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.100.140"
+    gateway = local.config["gateway_ip"]
+    bridge  = local.config["bridge"]
+  }]
+
+  storages = [{
+    storage = "proxmox"
+    size    = "20G"
+    }, {
+    storage = "proxmox"
+    size    = "20G"
+    }
+  ]
+}
+
+output "migration_summary" {
+  value = module.migration.summary
+}
+
 module "maven-exporter" {
   source      = "../modules/node"
   template    = var.templates["stable-zfs"]
