@@ -11,6 +11,13 @@ resource "rancher2_cluster" "archive-staging" {
     network {
       plugin = "canal"
     }
+    services {
+      kubelet {
+        extra_args = {
+          feature-gates = "NodeSwap=true"
+        }
+      }
+    }
   }
 }
 
