@@ -162,7 +162,7 @@ module "rancher-node-staging-worker3" {
   sockets     = "1"
   cores       = "4"
   onboot      = true
-  memory      = "8192"
+  memory      = "32768"
   balloon     = "4096"
 
   networks = [{
