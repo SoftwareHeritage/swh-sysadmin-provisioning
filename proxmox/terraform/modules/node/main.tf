@@ -81,7 +81,9 @@ resource "proxmox_vm_qemu" "node" {
     inline = concat(
       var.pre_provision_steps,
       [
-        # First install facts...
+        # clean the systemd logs dating from the vm creation
+        "journalctl --vacuum-time=1d",
+        # install facts...
         "mkdir -p /etc/facter/facts.d",
         "echo deployment=${var.config["facter_deployment"]} > /etc/facter/facts.d/deployment.txt",
         "echo subnet=${var.config["facter_subnet"]} > /etc/facter/facts.d/subnet.txt",
