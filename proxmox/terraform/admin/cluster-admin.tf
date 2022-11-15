@@ -198,41 +198,40 @@ resource "rancher2_app_v2" "cluster-admin-rancher-monitoring" {
 prometheus:
   enabled: true
   prometheusSpec:
+    externalLabels:
+      cluster_name: ${rancher2_cluster.cluster-admin.name}
+      domain: admin
+      environment: admin
+      infrastructure: kubernetes
     requests:
       cpu: 250m
       memory: 250Mi
-      retention: 15d # Temporary until the sync to azure is in place
-    # mark metrics with discriminative information, check official doc for details
-    # see https://thanos.io/tip/thanos/quick-tutorial.md/#external-labels
-    externalLabels:
-      environment: admin
-      infrastructure: kubernetes
-      domain: admin
-      cluster_name: ${rancher2_cluster.cluster-admin.name}
+      retention: 15d
     thanos:
-      # thanos-objstore-config-secret is installed in namespace cattle-monitoring-system
-      # see k8s-private-data:admin/thanos-objstore-config-secret.yaml. And
-      # https://prometheus-operator.dev/docs/operator/thanos/#configuring-thanos-object-storage
       objectStorageConfig:
         key: thanos.yaml
         name: thanos-objstore-config-secret
-  # thanos sidecar
-  thanosService:
-    enabled: false
   thanosIngress:
-    enabled: true
-    hosts: ["k8s-admin-thanos.internal.softwareheritage.org"]
-    loadBalancerIP: 192.168.50.44
-    pathType: Prefix
     annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-production
+      kubernetes.io/tls-acme: "true"
       metallb.universe.tf/allow-shared-ip: clusterIP
       nginx.ingress.kubernetes.io/backend-protocol: GRPC
-  thanosServiceMonitor:
+    enabled: true
+    hosts:
+    - k8s-admin-thanos.internal.admin.swh.network
+    loadBalancerIP: 192.168.50.44
+    pathType: Prefix
+    tls:
+    - hosts:
+      - k8s-admin-thanos.internal.admin.swh.network
+      secretName: thanos-crt
+  thanosService:
     enabled: false
   thanosServiceExternal:
-    enabled: false
-    loadBalancerIP: 192.168.50.44
     annotations:
       metallb.universe.tf/allow-shared-ip: clusterIP
+    enabled: false
+    loadBalancerIP: 192.168.50.44
 EOF
 }
