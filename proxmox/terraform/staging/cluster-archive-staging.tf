@@ -85,7 +85,7 @@ module "rancher-node-staging-worker1" {
   sockets     = "1"
   cores       = "4"
   onboot      = true
-  memory      = "8192"
+  memory      = "32768"
   balloon     = "4096"
 
   networks = [{
@@ -127,7 +127,7 @@ module "rancher-node-staging-worker2" {
   sockets     = "1"
   cores       = "4"
   onboot      = true
-  memory      = "8192"
+  memory      = "32768"
   balloon     = "4096"
 
   networks = [{
@@ -211,8 +211,8 @@ module "rancher-node-staging-worker4" {
   sockets     = "1"
   cores       = "8"
   onboot      = true
-  memory      = "16384"
-  balloon     = "8192"
+  memory      = "32768"
+  balloon     = "4096"
 
   networks = [{
     id      = 0
@@ -226,7 +226,7 @@ module "rancher-node-staging-worker4" {
     size    = "20G"
     }, {
     storage = "scratch"
-    size    = "20G"
+    size    = "50G"
     }
   ]
 
