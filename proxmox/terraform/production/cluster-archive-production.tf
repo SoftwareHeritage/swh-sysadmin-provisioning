@@ -77,7 +77,6 @@ module "rancher-node-production-worker01" {
   cores       = "8"
   onboot      = true
   memory      = "16384"
-  balloon     = "8192"
 
   networks = [{
     id      = 0
@@ -91,7 +90,7 @@ module "rancher-node-production-worker01" {
     size    = "20G"
     }, {
     storage = "uffizi-scratch"
-    size    = "20G"
+    size    = "50G"
     }
   ]
 
@@ -116,7 +115,6 @@ module "rancher-node-production-worker02" {
   cores       = "8"
   onboot      = true
   memory      = "16384"
-  balloon     = "8192"
 
   networks = [{
     id      = 0
@@ -130,7 +128,7 @@ module "rancher-node-production-worker02" {
     size    = "20G"
     }, {
     storage = "uffizi-scratch"
-    size    = "20G"
+    size    = "50G"
     }
   ]
 
@@ -155,7 +153,6 @@ module "rancher-node-production-worker03" {
   cores       = "8"
   onboot      = true
   memory      = "16384"
-  balloon     = "8192"
 
   networks = [{
     id      = 0
@@ -169,7 +166,7 @@ module "rancher-node-production-worker03" {
     size    = "20G"
     }, {
     storage = "uffizi-scratch"
-    size    = "20G"
+    size    = "50G"
     }
   ]
 
@@ -194,7 +191,6 @@ module "rancher-node-production-worker04" {
   cores       = "3"
   onboot      = true
   memory      = "16384"
-  balloon     = "8192"
 
   networks = [{
     id      = 0
@@ -208,7 +204,7 @@ module "rancher-node-production-worker04" {
     size    = "20G"
     }, {
     storage = "scratch"
-    size    = "20G"
+    size    = "50G"
     }
   ]
 
