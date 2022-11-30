@@ -18,6 +18,13 @@ resource "rancher2_cluster" "archive-staging" {
         }
       }
     }
+    upgrade_strategy {
+      drain = true
+      drain_input {
+        delete_local_data = true
+        timeout = 300
+      }
+    }
   }
 }
 

@@ -14,6 +14,13 @@ resource "rancher2_cluster" "archive-production" {
     ingress {
       provider = "none"
     }
+    upgrade_strategy {
+      drain = true
+      drain_input {
+        delete_local_data = true
+        timeout = 300
+      }
+    }
   }
 }
 
