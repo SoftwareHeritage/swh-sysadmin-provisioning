@@ -7,7 +7,7 @@ resource "rancher2_cluster" "archive-production" {
   name = "archive-production"
   description = "Archive production cluster"
   rke_config {
-    kubernetes_version = "v1.22.13-rancher1-1"
+    kubernetes_version = "v1.23.14-rancher1-1"
     network {
       plugin = "canal"
     }
