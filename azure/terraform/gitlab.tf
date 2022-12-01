@@ -29,7 +29,7 @@ module "gitlab-staging" {
   source            = "./modules/gitlab"
   name              = "euwest-gitlab-staging"
   blob_storage_name = "swheuwestgitlabstaging"
-  kubernetes_version = "1.22.15"
+  kubernetes_version = "1.24.6"
 }
 
 output "gitlab-staging_aks_summary" {

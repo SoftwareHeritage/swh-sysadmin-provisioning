@@ -14,6 +14,7 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
     enable_auto_scaling = true
     max_count           = var.maximal_pool_count
     min_count           = var.minimal_pool_count
+    orchestrator_version  = "${var.kubernetes_version}"
 
     # not supported for all vm types
     # os_disk_type        = "Ephemeral"
