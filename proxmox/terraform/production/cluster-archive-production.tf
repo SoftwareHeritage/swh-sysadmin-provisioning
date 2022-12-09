@@ -12,6 +12,7 @@ resource "rancher2_cluster" "archive-production" {
       plugin = "canal"
     }
     ingress {
+      default_backend = false
       provider = "none"
     }
     upgrade_strategy {

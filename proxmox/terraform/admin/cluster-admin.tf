@@ -8,6 +8,7 @@ resource "rancher2_cluster" "cluster-admin" {
       plugin = "canal"
     }
     ingress {
+      default_backend = false
       provider = "none"
     }
     upgrade_strategy {

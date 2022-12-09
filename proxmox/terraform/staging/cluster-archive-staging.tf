@@ -11,6 +11,10 @@ resource "rancher2_cluster" "archive-staging" {
     network {
       plugin = "canal"
     }
+    ingress {
+      default_backend = false
+      provider = "none"
+    }
     services {
       kubelet {
         extra_args = {
