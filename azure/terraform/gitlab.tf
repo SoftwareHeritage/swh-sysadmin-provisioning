@@ -7,9 +7,9 @@
 # Production instance
 #######
 module "gitlab-production" {
-  source = "./modules/gitlab"
-  name   = "euwest-gitlab-production"
-  blob_storage_name = "swheuwestgitlabprod" #can only consist of lowercase letters and numbers, and must be between 3 and 24 characters long
+  source             = "./modules/gitlab"
+  name               = "euwest-gitlab-production"
+  blob_storage_name  = "swheuwestgitlabprod" #can only consist of lowercase letters and numbers, and must be between 3 and 24 characters long
   kubernetes_version = "1.22.15"
 }
 
@@ -26,9 +26,9 @@ output "gitlab-production_storage_summary" {
 # Staging instance
 #######
 module "gitlab-staging" {
-  source            = "./modules/gitlab"
-  name              = "euwest-gitlab-staging"
-  blob_storage_name = "swheuwestgitlabstaging"
+  source             = "./modules/gitlab"
+  name               = "euwest-gitlab-staging"
+  blob_storage_name  = "swheuwestgitlabstaging"
   kubernetes_version = "1.24.6"
 }
 
