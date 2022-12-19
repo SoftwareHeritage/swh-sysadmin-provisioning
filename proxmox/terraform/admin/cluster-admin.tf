@@ -207,7 +207,7 @@ prometheus:
   enabled: true
   prometheusSpec:
     externalLabels:
-      cluster_name: ${rancher2_cluster.cluster-admin.name}
+      cluster: ${rancher2_cluster.cluster-admin.name}
       domain: admin
       environment: admin
       infrastructure: kubernetes

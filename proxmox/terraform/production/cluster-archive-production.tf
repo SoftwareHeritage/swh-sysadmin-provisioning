@@ -277,7 +277,7 @@ prometheus:
   enabled: true
   prometheusSpec:
     externalLabels:
-      cluster_name: ${rancher2_cluster.archive-production.name}
+      cluster: ${rancher2_cluster.archive-production.name}
       domain: production
       environment: production
       infrastructure: kubernetes

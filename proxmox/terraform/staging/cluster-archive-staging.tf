@@ -264,7 +264,7 @@ prometheus:
   enabled: true
   prometheusSpec:
     externalLabels:
-      cluster_name: ${rancher2_cluster.archive-staging.name}
+      cluster: ${rancher2_cluster.archive-staging.name}
       domain: staging
       environment: staging
       infrastructure: kubernetes
