@@ -4,7 +4,7 @@
 # - Execute registration command as last post-provisionning step
 
 resource "rancher2_cluster" "archive-production" {
-  name = "archive-production"
+  name        = "archive-production"
   description = "Archive production cluster"
   rke_config {
     kubernetes_version = "v1.23.14-rancher1-1"
@@ -13,13 +13,14 @@ resource "rancher2_cluster" "archive-production" {
     }
     ingress {
       default_backend = false
-      provider = "none"
+      provider        = "none"
     }
     upgrade_strategy {
-      drain = true
+      drain                  = true
+      max_unavailable_worker = 2
       drain_input {
         delete_local_data = true
-        timeout = 300
+        timeout           = 300
       }
     }
   }
