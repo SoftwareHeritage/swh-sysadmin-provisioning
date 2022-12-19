@@ -7,6 +7,31 @@ resource "azurerm_resource_group" "gitlab_rg" {
   }
 }
 
+resource "azurerm_log_analytics_workspace" "k8s_workspace" {
+  count = var.container_insights ? 1 : 0
+
+  name                = "k8s-workspace-${var.name}"
+  location            = azurerm_resource_group.gitlab_rg.location
+  resource_group_name = azurerm_resource_group.gitlab_rg.name
+  sku                 = "PerGB2018"
+  retention_in_days   = 30
+}
+
+resource "azurerm_log_analytics_solution" "k8s_log_analytics" {
+  count = var.container_insights ? 1 : 0
+
+  solution_name         = "ContainerInsights"
+  location              = azurerm_resource_group.gitlab_rg.location
+  resource_group_name   = azurerm_resource_group.gitlab_rg.name
+  workspace_resource_id = azurerm_log_analytics_workspace.k8s_workspace[count.index].id
+  workspace_name        = azurerm_log_analytics_workspace.k8s_workspace[count.index].name
+
+  plan {
+    publisher = "Microsoft"
+    product   = "OMSGallery/ContainerInsights"
+  }
+}
+
 # kubernetes cluster for compute and storage
 module "gitlab_aks_cluster" {
   source         = "../kubernetes"
@@ -18,6 +43,8 @@ module "gitlab_aks_cluster" {
   node_type          = "Standard_B2ms"
 
   kubernetes_version = var.kubernetes_version
+
+  log_analytics_workspace_id = var.container_insights ? azurerm_log_analytics_workspace.k8s_workspace[0].id : null
 
   depends_on = [
     azurerm_resource_group.gitlab_rg

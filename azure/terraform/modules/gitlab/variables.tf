@@ -28,3 +28,9 @@ variable "kubernetes_version" {
   type        = string
   default     = "1.22"
 }
+
+variable "container_insights" {
+  description = "Whether to enable Azure Container Insights"
+  type        = bool
+  default     = false
+}
