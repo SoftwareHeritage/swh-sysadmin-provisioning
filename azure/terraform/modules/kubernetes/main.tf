@@ -37,6 +37,15 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
     network_policy    = "calico"
     load_balancer_sku = "standard" # needed to assign a private ip address
   }
+
+  dynamic "oms_agent" {
+    for_each = var.log_analytics_workspace_id != null ? [var.log_analytics_workspace_id] : []
+    iterator = workspace_id
+
+    content {
+      log_analytics_workspace_id = workspace_id.value
+    }
+  }
 }
 
 resource "azurerm_private_endpoint" "aks_cluster_endpoint" {

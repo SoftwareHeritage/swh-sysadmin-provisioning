@@ -49,3 +49,9 @@ variable "kubernetes_version" {
   type        = string
   default     = null
 }
+
+variable "log_analytics_workspace_id" {
+  description = "The id of a log analytics workspace to send Container Insights to"
+  type        = string
+  default     = null
+}
