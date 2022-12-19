@@ -48,6 +48,29 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
   }
 }
 
+resource "azurerm_monitor_diagnostic_setting" "diagnostic" {
+  count = var.log_analytics_workspace_id != null ? 1 : 0
+
+  name                       = "diagnostic"
+  target_resource_id         = azurerm_kubernetes_cluster.aks_cluster.id
+  log_analytics_workspace_id = var.log_analytics_workspace_id
+
+  dynamic "log" {
+    for_each = ["cluster-autoscaler", "kube-apiserver", "kube-audit", "kube-audit-admin", "kube-controller-manager"]
+    iterator = category
+
+    content {
+      category = category.value
+      enabled  = true
+
+      retention_policy {
+        enabled = true
+        days    = 30
+      }
+    }
+  }
+}
+
 resource "azurerm_private_endpoint" "aks_cluster_endpoint" {
   name                = "${var.cluster_name}-endpoint"
   resource_group_name = data.azurerm_resource_group.aks_rg.name
