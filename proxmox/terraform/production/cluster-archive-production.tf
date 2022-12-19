@@ -266,51 +266,42 @@ output "rancher-node-production-worker05_summary" {
 }
 
 resource "rancher2_app_v2" "archive-production-rancher-monitoring" {
-  cluster_id = rancher2_cluster.archive-production.id
-  name = "rancher-monitoring"
-  namespace = "cattle-monitoring-system"
-  repo_name = "rancher-charts"
-  chart_name = "rancher-monitoring"
+  cluster_id    = rancher2_cluster.archive-production.id
+  name          = "rancher-monitoring"
+  namespace     = "cattle-monitoring-system"
+  repo_name     = "rancher-charts"
+  chart_name    = "rancher-monitoring"
   chart_version = "100.1.3+up19.0.3"
-  values = <<EOF
+  values        = <<EOF
 prometheus:
   enabled: true
   prometheusSpec:
+    externalLabels:
+      cluster_name: ${rancher2_cluster.archive-production.name}
+      domain: production
+      environment: production
+      infrastructure: kubernetes
     requests:
       cpu: 250m
       memory: 250Mi
-      retention: 365d # Temporary until the sync to azure is in place
-    # mark metrics with discriminative information, check official doc for details
-    # see https://thanos.io/tip/thanos/quick-tutorial.md/#external-labels
-    externalLabels:
-      environment: production
-      infrastructure: kubernetes
-      domain: production
-      cluster_name: ${rancher2_cluster.archive-production.name}
+      retention: 365d
     thanos:
-      # thanos-objstore-config-secret is installed in namespace cattle-monitoring-system
-      # see k8s-private-data:archive-production/thanos-objstore-config-secret.yaml. And
-      # https://prometheus-operator.dev/docs/operator/thanos/#configuring-thanos-object-storage
       objectStorageConfig:
         key: thanos.yaml
         name: thanos-objstore-config-secret
-  # thanos sidecar
-  thanosService:
-    enabled: false
   thanosIngress:
-    enabled: true
-    hosts: ["k8s-archive-production-thanos.internal.softwareheritage.org"]
-    loadBalancerIP: 192.168.100.119
-    pathType: Prefix
     annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-production-gandi
       metallb.universe.tf/allow-shared-ip: clusterIP
       nginx.ingress.kubernetes.io/backend-protocol: GRPC
-  thanosServiceMonitor:
-    enabled: false
-  thanosServiceExternal:
-    enabled: false
+    enabled: true
+    hosts:
+    - k8s-archive-production-thanos.internal.softwareheritage.org
     loadBalancerIP: 192.168.100.119
-    annotations:
-      metallb.universe.tf/allow-shared-ip: clusterIP
+    pathType: Prefix
+    tls:
+    - hosts:
+      - k8s-archive-production-thanos.internal.softwareheritage.org
+      secretName: thanos-crt
 EOF
 }
