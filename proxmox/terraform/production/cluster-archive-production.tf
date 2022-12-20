@@ -81,7 +81,7 @@ module "rancher-node-production-worker01" {
   config      = local.config
   hostname    = "rancher-node-production-worker01"
   description = "Generic worker node"
-  hypervisor  = "uffizi"
+  hypervisor  = "pompidou"
   sockets     = "2"
   cores       = "8"
   onboot      = true
@@ -98,7 +98,7 @@ module "rancher-node-production-worker01" {
     storage = "proxmox"
     size    = "20G"
     }, {
-    storage = "uffizi-scratch"
+    storage = "scratch"
     size    = "50G"
     }
   ]
@@ -119,7 +119,7 @@ module "rancher-node-production-worker02" {
   config      = local.config
   hostname    = "rancher-node-production-worker02"
   description = "Generic worker node"
-  hypervisor  = "uffizi"
+  hypervisor  = "mucem"
   sockets     = "2"
   cores       = "8"
   onboot      = true
@@ -136,7 +136,7 @@ module "rancher-node-production-worker02" {
     storage = "proxmox"
     size    = "20G"
     }, {
-    storage = "uffizi-scratch"
+    storage = "scratch"
     size    = "50G"
     }
   ]
@@ -157,7 +157,7 @@ module "rancher-node-production-worker03" {
   config      = local.config
   hostname    = "rancher-node-production-worker03"
   description = "Generic worker node"
-  hypervisor  = "uffizi"
+  hypervisor  = "mucem"
   sockets     = "2"
   cores       = "8"
   onboot      = true
@@ -174,7 +174,7 @@ module "rancher-node-production-worker03" {
     storage = "proxmox"
     size    = "20G"
     }, {
-    storage = "uffizi-scratch"
+    storage = "scratch"
     size    = "50G"
     }
   ]
@@ -233,7 +233,7 @@ module "rancher-node-production-worker05" {
   config      = local.config
   hostname    = "rancher-node-production-worker05"
   description = "Generic worker node"
-  hypervisor  = "uffizi"
+  hypervisor  = "mucem"
   sockets     = "2"
   cores       = "5"
   onboot      = true
@@ -250,7 +250,7 @@ module "rancher-node-production-worker05" {
     storage = "proxmox"
     size    = "20G"
     }, {
-    storage = "uffizi-scratch"
+    storage = "scratch"
     size    = "50G"
     }
   ]
