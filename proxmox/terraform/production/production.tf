@@ -76,27 +76,6 @@ module "counters1" {
   }]
 }
 
-module "provenance-client01" {
-  source = "../modules/node"
-  config = local.config
-
-  hostname    = "provenance-client01"
-  description = "Provenance client"
-  template    = var.templates["stable"]
-  hypervisor  = "uffizi"
-  cores       = "4"
-  sockets     = "4"
-  memory      = "131072"
-  balloon     = 32768
-  networks = [{
-    id      = 0
-    ip      = "192.168.100.111"
-    gateway = local.config["gateway_ip"]
-    macaddr = null
-    bridge  = local.config["bridge"]
-  }]
-}
-
 module "scrubber1" {
   source      = "../modules/node"
   config      = local.config
