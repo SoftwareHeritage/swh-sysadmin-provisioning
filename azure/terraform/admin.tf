@@ -10,7 +10,7 @@ variable "backup_disks_per_server" {
 
 # Size in gb
 variable "backup_disk_size" {
-  default = 256
+  default = 512
 }
 
 locals {
