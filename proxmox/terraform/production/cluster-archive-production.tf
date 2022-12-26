@@ -273,6 +273,16 @@ resource "rancher2_app_v2" "archive-production-rancher-monitoring" {
   chart_name    = "rancher-monitoring"
   chart_version = "100.1.3+up19.0.3"
   values        = <<EOF
+nodeExporter:
+  serviceMonitor:
+    enabled: true
+    relabelings:
+    - action: replace
+      regex: ^(.*)$
+      replacement: $1
+      sourceLabels:
+      - __meta_kubernetes_pod_node_name
+      targetLabel: instance
 prometheus:
   enabled: true
   prometheusSpec:
