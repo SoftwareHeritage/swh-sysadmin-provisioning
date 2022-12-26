@@ -86,7 +86,7 @@ module "dali" {
     {
       id      = 1
       storage = "proxmox"
-      size    = "200G"
+      size    = "250G"
     }
   ]
 }
