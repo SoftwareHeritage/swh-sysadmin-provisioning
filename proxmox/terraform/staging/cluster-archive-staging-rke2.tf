@@ -93,7 +93,7 @@ module "rancher-node-staging-rke2-worker1" {
 
   post_provision_steps = [
     "systemctl restart docker",  # workaround
-    "${rancher2_cluster.archive-staging.cluster_registration_token[0].node_command} --worker --label node_type=generic --label swh/rpc=true"
+    "${rancher2_cluster.archive-staging-rke2.cluster_registration_token[0].node_command} --worker --label node_type=generic --label swh/rpc=true"
   ]
 }
 
@@ -134,7 +134,7 @@ module "rancher-node-staging-rke2-worker2" {
 
   post_provision_steps = [
     "systemctl restart docker",  # workaround
-    "${rancher2_cluster.archive-staging.cluster_registration_token[0].node_command} --worker --label node_type=worker --label swh/rpc=true --label swh/loader=true --label swh/lister=true"
+    "${rancher2_cluster.archive-staging-rke2.cluster_registration_token[0].node_command} --worker --label node_type=worker --label swh/rpc=true --label swh/loader=true --label swh/lister=true"
   ]
 }
 
