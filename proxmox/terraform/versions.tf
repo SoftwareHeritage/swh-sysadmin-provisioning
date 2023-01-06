@@ -14,7 +14,7 @@ terraform {
 
 provider "proxmox" {
   pm_tls_insecure = true
-  pm_api_url      = "https://beaubourg.internal.softwareheritage.org:8006/api2/json"
+  pm_api_url      = "https://mucem.internal.softwareheritage.org:8006/api2/json"
   # in a shell (see README): source ../setup.sh
 
   # Uncomment this section to activate the proxmox execution logs
