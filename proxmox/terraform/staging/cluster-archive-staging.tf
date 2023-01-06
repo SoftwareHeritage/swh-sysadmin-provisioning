@@ -61,7 +61,7 @@ module "rancher-node-staging-mgmt0" {
     ip      = "192.168.130.130"
     gateway = local.config["gateway_ip"]
     macaddr = "72:CF:A9:AC:B8:EE"
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
 
   storages = [{
@@ -103,7 +103,7 @@ module "rancher-node-staging-worker1" {
     id      = 0
     ip      = "192.168.130.131"
     gateway = local.config["gateway_ip"]
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
 
   storages = [{
@@ -145,7 +145,7 @@ module "rancher-node-staging-worker2" {
     id      = 0
     ip      = "192.168.130.132"
     gateway = local.config["gateway_ip"]
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
 
   storages = [{
@@ -187,7 +187,7 @@ module "rancher-node-staging-worker3" {
     id      = 0
     ip      = "192.168.130.133"
     gateway = local.config["gateway_ip"]
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
 
   storages = [{
@@ -229,7 +229,7 @@ module "rancher-node-staging-worker4" {
     id      = 0
     ip      = "192.168.130.134"
     gateway = local.config["gateway_ip"]
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
 
   storages = [{

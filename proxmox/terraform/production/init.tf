@@ -19,6 +19,6 @@ locals {
     user_admin                      = var.user_admin
     user_admin_ssh_public_key       = var.user_admin_ssh_public_key
     user_admin_ssh_private_key_path = var.user_admin_ssh_private_key_path
-    bridge  = "vmbr0"
+    bridge                          = "vmbr0"
   }
 }

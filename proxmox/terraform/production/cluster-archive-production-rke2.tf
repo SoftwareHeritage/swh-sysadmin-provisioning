@@ -1,5 +1,3 @@
-
-
 resource "rancher2_cluster_v2" "archive-production-rke2" {
   name               = "archive-production-rke2"
 

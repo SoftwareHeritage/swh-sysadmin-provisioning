@@ -10,7 +10,7 @@ locals {
     user_admin                      = var.user_admin
     user_admin_ssh_public_key       = var.user_admin_ssh_public_key
     user_admin_ssh_private_key_path = var.user_admin_ssh_private_key_path
-    vlan                            = "vmbr442"
+    bridge                          = "vmbr442"
   }
 }
 
@@ -31,7 +31,7 @@ module "bardo" {
     ip      = "192.168.50.10"
     gateway = local.config["gateway_ip"]
     macaddr = "7A:CE:A2:72:FA:E8"
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
 }
 
@@ -53,7 +53,7 @@ module "rp1" {
     ip      = "192.168.50.20"
     gateway = local.config["gateway_ip"]
     macaddr = "4E:42:20:E0:B6:65"
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
    }]
 }
 
@@ -75,7 +75,7 @@ module "dali" {
     ip      = "192.168.50.50"
     gateway = local.config["gateway_ip"]
     macaddr = "C2:7C:85:D0:E8:7C"
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
    }]
   storages = [
     {
@@ -112,7 +112,7 @@ module "grafana0" {
     ip      = "192.168.50.30"
     gateway = local.config["gateway_ip"]
     macaddr = "B2:CB:D9:09:D3:3B"
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
 }
 
@@ -139,7 +139,7 @@ module "bojimans" {
     ip      = "192.168.50.60"
     gateway = "192.168.50.1"
     macaddr = "EE:ED:A6:A0:78:9F"
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
   storages = [{
     id      = 0
@@ -173,7 +173,7 @@ module "money" {
     ip      = "192.168.50.65"
     gateway = "192.168.50.1"
     macaddr = ""
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
   storages = [{
     id      = 0
@@ -205,7 +205,7 @@ module "thanos" {
     ip      = "192.168.50.90"
     gateway = local.config["gateway_ip"]
     macaddr = "16:3C:72:26:70:34"
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
 
   storages = [{

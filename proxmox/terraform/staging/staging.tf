@@ -17,7 +17,7 @@ module "scheduler0" {
     ip      = "192.168.130.50"
     gateway = local.config["gateway_ip"]
     macaddr = "92:02:7E:D0:B9:36"
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
 }
 
@@ -44,7 +44,7 @@ module "worker0" {
     ip      = "192.168.130.100"
     gateway = local.config["gateway_ip"]
     macaddr = "72:D9:03:46:B1:47"
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
 }
 
@@ -71,7 +71,7 @@ module "webapp" {
     ip      = "192.168.130.30"
     gateway = local.config["gateway_ip"]
     macaddr = "1A:00:39:95:D4:5F"
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
 }
 
@@ -98,7 +98,7 @@ module "deposit" {
     ip      = "192.168.130.31"
     gateway = local.config["gateway_ip"]
     macaddr = "9E:81:DD:58:15:3B"
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
 }
 
@@ -125,7 +125,7 @@ module "vault" {
     ip      = "192.168.130.60"
     gateway = local.config["gateway_ip"]
     macaddr = "16:15:1C:79:CB:DB"
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
 }
 
@@ -150,7 +150,7 @@ module "rp0" {
     ip      = "192.168.130.20"
     gateway = local.config["gateway_ip"]
     macaddr = "4A:80:47:5D:DF:73"
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
   # facter_subnet     = "sesi_rocquencourt_staging"
   # factor_deployment = "staging"
@@ -177,7 +177,7 @@ module "search-esnode0" {
     ip      = "192.168.130.80"
     gateway = local.config["gateway_ip"]
     macaddr = "96:74:49:BD:B5:08"
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
   storages = [{
     id      = 0
@@ -210,7 +210,7 @@ module "search0" {
     ip      = "192.168.130.90"
     gateway = local.config["gateway_ip"]
     macaddr = "EE:FA:76:55:CF:99"
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
 }
 
@@ -234,7 +234,7 @@ module "objstorage0" {
     ip      = "192.168.130.110"
     gateway = local.config["gateway_ip"]
     macaddr = "5E:28:EA:7D:50:0D"
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
 }
 
@@ -257,7 +257,7 @@ module "counters0" {
     ip      = "192.168.130.95"
     gateway = local.config["gateway_ip"]
     macaddr = "E2:6E:12:C7:3E:A4"
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
 }
 
@@ -283,7 +283,7 @@ module "mirror-test" {
     ip      = "192.168.130.160"
     gateway = local.config["gateway_ip"]
     macaddr = "E6:3C:8A:B7:26:5D"
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
 }
 
@@ -311,7 +311,7 @@ module "maven-exporter0" {
     ip      = "192.168.130.70"
     gateway = local.config["gateway_ip"]
     macaddr = "36:86:F6:F9:2A:5D"
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
 
   storages = [{
@@ -347,7 +347,7 @@ module "scrubber0" {
     ip      = "192.168.130.120"
     gateway = local.config["gateway_ip"]
     macaddr = "86:09:0A:61:AB:C1"
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
 
   storages = [{

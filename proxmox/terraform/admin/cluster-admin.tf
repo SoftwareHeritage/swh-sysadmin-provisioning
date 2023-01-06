@@ -50,7 +50,7 @@ module "rancher-node-admin-mgmt1" {
     id      = 0
     ip      = "192.168.50.45"
     gateway = local.config["gateway_ip"]
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
 
   storages = [{
@@ -91,7 +91,7 @@ module "rancher-node-admin-node01" {
     id      = 0
     ip      = "192.168.50.46"
     gateway = local.config["gateway_ip"]
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
 
   storages = [{
@@ -132,7 +132,7 @@ module "rancher-node-admin-node02" {
     id      = 0
     ip      = "192.168.50.47"
     gateway = local.config["gateway_ip"]
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
 
   storages = [{
@@ -173,7 +173,7 @@ module "rancher-node-admin-node03" {
     id      = 0
     ip      = "192.168.50.48"
     gateway = local.config["gateway_ip"]
-    bridge  = local.config["vlan"]
+    bridge  = local.config["bridge"]
   }]
 
   storages = [{
