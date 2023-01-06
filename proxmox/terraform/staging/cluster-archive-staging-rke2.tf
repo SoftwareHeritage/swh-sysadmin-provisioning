@@ -93,7 +93,7 @@ module "rancher-node-staging-rke2-worker1" {
 
   post_provision_steps = [
     "systemctl restart docker",  # workaround
-    "${rancher2_cluster.archive-staging-rke2.cluster_registration_token[0].node_command} --worker --label node_type=generic --label swh/rpc=true"
+    "${rancher2_cluster_v2.archive-staging-rke2.cluster_registration_token[0].node_command} --worker --label node_type=generic --label swh/rpc=true"
   ]
 }
 
@@ -134,10 +134,51 @@ module "rancher-node-staging-rke2-worker2" {
 
   post_provision_steps = [
     "systemctl restart docker",  # workaround
-    "${rancher2_cluster.archive-staging-rke2.cluster_registration_token[0].node_command} --worker --label node_type=worker --label swh/rpc=true --label swh/loader=true --label swh/lister=true"
+    "${rancher2_cluster_v2.archive-staging-rke2.cluster_registration_token[0].node_command} --worker --label node_type=worker --label swh/rpc=true --label swh/loader=true --label swh/lister=true"
   ]
 }
 
 output "rancher-node-staging-rke2-worker2_summary" {
   value = module.rancher-node-staging-rke2-worker2.summary
+}
+
+# loader nodes must have a 2nd disk on hypervisor local storage to avoid
+# unnecessary ceph traffic on ceph
+module "rancher-node-staging-rke2-worker3" {
+  source      = "../modules/node"
+  template    = var.templates["stable-zfs"]
+  config      = local.config
+  hostname    = "rancher-node-staging-rke2-worker3"
+  description = "elastic worker for computations (e.g. loader, lister, ...)"
+  hypervisor  = "pompidou"
+  sockets     = "1"
+  cores       = "4"
+  onboot      = true
+  memory      = "32768"
+  balloon     = "16384"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.130.143"
+    gateway = local.config["gateway_ip"]
+    bridge  = local.config["bridge"]
+  }]
+
+  storages = [{
+    storage = "proxmox"
+    size    = "20G"
+    }, {
+    storage = "scratch"
+    size    = "50G"
+    }
+  ]
+
+  post_provision_steps = [
+    "systemctl restart docker",  # workaround
+    "${rancher2_cluster_v2.archive-staging-rke2.cluster_registration_token[0].node_command} --worker --label node_type=worker --label swh/rpc=true --label swh/loader=true --label swh/lister=true"
+  ]
+}
+
+output "rancher-node-staging-rke2-worker3_summary" {
+  value = module.rancher-node-staging-rke2-worker3.summary
 }
