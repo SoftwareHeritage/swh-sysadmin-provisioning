@@ -162,7 +162,7 @@ module "rancher-node-admin-node03" {
   template    = var.templates["stable-zfs"]
   config      = local.config
   description = "Admin cluster node03"
-  hypervisor  = "pompidou"
+  hypervisor  = "mucem"
   sockets     = "1"
   cores       = "4"
   onboot      = true

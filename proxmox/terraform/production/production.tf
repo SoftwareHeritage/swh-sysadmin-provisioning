@@ -142,7 +142,7 @@ module "maven-exporter" {
   config      = local.config
   hostname    = "maven-exporter"
   description = "Maven index exporter to run containers and expose export.fld files"
-  hypervisor  = "pompidou"
+  hypervisor  = "mucem"
   sockets     = "1"
   cores       = "4"
   onboot      = true
