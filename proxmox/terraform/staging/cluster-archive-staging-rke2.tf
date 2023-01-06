@@ -61,6 +61,57 @@ output "rancher-node-staging-rke2-mgmt1_summary" {
   value = module.rancher-node-staging-rke2-mgmt1.summary
 }
 
+resource "rancher2_app_v2" "archive-staging-rke2-rancher-monitoring" {
+  cluster_id    = rancher2_cluster_v2.archive-staging-rke2.cluster_v1_id
+  name          = "rancher-monitoring"
+  namespace     = "cattle-monitoring-system"
+  repo_name     = "rancher-charts"
+  chart_name    = "rancher-monitoring"
+  chart_version = "100.1.3+up19.0.3"
+  values        = <<EOF
+nodeExporter:
+  serviceMonitor:
+    enabled: true
+    relabelings:
+    - action: replace
+      regex: ^(.*)$
+      replacement: $1
+      sourceLabels:
+      - __meta_kubernetes_pod_node_name
+      targetLabel: instance
+prometheus:
+  enabled: true
+  prometheusSpec:
+    externalLabels:
+      cluster: ${rancher2_cluster_v2.archive-staging-rke2.name}
+      domain: staging
+      environment: staging
+      infrastructure: kubernetes
+    requests:
+      cpu: 250m
+      memory: 250Mi
+      retention: 30d
+    thanos:
+      objectStorageConfig:
+        key: thanos.yaml
+        name: thanos-objstore-config-secret
+  thanosIngress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-staging-gandi
+      metallb.universe.tf/allow-shared-ip: clusterIP
+      nginx.ingress.kubernetes.io/backend-protocol: GRPC
+    enabled: true
+    hosts:
+    - k8s-archive-staging-rke2-thanos.internal.softwareheritage.org
+    loadBalancerIP: 192.168.100.119
+    pathType: Prefix
+    tls:
+    - hosts:
+      - k8s-archive-staging-rke2-thanos.internal.softwareheritage.org
+      secretName: thanos-crt
+EOF
+}
+
 # Dedicated node for rpc services (e.g. graphql, ...)
 module "rancher-node-staging-rke2-worker1" {
   source      = "../modules/node"
