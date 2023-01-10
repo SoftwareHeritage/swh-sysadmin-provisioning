@@ -221,10 +221,10 @@ prometheus:
       domain: admin
       environment: admin
       infrastructure: kubernetes
-    requests:
-      cpu: 250m
-      memory: 250Mi
-      retention: 15d
+    resources:
+      limits:
+        cpu: 1500m
+    retention: 15d
     thanos:
       objectStorageConfig:
         key: thanos.yaml
