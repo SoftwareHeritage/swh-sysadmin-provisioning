@@ -24,14 +24,15 @@ output "rancher2_cluster_archive_staging_rke2_command" {
 
 module "rancher-node-staging-rke2-mgmt1" {
   source      = "../modules/node"
-  template    = var.templates["stable-zfs"]
   config      = local.config
+  hypervisor  = "pompidou"
+  onboot      = false
+
+  template    = var.templates["stable-zfs"]
   hostname    = "rancher-node-staging-rke2-mgmt1"
   description = "staging rke2 management node"
-  hypervisor  = "pompidou"
   sockets     = "1"
   cores       = "4"
-  onboot      = true
   memory      = "8192"
   balloon     = "8192"
 
@@ -115,14 +116,15 @@ EOF
 # Dedicated node for rpc services (e.g. graphql, ...)
 module "rancher-node-staging-rke2-worker1" {
   source      = "../modules/node"
-  template    = var.templates["stable-zfs"]
   config      = local.config
+  hypervisor  = "pompidou"
+  onboot      = false
+
+  template    = var.templates["stable-zfs"]
   hostname    = "rancher-node-staging-rke2-worker1"
   description = "elastic worker for rpc services (e.g. graphql, ...)"
-  hypervisor  = "pompidou"
   sockets     = "1"
   cores       = "4"
-  onboot      = true
   memory      = "32768"
   balloon     = "16384"
 
@@ -156,14 +158,15 @@ output "rancher-node-staging-rke2-worker1_summary" {
 # unnecessary ceph traffic on ceph
 module "rancher-node-staging-rke2-worker2" {
   source      = "../modules/node"
-  template    = var.templates["stable-zfs"]
   config      = local.config
+  hypervisor  = "pompidou"
+  onboot      = false
+
+  template    = var.templates["stable-zfs"]
   hostname    = "rancher-node-staging-rke2-worker2"
   description = "elastic worker for computations (e.g. loader, lister, ...)"
-  hypervisor  = "pompidou"
   sockets     = "1"
   cores       = "4"
-  onboot      = true
   memory      = "32768"
   balloon     = "16384"
 
@@ -197,14 +200,15 @@ output "rancher-node-staging-rke2-worker2_summary" {
 # unnecessary ceph traffic on ceph
 module "rancher-node-staging-rke2-worker3" {
   source      = "../modules/node"
-  template    = var.templates["stable-zfs"]
   config      = local.config
+  hypervisor  = "pompidou"
+  onboot      = false
+
+  template    = var.templates["stable-zfs"]
   hostname    = "rancher-node-staging-rke2-worker3"
   description = "elastic worker for computations (e.g. loader, lister, ...)"
-  hypervisor  = "pompidou"
   sockets     = "1"
   cores       = "4"
-  onboot      = true
   memory      = "32768"
   balloon     = "16384"
 
@@ -238,14 +242,15 @@ output "rancher-node-staging-rke2-worker3_summary" {
 # unnecessary ceph traffic on ceph
 module "rancher-node-staging-rke2-worker4" {
   source      = "../modules/node"
-  template    = var.templates["stable-zfs"]
   config      = local.config
+  hypervisor  = "pompidou"
+  onboot      = false
+
+  template    = var.templates["stable-zfs"]
   hostname    = "rancher-node-staging-rke2-worker4"
   description = "elastic worker for computations (e.g. loader, lister, ...)"
-  hypervisor  = "pompidou"
   sockets     = "1"
   cores       = "4"
-  onboot      = true
   memory      = "32768"
   balloon     = "16384"
 

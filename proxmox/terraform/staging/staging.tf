@@ -1,11 +1,12 @@
 module "scheduler0" {
-  source = "../modules/node"
-  config = local.config
+  source      = "../modules/node"
+  config      = local.config
+  hypervisor  = "pompidou"
+  onboot      = false
 
   vmid        = 116
   hostname    = "scheduler0"
   description = "Scheduler api services"
-  hypervisor  = "beaubourg"
   # to match the real vm configuration in proxmox
   # to remove
   args    = "-device virtio-rng-pci"
@@ -26,17 +27,17 @@ output "scheduler0_summary" {
 }
 
 module "worker0" {
-  source = "../modules/node"
-  config = local.config
+  source      = "../modules/node"
+  config      = local.config
+  hypervisor  = "beaubourg"
+  onboot      = false
 
   vmid        = 117
   hostname    = "worker0"
   description = "Loader/lister service node"
-  hypervisor  = "beaubourg"
   cores       = "2"
   memory      = 4096
   balloon     = 1024
-  onboot      = false
   args        = "-device virtio-rng-pci"
 
   networks = [{
@@ -53,13 +54,14 @@ output "worker0_summary" {
 }
 
 module "webapp" {
-  source = "../modules/node"
-  config = local.config
+  source      = "../modules/node"
+  config      = local.config
+  hypervisor  = "pompidou"
+  onboot      = false
 
   vmid        = 119
   hostname    = "webapp"
   description = "Archive/Webapp service node"
-  hypervisor  = "branly"
   cores       = 4
   memory      = 16384
   balloon     = 1024
@@ -80,13 +82,14 @@ output "webapp_summary" {
 }
 
 module "deposit" {
-  source = "../modules/node"
-  config = local.config
+  source      = "../modules/node"
+  config      = local.config
+  hypervisor  = "pompidou"
+  onboot      = false
 
   vmid        = 120
   hostname    = "deposit"
   description = "Deposit service node"
-  hypervisor  = "beaubourg"
   cores       = "4"
   memory      = "8192"
   balloon     = 1024
@@ -107,13 +110,14 @@ output "deposit_summary" {
 }
 
 module "vault" {
-  source = "../modules/node"
-  config = local.config
+  source      = "../modules/node"
+  config      = local.config
+  hypervisor  = "pompidou"
+  onboot      = false
 
   vmid        = 121
   hostname    = "vault"
   description = "Vault services node"
-  hypervisor  = "beaubourg"
   cores       = "4"
   memory      = "8192"
   balloon     = 1024
@@ -133,11 +137,11 @@ output "vault_summary" {
   value = module.vault.summary
 }
 
-
 module "rp0" {
-  source     = "../modules/node"
-  config     = local.config
-  hypervisor = "branly"
+  source      = "../modules/node"
+  config      = local.config
+  hypervisor  = "pompidou"
+  onboot      = false
 
   vmid        = 129
   hostname    = "rp0"
@@ -162,9 +166,10 @@ output "rp0_summary" {
 
 
 module "search-esnode0" {
-  source     = "../modules/node"
-  config     = local.config
-  hypervisor = "branly"
+  source      = "../modules/node"
+  config      = local.config
+  hypervisor  = "pompidou"
+  onboot      = false
 
   vmid        = 130
   hostname    = "search-esnode0"
@@ -195,9 +200,10 @@ output "search-esnode0_summary" {
 }
 
 module "search0" {
-  source     = "../modules/node"
-  config     = local.config
-  hypervisor = "branly"
+  source      = "../modules/node"
+  config      = local.config
+  hypervisor  = "pompidou"
+  onboot      = false
 
   vmid        = 131
   hostname    = "search0"
@@ -219,9 +225,10 @@ output "search0_summary" {
 }
 
 module "objstorage0" {
-  source     = "../modules/node"
-  config     = local.config
-  hypervisor = "pompidou"
+  source      = "../modules/node"
+  config      = local.config
+  hypervisor  = "pompidou"
+  onboot      = false
 
   vmid        = 102
   hostname    = "objstorage0"
@@ -245,10 +252,12 @@ output "objstorage0_summary" {
 module "counters0" {
   source      = "../modules/node"
   config      = local.config
+  hypervisor  = "pompidou"
+  onboot      = false
+
   vmid        = 138
   hostname    = "counters0"
   description = "Counters server"
-  hypervisor  = "pompidou"
   cores       = "4"
   memory      = "6096"
   balloon     = 2048
@@ -268,16 +277,17 @@ output "counters0_summary" {
 module "mirror-test" {
   source      = "../modules/node"
   config      = local.config
+  hypervisor  = "pompidou"
+  onboot      = false
+
   vmid        = 132
   hostname    = "mirror-test"
   description = "Sandbox VM to test the mirror environment"
-  hypervisor  = "uffizi"
   sockets     = "2"
   cores       = "4"
 
-  memory  = "65536"
-  balloon = "20480"
-
+  memory      = "65536"
+  balloon     = "20480"
   networks = [{
     id      = 0
     ip      = "192.168.130.160"
@@ -293,15 +303,16 @@ output "mirror-tests_summary" {
 
 module "maven-exporter0" {
   source      = "../modules/node"
+  config      = local.config
+  hypervisor  = "pompidou"
+  onboot      = false
+
   template    = var.templates["stable-zfs"]
   vmid        = 122
-  config      = local.config
   hostname    = "maven-exporter0"
   description = "Maven index exporter to run containers and expose export.fld files"
-  hypervisor  = "pompidou"
   sockets     = "1"
   cores       = "4"
-  onboot      = true
 
   memory  = "4096"
   balloon = "1024"
@@ -330,14 +341,15 @@ output "maven-exporter0_summary" {
 
 module "scrubber0" {
   source      = "../modules/node"
-  vmid        = 142
   config      = local.config
+  hypervisor  = "pompidou"
+  onboot      = false
+
+  vmid        = 142
   hostname    = "scrubber0"
   description = "Scrubber checker services"
-  hypervisor  = "pompidou"
   sockets     = "1"
   cores       = "4"
-  onboot      = true
 
   memory  = "4096"
   balloon = "1024"
