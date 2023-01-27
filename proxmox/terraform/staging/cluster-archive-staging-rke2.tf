@@ -26,7 +26,7 @@ module "rancher-node-staging-rke2-mgmt1" {
   source      = "../modules/node"
   config      = local.config
   hypervisor  = "pompidou"
-  onboot      = false
+  onboot      = true
 
   template    = var.templates["stable-zfs"]
   hostname    = "rancher-node-staging-rke2-mgmt1"
@@ -118,7 +118,7 @@ module "rancher-node-staging-rke2-worker1" {
   source      = "../modules/node"
   config      = local.config
   hypervisor  = "pompidou"
-  onboot      = false
+  onboot      = true
 
   template    = var.templates["stable-zfs"]
   hostname    = "rancher-node-staging-rke2-worker1"
@@ -160,7 +160,7 @@ module "rancher-node-staging-rke2-worker2" {
   source      = "../modules/node"
   config      = local.config
   hypervisor  = "pompidou"
-  onboot      = false
+  onboot      = true
 
   template    = var.templates["stable-zfs"]
   hostname    = "rancher-node-staging-rke2-worker2"
@@ -202,7 +202,7 @@ module "rancher-node-staging-rke2-worker3" {
   source      = "../modules/node"
   config      = local.config
   hypervisor  = "pompidou"
-  onboot      = false
+  onboot      = true
 
   template    = var.templates["stable-zfs"]
   hostname    = "rancher-node-staging-rke2-worker3"
@@ -244,7 +244,7 @@ module "rancher-node-staging-rke2-worker4" {
   source      = "../modules/node"
   config      = local.config
   hypervisor  = "pompidou"
-  onboot      = false
+  onboot      = true
 
   template    = var.templates["stable-zfs"]
   hostname    = "rancher-node-staging-rke2-worker4"

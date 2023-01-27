@@ -2,7 +2,7 @@ module "scheduler0" {
   source      = "../modules/node"
   config      = local.config
   hypervisor  = "pompidou"
-  onboot      = false
+  onboot      = true
 
   vmid        = 116
   hostname    = "scheduler0"
@@ -30,7 +30,7 @@ module "worker0" {
   source      = "../modules/node"
   config      = local.config
   hypervisor  = "beaubourg"
-  onboot      = false
+  onboot      = true
 
   vmid        = 117
   hostname    = "worker0"
@@ -57,7 +57,7 @@ module "webapp" {
   source      = "../modules/node"
   config      = local.config
   hypervisor  = "pompidou"
-  onboot      = false
+  onboot      = true
 
   vmid        = 119
   hostname    = "webapp"
@@ -85,7 +85,7 @@ module "deposit" {
   source      = "../modules/node"
   config      = local.config
   hypervisor  = "pompidou"
-  onboot      = false
+  onboot      = true
 
   vmid        = 120
   hostname    = "deposit"
@@ -113,7 +113,7 @@ module "vault" {
   source      = "../modules/node"
   config      = local.config
   hypervisor  = "pompidou"
-  onboot      = false
+  onboot      = true
 
   vmid        = 121
   hostname    = "vault"
@@ -141,7 +141,7 @@ module "rp0" {
   source      = "../modules/node"
   config      = local.config
   hypervisor  = "pompidou"
-  onboot      = false
+  onboot      = true
 
   vmid        = 129
   hostname    = "rp0"
@@ -169,7 +169,7 @@ module "search-esnode0" {
   source      = "../modules/node"
   config      = local.config
   hypervisor  = "pompidou"
-  onboot      = false
+  onboot      = true
 
   vmid        = 130
   hostname    = "search-esnode0"
@@ -203,7 +203,7 @@ module "search0" {
   source      = "../modules/node"
   config      = local.config
   hypervisor  = "pompidou"
-  onboot      = false
+  onboot      = true
 
   vmid        = 131
   hostname    = "search0"
@@ -228,7 +228,7 @@ module "objstorage0" {
   source      = "../modules/node"
   config      = local.config
   hypervisor  = "pompidou"
-  onboot      = false
+  onboot      = true
 
   vmid        = 102
   hostname    = "objstorage0"
@@ -253,7 +253,7 @@ module "counters0" {
   source      = "../modules/node"
   config      = local.config
   hypervisor  = "pompidou"
-  onboot      = false
+  onboot      = true
 
   vmid        = 138
   hostname    = "counters0"
@@ -305,7 +305,7 @@ module "maven-exporter0" {
   source      = "../modules/node"
   config      = local.config
   hypervisor  = "pompidou"
-  onboot      = false
+  onboot      = true
 
   template    = var.templates["stable-zfs"]
   vmid        = 122
@@ -343,7 +343,7 @@ module "scrubber0" {
   source      = "../modules/node"
   config      = local.config
   hypervisor  = "pompidou"
-  onboot      = false
+  onboot      = true
 
   vmid        = 142
   hostname    = "scrubber0"
