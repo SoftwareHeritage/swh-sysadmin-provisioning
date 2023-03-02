@@ -8,6 +8,11 @@ infra (proxmox)
 
 See prepare-workstation.md
 
+## Get rancher access key
+Go to rancher, in your account detail[1] generate a new access key without scope
+
+[1] https://rancher.euwest.azure.internal.softwareheritage.org/dashboard/account
+
 ## setup.sh
 
 Create a `setup.sh` file holding the PM_{USER,PASS} information:
@@ -15,6 +20,8 @@ Create a `setup.sh` file holding the PM_{USER,PASS} information:
 ```
 export PM_USER=<swh-login>@pam
 export PM_PASS=<swh-login-pass>
+export RANCHER_ACCESS_KEY="<rancher token id>"
+export RANCHER_SECRET_KEY="<rancher secret key>"
 ```
 
 source it in your current shell session.
