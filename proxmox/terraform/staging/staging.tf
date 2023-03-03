@@ -385,6 +385,7 @@ module "gsa-temp" {
   description = "gsa temporary vm"
   sockets     = "1"
   cores       = "8"
+  cpu         = "host"
 
   memory      = "32768"
   balloon     = "10000"
