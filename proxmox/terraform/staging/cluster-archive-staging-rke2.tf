@@ -98,17 +98,17 @@ prometheus:
         name: thanos-objstore-config-secret
   thanosIngress:
     annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-staging-gandi
+      cert-manager.io/cluster-issuer: letsencrypt-production-gandi
       metallb.universe.tf/allow-shared-ip: clusterIP
       nginx.ingress.kubernetes.io/backend-protocol: GRPC
     enabled: true
     hosts:
-    - k8s-archive-staging-rke2-thanos.internal.softwareheritage.org
+    - k8s-archive-staging-rke2-thanos.internal.staging.swh.network
     loadBalancerIP: 192.168.100.119
     pathType: Prefix
     tls:
     - hosts:
-      - k8s-archive-staging-rke2-thanos.internal.softwareheritage.org
+      - k8s-archive-staging-rke2-thanos.internal.staging.swh.network
       secretName: thanos-crt
 EOF
 }
