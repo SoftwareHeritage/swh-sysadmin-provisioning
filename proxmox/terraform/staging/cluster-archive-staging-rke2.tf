@@ -140,7 +140,7 @@ module "rancher-node-staging-rke2-worker1" {
     size    = "20G"
     }, {
     storage = "scratch"
-    size    = "50G"
+    size    = "100G"
     }
   ]
 
@@ -182,7 +182,7 @@ module "rancher-node-staging-rke2-worker2" {
     size    = "20G"
     }, {
     storage = "scratch"
-    size    = "50G"
+    size    = "100G"
     }
   ]
 
@@ -224,7 +224,7 @@ module "rancher-node-staging-rke2-worker3" {
     size    = "20G"
     }, {
     storage = "scratch"
-    size    = "50G"
+    size    = "100G"
     }
   ]
 
@@ -266,7 +266,7 @@ module "rancher-node-staging-rke2-worker4" {
     size    = "20G"
     }, {
     storage = "scratch"
-    size    = "50G"
+    size    = "100G"
     }
   ]
 
