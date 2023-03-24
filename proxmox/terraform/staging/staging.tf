@@ -26,33 +26,6 @@ output "scheduler0_summary" {
   value = module.scheduler0.summary
 }
 
-module "worker0" {
-  source      = "../modules/node"
-  config      = local.config
-  hypervisor  = "beaubourg"
-  onboot      = true
-
-  vmid        = 117
-  hostname    = "worker0"
-  description = "Loader/lister service node"
-  cores       = "2"
-  memory      = 4096
-  balloon     = 1024
-  args        = "-device virtio-rng-pci"
-
-  networks = [{
-    id      = 0
-    ip      = "192.168.130.100"
-    gateway = local.config["gateway_ip"]
-    macaddr = "72:D9:03:46:B1:47"
-    bridge  = local.config["bridge"]
-  }]
-}
-
-output "worker0_summary" {
-  value = module.worker0.summary
-}
-
 module "webapp" {
   source      = "../modules/node"
   config      = local.config
