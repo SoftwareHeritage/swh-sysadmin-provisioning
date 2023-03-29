@@ -34,3 +34,15 @@ variable "container_insights" {
   type        = bool
   default     = false
 }
+
+variable "minimal_pool_count" {
+  description = "minimal nodes count to instanciate in the node pool"
+  type        = number
+  default     = 1
+}
+
+variable "maximal_pool_count" {
+  description = "minimal nodes count to instanciate in the node pool"
+  type        = number
+  default     = 5
+}

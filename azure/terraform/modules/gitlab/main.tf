@@ -38,8 +38,8 @@ module "gitlab_aks_cluster" {
   cluster_name   = var.name
   resource_group = var.name
 
-  minimal_pool_count = 1
-  maximal_pool_count = 5
+  minimal_pool_count = var.minimal_pool_count
+  maximal_pool_count = var.maximal_pool_count
   node_type          = "Standard_B2ms"
 
   kubernetes_version = var.kubernetes_version
