@@ -345,37 +345,3 @@ module "scrubber0" {
 output "scrubber0_summary" {
   value = module.scrubber0.summary
 }
-
-module "gsa-temp" {
-  source      = "../modules/node"
-  config      = local.config
-  hypervisor  = "pompidou"
-  onboot      = false
-
-  template    = var.templates["stable"]
-  vmid        = 143
-  hostname    = "gsa-temp"
-  description = "gsa temporary vm"
-  sockets     = "1"
-  cores       = "8"
-  cpu         = "host"
-
-  memory      = "32768"
-  balloon     = "10000"
-  networks = [{
-    id      = 0
-    ip      = "192.168.130.202"
-    gateway = local.config["gateway_ip"]
-    bridge  = local.config["bridge"]
-  }]
-
-  storages = [{
-    storage = "proxmox"
-    size    = "100G"
-    }
-  ]
-}
-
-output "gsa-temp_summary" {
-  value = module.gsa-temp.summary
-}
