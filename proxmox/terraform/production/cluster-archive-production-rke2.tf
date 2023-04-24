@@ -96,6 +96,13 @@ prometheus:
       objectStorageConfig:
         key: thanos.yaml
         name: thanos-objstore-config-secret
+    resources:
+      limits:
+        memory: 6000Mi
+        cpu: 2000m
+      requests:
+        memory: 3500Mi
+        cpu: 1000m
   thanosIngress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-production-gandi
@@ -110,5 +117,9 @@ prometheus:
     - hosts:
       - k8s-archive-production-rke2-thanos.internal.softwareheritage.org
       secretName: thanos-crt
+prometheus-node-exporter:
+  resources:
+    limits:
+      memory: 100Mi
 EOF
 }
