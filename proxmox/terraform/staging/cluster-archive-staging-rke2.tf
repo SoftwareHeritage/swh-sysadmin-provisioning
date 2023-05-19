@@ -33,8 +33,8 @@ module "rancher-node-staging-rke2-mgmt1" {
   description = "staging rke2 management node"
   sockets     = "1"
   cores       = "4"
-  memory      = "8192"
-  balloon     = "8192"
+  memory      = "16384"
+  balloon     = "16384"
 
   networks = [{
     id      = 0
