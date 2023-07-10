@@ -95,6 +95,13 @@ prometheus:
       objectStorageConfig:
         key: thanos.yaml
         name: thanos-objstore-config-secret
+    resources:
+      limits:
+        memory: 5000Mi
+        cpu: 2000m
+      requests:
+        memory: 3500Mi
+        cpu: 750m
   thanosIngress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-production-gandi
