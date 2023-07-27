@@ -286,7 +286,6 @@ output "rancher-node-staging-rke2-worker4_summary" {
   value = module.rancher-node-staging-rke2-worker4.summary
 }
 
-
 # loader nodes must have a 2nd disk on hypervisor local storage to avoid
 # unnecessary ceph traffic on ceph
 module "rancher-node-staging-rke2-worker5" {
@@ -327,4 +326,46 @@ module "rancher-node-staging-rke2-worker5" {
 
 output "rancher-node-staging-rke2-worker5_summary" {
   value = module.rancher-node-staging-rke2-worker5.summary
+}
+
+# loader nodes must have a 2nd disk on hypervisor local storage to avoid
+# unnecessary ceph traffic on ceph
+module "rancher-node-staging-rke2-worker6" {
+  source      = "../modules/node"
+  config      = local.config
+  hypervisor  = "uffizi"
+  onboot      = true
+
+  template    = var.templates["stable-zfs"]
+  hostname    = "rancher-node-staging-rke2-worker6"
+  description = "elastic worker for computations (e.g. loader, lister, ...)"
+  sockets     = "1"
+  cores       = "6"
+  memory      = "32768"
+  balloon     = "16384"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.130.146"
+    gateway = local.config["gateway_ip"]
+    bridge  = local.config["bridge"]
+  }]
+
+  storages = [{
+    storage = "proxmox"
+    size    = "20G"
+    }, {
+    storage = "scratch"
+    size    = "100G"
+    }
+  ]
+
+  post_provision_steps = [
+    "systemctl restart docker",  # workaround
+    "${rancher2_cluster_v2.archive-staging-rke2.cluster_registration_token[0].node_command} --worker --label node_type=worker --label swh/rpc=true --label swh/loader=true"
+  ]
+}
+
+output "rancher-node-staging-rke2-worker6_summary" {
+  value = module.rancher-node-staging-rke2-worker6.summary
 }
