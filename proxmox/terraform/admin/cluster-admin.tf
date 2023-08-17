@@ -4,6 +4,7 @@ resource "rancher2_cluster" "cluster-admin" {
 
   rke_config {
     kubernetes_version = "v1.24.16-rancher1-1"
+    enable_cri_dockerd = true
     network {
       plugin = "canal"
     }
@@ -201,7 +202,7 @@ resource "rancher2_app_v2" "cluster-admin-rancher-monitoring" {
   namespace = "cattle-monitoring-system"
   repo_name = "rancher-charts"
   chart_name = "rancher-monitoring"
-  chart_version = "100.1.3+up19.0.3"
+  chart_version = "102.0.1+up40.1.2"
   values = <<EOF
 alertmanager:
   alertmanagerSpec:
