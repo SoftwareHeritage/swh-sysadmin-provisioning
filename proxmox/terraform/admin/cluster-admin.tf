@@ -203,6 +203,15 @@ resource "rancher2_app_v2" "cluster-admin-rancher-monitoring" {
   chart_name = "rancher-monitoring"
   chart_version = "100.1.3+up19.0.3"
   values = <<EOF
+alertmanager:
+  alertmanagerSpec:
+    logLevel: debug
+global:
+  cattle:
+    clusterId: c-q2wd4
+    clusterName: cluster-admin
+    systemDefaultRegistry: ""
+  systemDefaultRegistry: ""
 nodeExporter:
   serviceMonitor:
     enabled: true
