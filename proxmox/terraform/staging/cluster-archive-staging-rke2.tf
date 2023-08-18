@@ -68,7 +68,7 @@ resource "rancher2_app_v2" "archive-staging-rke2-rancher-monitoring" {
   namespace     = "cattle-monitoring-system"
   repo_name     = "rancher-charts"
   chart_name    = "rancher-monitoring"
-  chart_version = "100.1.3+up19.0.3"
+  chart_version = "102.0.1+up40.1.2"
   values        = <<EOF
 nodeExporter:
   serviceMonitor:
