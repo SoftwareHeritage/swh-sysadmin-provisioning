@@ -3,7 +3,7 @@ resource "rancher2_cluster" "cluster-admin" {
   description = "cluster for admin tools (argocd, minio, ...)"
 
   rke_config {
-    kubernetes_version = "v1.24.16-rancher1-1"
+    kubernetes_version = "v1.26.7-rancher1-1"
     enable_cri_dockerd = true
     network {
       plugin = "canal"
