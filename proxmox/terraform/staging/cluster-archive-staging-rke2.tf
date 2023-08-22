@@ -4,7 +4,7 @@ resource "rancher2_cluster_v2" "archive-staging-rke2" {
   rke_config {
     upgrade_strategy {
       worker_drain_options {
-        enabled               = true
+        enabled               = false
         delete_empty_dir_data = true
         timeout               = 300
       }
