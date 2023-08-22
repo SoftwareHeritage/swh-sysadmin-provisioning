@@ -68,8 +68,14 @@ resource "rancher2_app_v2" "archive-production-rke2-rancher-monitoring" {
   namespace     = "cattle-monitoring-system"
   repo_name     = "rancher-charts"
   chart_name    = "rancher-monitoring"
-  chart_version = "100.1.3+up19.0.3"
+  chart_version = "102.0.1+up40.1.2"
   values        = <<EOF
+global:
+  cattle:
+    clusterId: c-m-75xcg59s
+    clusterName: archive-production-rke2
+    systemDefaultRegistry: ""
+  systemDefaultRegistry: ""
 nodeExporter:
   serviceMonitor:
     enabled: true
@@ -91,17 +97,18 @@ prometheus:
     requests:
       cpu: 250m
       memory: 250Mi
+      retention: 10d
+    resources:
+      limits:
+        cpu: 2000m
+        memory: 6000Mi
+      requests:
+        cpu: 1000m
+        memory: 3500Mi
     thanos:
       objectStorageConfig:
         key: thanos.yaml
         name: thanos-objstore-config-secret
-    resources:
-      limits:
-        memory: 6000Mi
-        cpu: 2000m
-      requests:
-        memory: 3500Mi
-        cpu: 1000m
   thanosIngress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-production-gandi
