@@ -1,15 +1,20 @@
 resource "rancher2_cluster_v2" "archive-production-rke2" {
   name               = "archive-production-rke2"
-
   kubernetes_version = "v1.24.9+rke2r2"
   rke_config {
     upgrade_strategy {
       worker_drain_options {
-        enabled              = true
+        enabled               = false
         delete_empty_dir_data = true
-        timeout              = 300
+        timeout               = 300
       }
     }
+
+    machine_global_config = <<EOF
+cni: "calico"
+disable:
+  - rke2-ingress-nginx
+EOF
   }
 }
 
