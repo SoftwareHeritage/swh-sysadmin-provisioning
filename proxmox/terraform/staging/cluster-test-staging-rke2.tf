@@ -22,6 +22,14 @@ output "rancher2_cluster_test_staging_rke2_command" {
   value     = rancher2_cluster_v2.test-staging-rke2.cluster_registration_token[0].node_command
 }
 
+resource "rancher2_cluster_sync" "test-staging-rke2" {
+  cluster_id =  rancher2_cluster_v2.test-staging-rke2.cluster_v1_id
+  state_confirm = 2
+  timeouts {
+    create = "45m"
+  }
+}
+
 module "rancher-node-test-rke2-mgmt1" {
   source      = "../modules/node"
   config      = local.config
@@ -66,62 +74,67 @@ output "rancher-node-test-rke2-mgmt1_summary" {
 }
 
 # Disabled, it should be created and maintained by argocd
-# resource "rancher2_app_v2" "test-staging-rke2-rancher-monitoring" {
-#   cluster_id    = rancher2_cluster_v2.test-staging-rke2.cluster_v1_id
-#   name          = "rancher-monitoring"
-#   namespace     = "cattle-monitoring-system"
-#   repo_name     = "rancher-charts"
-#   chart_name    = "rancher-monitoring"
-#   chart_version = "102.0.1+up40.1.2"
-#   values        = <<EOF
-# nodeExporter:
-#   serviceMonitor:
+resource "rancher2_app_v2" "test-staging-rke2-rancher-monitoring" {
+  cluster_id    = rancher2_cluster_v2.test-staging-rke2.cluster_v1_id
+  name          = "rancher-monitoring"
+  namespace     = "cattle-monitoring-system"
+  repo_name     = "rancher-charts"
+  chart_name    = "rancher-monitoring"
+  chart_version = "102.0.1+up40.1.2"
+  values        = <<EOF
+nodeExporter:
+  serviceMonitor:
+    enabled: true
+    relabelings:
+    - action: replace
+      regex: ^(.*)$
+      replacement: $1
+      sourceLabels:
+      - __meta_kubernetes_pod_node_name
+      targetLabel: instance
+prometheus:
+  enabled: true
+  prometheusSpec:
+    externalLabels:
+      cluster: ${rancher2_cluster_v2.test-staging-rke2.name}
+      domain: staging
+      environment: test
+      infrastructure: kubernetes
+    requests:
+      cpu: 250m
+      memory: 250Mi
+    # thanos:
+    #   objectStorageConfig:
+    #     key: thanos.yaml
+    #     name: thanos-objstore-config-secret
+    resources:
+      limits:
+        memory: 5000Mi
+        cpu: 2000m
+      requests:
+        memory: 3500Mi
+        cpu: 750m
+#   thanosIngress:
+#     annotations:
+#       cert-manager.io/cluster-issuer: letsencrypt-production-gandi
+#       metallb.universe.tf/allow-shared-ip: clusterIP
+#       nginx.ingress.kubernetes.io/backend-protocol: GRPC
 #     enabled: true
-#     relabelings:
-#     - action: replace
-#       regex: ^(.*)$
-#       replacement: $1
-#       sourceLabels:
-#       - __meta_kubernetes_pod_node_name
-#       targetLabel: instance
-# prometheus:
-#   enabled: true
-#   prometheusSpec:
-#     externalLabels:
-#       cluster: ${rancher2_cluster_v2.test-staging-rke2.name}
-#       domain: staging
-#       environment: test
-#       infrastructure: kubernetes
-#     requests:
-#       cpu: 250m
-#       memory: 250Mi
-#     # thanos:
-#     #   objectStorageConfig:
-#     #     key: thanos.yaml
-#     #     name: thanos-objstore-config-secret
-#     resources:
-#       limits:
-#         memory: 5000Mi
-#         cpu: 2000m
-#       requests:
-#         memory: 3500Mi
-#         cpu: 750m
-# #   thanosIngress:
-# #     annotations:
-# #       cert-manager.io/cluster-issuer: letsencrypt-production-gandi
-# #       metallb.universe.tf/allow-shared-ip: clusterIP
-# #       nginx.ingress.kubernetes.io/backend-protocol: GRPC
-# #     enabled: true
-# #     hosts:
-# #     - k8s-test-staging-rke2-thanos.internal.staging.swh.network
-# #     loadBalancerIP: 192.168.130.129
-# #     pathType: Prefix
-# #     tls:
-# #     - hosts:
-# #       - k8s-test-staging-rke2-thanos.internal.staging.swh.network
-# #       secretName: thanos-crt
-# EOF
-# }
+#     hosts:
+#     - k8s-test-staging-rke2-thanos.internal.staging.swh.network
+#     loadBalancerIP: 192.168.130.129
+#     pathType: Prefix
+#     tls:
+#     - hosts:
+#       - k8s-test-staging-rke2-thanos.internal.staging.swh.network
+#       secretName: thanos-crt
+EOF
+depends_on = [rancher2_cluster_sync.test-staging-rke2,
+              rancher2_cluster_v2.test-staging-rke2,
+              module.rancher-node-test-rke2-mgmt1,
+              module.rancher-node-test-rke2-worker1,
+              module.rancher-node-test-rke2-worker2]
+}
 
 # Dedicated node for rpc services (e.g. graphql, ...)
 module "rancher-node-test-rke2-worker1" {
