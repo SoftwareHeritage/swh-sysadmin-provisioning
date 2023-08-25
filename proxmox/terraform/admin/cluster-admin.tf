@@ -261,5 +261,22 @@ prometheus:
       metallb.universe.tf/allow-shared-ip: clusterIP
     enabled: false
     loadBalancerIP: 192.168.50.44
+prometheusOperator:
+  logLevel: debug
 EOF
+depends_on = [rancher2_cluster_sync.cluster-admin,
+              rancher2_cluster.cluster-admin,
+              module.rancher-node-admin-mgmt1,
+              module.rancher-node-admin-node01,
+              module.rancher-node-admin-node02,
+              module.rancher-node-admin-node03]
+
+}
+
+resource "rancher2_cluster_sync" "cluster-admin" {
+  cluster_id =  rancher2_cluster.cluster-admin.id
+  state_confirm = 2
+  timeouts {
+    create = "45m"
+  }
 }
