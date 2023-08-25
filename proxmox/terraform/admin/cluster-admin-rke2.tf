@@ -254,7 +254,7 @@ prometheus:
     pathType: Prefix
     tls:
     - hosts:
-      - k8s-admin-rke2-thanos.internal.staging.swh.network
+      - k8s-admin-rke2-thanos.internal.admin.swh.network
       secretName: thanos-crt
 prometheusOperator:
   logLevel: debug
