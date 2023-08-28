@@ -28,6 +28,14 @@ output "rancher2_cluster_cluster_admin_rke2_command" {
   value     = rancher2_cluster_v2.cluster-admin-rke2.cluster_registration_token[0].node_command
 }
 
+resource "rancher2_cluster_sync" "cluster-admin-rke2" {
+  cluster_id =  rancher2_cluster_v2.cluster-admin-rke2.cluster_v1_id
+  state_confirm = 2
+  timeouts {
+    create = "45m"
+  }
+}
+
 module "rancher-node-admin-rke2-mgmt1" {
   source      = "../modules/node"
   config      = local.config
@@ -69,7 +77,6 @@ module "rancher-node-admin-rke2-mgmt1" {
 output "rancher-node-admin-rke2-mgmt1_summary" {
   value = module.rancher-node-admin-rke2-mgmt1.summary
 }
-
 
 module "rancher-node-admin-rke2-node01" {
   source      = "../modules/node"
@@ -259,5 +266,9 @@ prometheus:
 prometheusOperator:
   logLevel: debug
 EOF
+depends_on = [rancher2_cluster_sync.cluster-admin-rke2,
+              rancher2_cluster_v2.cluster-admin-rke2,
+              module.rancher-node-admin-rke2-mgmt1,
+              module.rancher-node-admin-rke2-node01]
 }
 
