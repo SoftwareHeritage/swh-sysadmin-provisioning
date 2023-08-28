@@ -28,6 +28,14 @@ output "rancher2_cluster_archive_production_rke2_command" {
   value     = rancher2_cluster_v2.archive-production-rke2.cluster_registration_token[0].node_command
 }
 
+resource "rancher2_cluster_sync" "archive-production-rke2" {
+  cluster_id =  rancher2_cluster_v2.archive-production-rke2.cluster_v1_id
+  state_confirm = 2
+  timeouts {
+    create = "45m"
+  }
+}
+
 module "rancher-node-production-rke2-mgmt1" {
   source      = "../modules/node"
   template    = var.templates["stable-zfs"]
@@ -133,4 +141,7 @@ prometheus-node-exporter:
     limits:
       memory: 100Mi
 EOF
+depends_on = [rancher2_cluster_sync.archive-production-rke2,
+              rancher2_cluster_v2.archive-production-rke2,
+              module.rancher-node-production-rke2-mgmt1]
 }
