@@ -28,6 +28,14 @@ output "rancher2_cluster_archive_staging_rke2_command" {
   value     = rancher2_cluster_v2.archive-staging-rke2.cluster_registration_token[0].node_command
 }
 
+resource "rancher2_cluster_sync" "archive-staging-rke2" {
+  cluster_id =  rancher2_cluster_v2.archive-staging-rke2.cluster_v1_id
+  state_confirm = 2
+  timeouts {
+    create = "45m"
+  }
+}
+
 module "rancher-node-staging-rke2-mgmt1" {
   source      = "../modules/node"
   config      = local.config
@@ -123,6 +131,10 @@ prometheus:
       - k8s-archive-staging-rke2-thanos.internal.staging.swh.network
       secretName: thanos-crt
 EOF
+depends_on = [rancher2_cluster_sync.archive-staging-rke2,
+              rancher2_cluster_v2.archive-staging-rke2,
+              module.rancher-node-staging-rke2-mgmt1,
+              module.rancher-node-staging-rke2-worker1]
 }
 
 # Dedicated node for rpc services (e.g. graphql, ...)
