@@ -25,3 +25,12 @@ aptitude -y install "?priority(standard)!~i?archive(stable)"
 # Puppet
 ####
 apt-get install -y puppet gnupg
+
+####
+# Swap Label
+####
+
+SWAP_DEVICE=$(awk 'NR>1{print $1}' /proc/swaps)
+swapoff "$SWAP_DEVICE"
+swaplabel -L swap "$SWAP_DEVICE"
+swapon -L swap

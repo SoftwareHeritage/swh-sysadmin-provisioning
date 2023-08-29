@@ -22,7 +22,7 @@
       "username": "{{ user `username` }}",
       "password": "{{ user `password` }}",
       "node": "{{ user `proxmox_node` }}",
-      "vm_id": 10010,
+      "vm_id": 10012,
       "memory": 1024,
       "sockets": "1",
       "cores": 2,
@@ -46,9 +46,9 @@
       "cloud_init_storage_pool": "proxmox",
 
       "iso_urls": [
-        "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-11.4.0-amd64-netinst.iso"
+        "https://cdimage.debian.org/cdimage/archive/11.7.0/amd64/iso-cd/debian-11.7.0-amd64-netinst.iso"
       ],
-      "iso_checksum": "d490a35d36030592839f24e468a5b818c919943967012037d6ab3d65d030ef7f",
+      "iso_checksum": "eb3f96fd607e4b67e80f4fc15670feb7d9db5be50f4ca8d0bf07008cb025766b",
       "iso_storage_pool": "proxmox-cephfs",
       "unmount_iso": "true",
 
@@ -87,7 +87,7 @@
       "ssh_username": "installer",
       "ssh_timeout": "15m",
       "ssh_password": "installer",
-      "template_name": "debian-bullseye-11.4-zfs-{{ user `template-suffix` }}",
+      "template_name": "debian-bullseye-11.7-zfs-{{ user `template-suffix` }}",
       "template_description": "debian bullseye, generated on {{ user `template-date` }}"
     }
   ],
