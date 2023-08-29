@@ -55,7 +55,7 @@ variable "templates" {
   type = map(string)
   default = {
     oldstable  = "debian-buster-10.10-2021-09-09"
-    stable     = "debian-bullseye-11.4-2022-07-27"
-    stable-zfs = "debian-bullseye-11.4-zfs-2022-07-27"
+    stable     = "debian-bullseye-11.7-2023-08-29"
+    stable-zfs = "debian-bullseye-11.7-zfs-2023-08-29"
   }
 }

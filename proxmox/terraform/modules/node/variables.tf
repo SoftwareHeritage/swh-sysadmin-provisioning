@@ -26,8 +26,8 @@ variable "template" {
   type        = string
   default     = "debian-buster-10.10-2021-09-09"
   # other possible template values:
-  # - debian-bullseye-11.4-2022-07-27
-  # - debian-bullseye-11.4-zfs-2022-07-27 (for extra zfs dependencies)
+  # - debian-bullseye-11.7-2023-08-29
+  # - debian-bullseye-11.7-zfs-2023-08-29  (for extra zfs dependencies)
 }
 
 variable "sockets" {
