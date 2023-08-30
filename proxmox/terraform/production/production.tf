@@ -106,7 +106,7 @@ output "scrubber1_summary" {
 module "migration" {
   source      = "../modules/node"
   config      = local.config
-  template    = var.templates["oldstable-zfs"]
+  template    = var.templates["bullseye-zfs"]
 
   hostname    = "migration"
   description = "Migration"
@@ -138,7 +138,7 @@ output "migration_summary" {
 
 module "maven-exporter" {
   source      = "../modules/node"
-  template    = var.templates["oldstable-zfs"]
+  template    = var.templates["bullseye-zfs"]
   config      = local.config
   hostname    = "maven-exporter"
   description = "Maven index exporter to run containers and expose export.fld files"

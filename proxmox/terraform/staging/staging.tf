@@ -280,7 +280,7 @@ module "maven-exporter0" {
   hypervisor  = "pompidou"
   onboot      = true
 
-  template    = var.templates["oldstable-zfs"]
+  template    = var.templates["bullseye-zfs"]
   vmid        = 122
   hostname    = "maven-exporter0"
   description = "Maven index exporter to run containers and expose export.fld files"

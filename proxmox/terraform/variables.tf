@@ -54,10 +54,10 @@ variable "templates" {
   description = "Debian image templates created by packer"
   type = map(string)
   default = {
-    oldoldstable  = "debian-buster-10.10-2021-09-09"
-    oldstable     = "debian-bullseye-11.7-2023-08-29"
-    oldstable-zfs = "debian-bullseye-11.7-zfs-2023-08-29"
-    stable        = "debian-bookworm-12.1-2023-08-30"
-    stable-zfs    = "debian-bookworm-12.1-zfs-2023-08-30"
+    buster       = "debian-buster-10.10-2021-09-09"
+    bullseye     = "debian-bullseye-11.7-2023-08-29"
+    bullseye-zfs = "debian-bullseye-11.7-zfs-2023-08-29"
+    bookworm     = "debian-bookworm-12.1-2023-08-30"
+    bookworm-zfs = "debian-bookworm-12.1-zfs-2023-08-30"
   }
 }

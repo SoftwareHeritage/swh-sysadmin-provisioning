@@ -38,7 +38,7 @@ resource "rancher2_cluster_sync" "archive-production-rke2" {
 
 module "rancher-node-production-rke2-mgmt1" {
   source      = "../modules/node"
-  template    = var.templates["oldstable-zfs"]
+  template    = var.templates["bullseye-zfs"]
   config      = local.config
   hostname    = "rancher-node-production-rke2-mgmt1"
   description = "production rke2 management node"

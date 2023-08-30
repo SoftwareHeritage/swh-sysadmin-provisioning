@@ -43,7 +43,7 @@ module "rancher-node-admin-rke2-mgmt1" {
   onboot      = true
   vmid        = 175
 
-  template    = var.templates["oldstable-zfs"]
+  template    = var.templates["bullseye-zfs"]
   hostname    = "rancher-node-admin-rke2-mgmt1"
   description = "admin rke2 management node"
   sockets     = "1"
@@ -86,7 +86,7 @@ module "rancher-node-admin-rke2-node01" {
   vmid        = 176
 
 
-  template    = var.templates["oldstable-zfs"]
+  template    = var.templates["bullseye-zfs"]
   hostname    = "rancher-node-admin-rke2-node01"
   description = "Admin cluster node01"
   sockets     = "1"
@@ -129,7 +129,7 @@ module "rancher-node-admin-rke2-node02" {
   vmid        = 177
 
 
-  template    = var.templates["oldstable-zfs"]
+  template    = var.templates["bullseye-zfs"]
   hostname    = "rancher-node-admin-rke2-node02"
   description = "Admin cluster node02"
   sockets     = "1"
@@ -172,7 +172,7 @@ module "rancher-node-admin-rke2-node03" {
   vmid        = 178
 
 
-  template    = var.templates["oldstable-zfs"]
+  template    = var.templates["bullseye-zfs"]
   hostname    = "rancher-node-admin-rke2-node03"
   description = "Admin cluster node03"
   sockets     = "1"
