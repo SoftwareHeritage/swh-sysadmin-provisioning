@@ -28,6 +28,8 @@ variable "template" {
   # other possible template values:
   # - debian-bullseye-11.7-2023-08-29
   # - debian-bullseye-11.7-zfs-2023-08-29  (for extra zfs dependencies)
+  # - debian-bookworm-12.1-2023-08-30
+  # - debian-bookworm-12.1-zfs-2023-08-30  (for extra zfs dependencies)
 }
 
 variable "sockets" {

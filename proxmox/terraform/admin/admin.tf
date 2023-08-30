@@ -62,7 +62,7 @@ module "dali" {
   source = "../modules/node"
   config = local.config
 
-  template    = var.templates["stable"]
+  template    = var.templates["oldstable"]
   hostname    = "dali"
   description = "admin databases host"
   hypervisor  = "branly"
@@ -99,7 +99,7 @@ module "grafana0" {
   source = "../modules/node"
   config = local.config
 
-  template    = var.templates["stable"]
+  template    = var.templates["oldstable"]
   hostname    = "grafana0"
   description = "Grafana server"
   hypervisor  = "branly"
@@ -124,7 +124,7 @@ module "bojimans" {
   source = "../modules/node"
   config = local.config
 
-  template    = var.templates["stable"]
+  template    = var.templates["oldstable"]
   hostname    = "bojimans"
   description = "Inventory server (netbox)"
   hypervisor  = "branly"
@@ -156,7 +156,7 @@ module "money" {
   source = "../modules/node"
   config = local.config
 
-  template    = var.templates["stable"]
+  template    = var.templates["oldstable"]
   hostname    = "money"
   description = "Azure billing reporting server"
   hypervisor  = "branly"
@@ -190,7 +190,7 @@ module "thanos" {
   source      = "../modules/node"
   config      = local.config
   onboot      = true
-  template    = var.templates["stable"]
+  template    = var.templates["oldstable"]
 
   hostname    = "thanos"
   description = "Thanos query service"

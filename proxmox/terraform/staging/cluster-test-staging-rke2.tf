@@ -37,7 +37,7 @@ module "rancher-node-test-rke2-mgmt1" {
   onboot      = false
   vmid        = 143
 
-  template    = var.templates["stable-zfs"]
+  template    = var.templates["oldstable-zfs"]
   hostname    = "rancher-node-test-rke2-mgmt1"
   description = "test rke2 management node"
   sockets     = "1"
@@ -144,7 +144,7 @@ module "rancher-node-test-rke2-worker1" {
   onboot      = false
   vmid        = 146
 
-  template    = var.templates["stable-zfs"]
+  template    = var.templates["oldstable-zfs"]
   hostname    = "rancher-node-test-rke2-worker1"
   description = "elastic worker for rpc services (e.g. graphql, ...)"
   sockets     = "1"
@@ -189,7 +189,7 @@ module "rancher-node-test-rke2-worker2" {
   onboot      = false
   vmid        = 147
 
-  template    = var.templates["stable-zfs"]
+  template    = var.templates["oldstable-zfs"]
   hostname    = "rancher-node-test-rke2-worker2"
   description = "elastic worker for computations (e.g. loader, lister, ...)"
   sockets     = "1"

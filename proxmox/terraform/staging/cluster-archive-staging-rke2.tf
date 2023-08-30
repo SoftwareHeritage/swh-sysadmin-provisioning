@@ -42,7 +42,7 @@ module "rancher-node-staging-rke2-mgmt1" {
   hypervisor  = "pompidou"
   onboot      = true
 
-  template    = var.templates["stable-zfs"]
+  template    = var.templates["oldstable-zfs"]
   hostname    = "rancher-node-staging-rke2-mgmt1"
   description = "staging rke2 management node"
   sockets     = "1"
@@ -144,7 +144,7 @@ module "rancher-node-staging-rke2-worker1" {
   hypervisor  = "pompidou"
   onboot      = true
 
-  template    = var.templates["stable-zfs"]
+  template    = var.templates["oldstable-zfs"]
   hostname    = "rancher-node-staging-rke2-worker1"
   description = "elastic worker for rpc services (e.g. graphql, ...)"
   sockets     = "1"
@@ -186,7 +186,7 @@ module "rancher-node-staging-rke2-worker2" {
   hypervisor  = "pompidou"
   onboot      = true
 
-  template    = var.templates["stable-zfs"]
+  template    = var.templates["oldstable-zfs"]
   hostname    = "rancher-node-staging-rke2-worker2"
   description = "elastic worker for computations (e.g. loader, lister, ...)"
   sockets     = "1"
@@ -228,7 +228,7 @@ module "rancher-node-staging-rke2-worker3" {
   hypervisor  = "pompidou"
   onboot      = true
 
-  template    = var.templates["stable-zfs"]
+  template    = var.templates["oldstable-zfs"]
   hostname    = "rancher-node-staging-rke2-worker3"
   description = "elastic worker for computations (e.g. loader, lister, ...)"
   sockets     = "1"
@@ -270,7 +270,7 @@ module "rancher-node-staging-rke2-worker4" {
   hypervisor  = "pompidou"
   onboot      = true
 
-  template    = var.templates["stable-zfs"]
+  template    = var.templates["oldstable-zfs"]
   hostname    = "rancher-node-staging-rke2-worker4"
   description = "elastic worker for computations (e.g. loader, lister, ...)"
   sockets     = "1"
@@ -312,7 +312,7 @@ module "rancher-node-staging-rke2-worker5" {
   hypervisor  = "pompidou"
   onboot      = true
 
-  template    = var.templates["stable-zfs"]
+  template    = var.templates["oldstable-zfs"]
   hostname    = "rancher-node-staging-rke2-worker5"
   description = "elastic worker for computations (e.g. loader, lister, ...)"
   sockets     = "1"
@@ -354,7 +354,7 @@ module "rancher-node-staging-rke2-worker6" {
   hypervisor  = "uffizi"
   onboot      = true
 
-  template    = var.templates["stable-zfs"]
+  template    = var.templates["oldstable-zfs"]
   hostname    = "rancher-node-staging-rke2-worker6"
   description = "elastic worker for computations (e.g. loader, lister, ...)"
   sockets     = "1"
