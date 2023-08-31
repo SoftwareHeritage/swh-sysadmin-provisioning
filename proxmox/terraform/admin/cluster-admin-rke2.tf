@@ -12,6 +12,9 @@ resource "rancher2_cluster_v2" "cluster-admin-rke2" {
 
     machine_global_config = <<EOF
 cni: "calico"
+kubelet-arg:
+  - --image-gc-high-threshold=70
+  - --image-gc-low-threshold=50
 disable:
   - rke2-ingress-nginx
 EOF

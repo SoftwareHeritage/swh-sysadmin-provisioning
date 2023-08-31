@@ -9,6 +9,21 @@ resource "rancher2_cluster_v2" "test-staging-rke2" {
         timeout               = 300
       }
     }
+
+    chart_values = <<-EOT
+rke2-calico: {}
+EOT
+
+    machine_global_config = <<EOF
+cni: "calico"
+kubelet-arg:
+  - --image-gc-high-threshold=70
+  - --image-gc-low-threshold=50
+EOF
+# to disable when the cluster will be managed
+# by argocd as the other ones
+# disable:
+#   - rke2-ingress-nginx
   }
 }
 
