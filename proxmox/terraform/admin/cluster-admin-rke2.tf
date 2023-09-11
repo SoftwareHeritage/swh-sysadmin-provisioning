@@ -72,7 +72,7 @@ module "rancher-node-admin-rke2-mgmt1" {
 
   post_provision_steps = [
     "mkdir -p etc/rancher/rke2/config.yaml.d",
-    "echo '{ \"snapshotter\": \"native\" }' >/etc/rancher/rke2/config.yaml.d/50-snaphotter.yaml",
+    "echo '{ \"snapshotter\": \"native\" }' >/etc/rancher/rke2/config.yaml.d/50-snapshotter.yaml",
     "${rancher2_cluster_v2.cluster-admin-rke2.cluster_registration_token[0].node_command} --etcd --controlplane"
   ]
 }
@@ -115,7 +115,7 @@ module "rancher-node-admin-rke2-node01" {
 
   post_provision_steps = [
     "mkdir -p etc/rancher/rke2/config.yaml.d",
-    "echo '{ \"snapshotter\": \"native\" }' >/etc/rancher/rke2/config.yaml.d/50-snaphotter.yaml",
+    "echo '{ \"snapshotter\": \"native\" }' >/etc/rancher/rke2/config.yaml.d/50-snapshotter.yaml",
     "${rancher2_cluster_v2.cluster-admin-rke2.cluster_registration_token[0].node_command} --worker"
   ]
 }
@@ -158,7 +158,7 @@ module "rancher-node-admin-rke2-node02" {
 
   post_provision_steps = [
     "mkdir -p etc/rancher/rke2/config.yaml.d",
-    "echo '{ \"snapshotter\": \"native\" }' >/etc/rancher/rke2/config.yaml.d/50-snaphotter.yaml",
+    "echo '{ \"snapshotter\": \"native\" }' >/etc/rancher/rke2/config.yaml.d/50-snapshotter.yaml",
     "${rancher2_cluster_v2.cluster-admin-rke2.cluster_registration_token[0].node_command} --worker"
   ]
 }
@@ -201,7 +201,7 @@ module "rancher-node-admin-rke2-node03" {
 
   post_provision_steps = [
     "mkdir -p etc/rancher/rke2/config.yaml.d",
-    "echo '{ \"snapshotter\": \"native\" }' >/etc/rancher/rke2/config.yaml.d/50-snaphotter.yaml",
+    "echo '{ \"snapshotter\": \"native\" }' >/etc/rancher/rke2/config.yaml.d/50-snapshotter.yaml",
     "${rancher2_cluster_v2.cluster-admin-rke2.cluster_registration_token[0].node_command} --worker"
   ]
 }
@@ -274,4 +274,3 @@ depends_on = [rancher2_cluster_sync.cluster-admin-rke2,
               module.rancher-node-admin-rke2-mgmt1,
               module.rancher-node-admin-rke2-node01]
 }
-
