@@ -19,6 +19,8 @@ cni: "calico"
 kubelet-arg:
   - --image-gc-high-threshold=70
   - --image-gc-low-threshold=50
+disable:
+  - rke2-ingress-nginx
 EOF
 # to disable when the cluster will be managed
 # by argocd as the other ones
