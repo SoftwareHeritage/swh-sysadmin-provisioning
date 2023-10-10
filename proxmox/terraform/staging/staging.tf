@@ -345,3 +345,38 @@ module "scrubber0" {
 output "scrubber0_summary" {
   value = module.scrubber0.summary
 }
+
+module "runner0" {
+  source      = "../modules/node"
+  config      = local.config
+  hypervisor  = "pompidou"
+  onboot      = true
+
+  template    = var.templates["bullseye"]
+  vmid        = 148
+  hostname    = "runner0"
+  description = "Gitlab runner to process add-forge-now requests"
+  sockets     = "1"
+  cores       = "4"
+
+  memory  = "4096"
+  balloon = "1024"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.130.221"
+    gateway = local.config["gateway_ip"]
+    macaddr = "32:8B:78:F0:AE:C0"
+    bridge  = local.config["bridge"]
+  }]
+
+  storages = [{
+    storage = "proxmox"
+    size    = "50G"
+    }
+  ]
+}
+
+output "runner0_summary" {
+  value = module.runner0.summary
+}
