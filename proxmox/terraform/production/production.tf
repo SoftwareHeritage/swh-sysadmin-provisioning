@@ -166,3 +166,65 @@ module "maven-exporter" {
     }
   ]
 }
+
+module "jenkins-docker01" {
+  source      = "../modules/node"
+  template    = var.templates["bullseye-zfs"]
+  vmid        = 151
+  config      = local.config
+  hostname    = "jenkins-docker01"
+  description = "Docker-based jenkins agent"
+  hypervisor  = "mucem"
+  sockets     = "2"
+  cores       = "4"
+  onboot      = true
+  memory      = "16384"
+  balloon     = "2048"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.100.151"
+    gateway = local.config["gateway_ip"]
+    bridge  = local.config["bridge"]
+  }]
+
+  storages = [{
+    storage = "proxmox"
+    size    = "20G"
+    }, {
+    storage = "scratch"
+    size    = "200G"
+    }
+  ]
+}
+
+module "jenkins-docker02" {
+  source      = "../modules/node"
+  template    = var.templates["bullseye-zfs"]
+  vmid        = 152
+  config      = local.config
+  hostname    = "jenkins-docker02"
+  description = "Docker-based jenkins agent"
+  hypervisor  = "mucem"
+  sockets     = "2"
+  cores       = "4"
+  onboot      = true
+  memory      = "16384"
+  balloon     = "2048"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.100.152"
+    gateway = local.config["gateway_ip"]
+    bridge  = local.config["bridge"]
+  }]
+
+  storages = [{
+    storage = "proxmox"
+    size    = "20G"
+    }, {
+    storage = "scratch"
+    size    = "200G"
+    }
+  ]
+}
