@@ -352,7 +352,7 @@ module "runner0" {
   hypervisor  = "pompidou"
   onboot      = true
 
-  template    = var.templates["bullseye"]
+  template    = var.templates["bullseye-zfs"]
   vmid        = 148
   hostname    = "runner0"
   description = "Gitlab runner to process add-forge-now requests"
@@ -366,13 +366,15 @@ module "runner0" {
     id      = 0
     ip      = "192.168.130.221"
     gateway = local.config["gateway_ip"]
-    macaddr = "32:8B:78:F0:AE:C0"
     bridge  = local.config["bridge"]
   }]
 
   storages = [{
     storage = "proxmox"
-    size    = "50G"
+    size    = "20G"
+    }, {
+    storage = "proxmox"
+    size    = "30G"
     }
   ]
 }
