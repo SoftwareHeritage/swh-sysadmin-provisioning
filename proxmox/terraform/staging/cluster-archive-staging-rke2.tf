@@ -151,9 +151,8 @@ module "rancher-node-staging-rke2-worker1" {
   hostname    = "rancher-node-staging-rke2-worker1"
   description = "elastic worker for rpc services (e.g. graphql, ...)"
   sockets     = "1"
-  cores       = "6"
-  memory      = "32768"
-  balloon     = "16384"
+  cores       = "8"
+  memory      = "40960"
 
   networks = [{
     id      = 0
@@ -193,9 +192,8 @@ module "rancher-node-staging-rke2-worker2" {
   hostname    = "rancher-node-staging-rke2-worker2"
   description = "elastic worker for computations (e.g. loader, lister, ...)"
   sockets     = "1"
-  cores       = "6"
-  memory      = "32768"
-  balloon     = "16384"
+  cores       = "8"
+  memory      = "40960"
 
   networks = [{
     id      = 0
@@ -235,9 +233,8 @@ module "rancher-node-staging-rke2-worker3" {
   hostname    = "rancher-node-staging-rke2-worker3"
   description = "elastic worker for computations (e.g. loader, lister, ...)"
   sockets     = "1"
-  cores       = "6"
-  memory      = "32768"
-  balloon     = "16384"
+  cores       = "8"
+  memory      = "40960"
 
   networks = [{
     id      = 0
@@ -277,9 +274,8 @@ module "rancher-node-staging-rke2-worker4" {
   hostname    = "rancher-node-staging-rke2-worker4"
   description = "elastic worker for computations (e.g. loader, lister, ...)"
   sockets     = "1"
-  cores       = "6"
-  memory      = "32768"
-  balloon     = "16384"
+  cores       = "8"
+  memory      = "40960"
 
   networks = [{
     id      = 0
@@ -319,9 +315,8 @@ module "rancher-node-staging-rke2-worker5" {
   hostname    = "rancher-node-staging-rke2-worker5"
   description = "elastic worker for computations (e.g. loader, lister, ...)"
   sockets     = "1"
-  cores       = "6"
-  memory      = "32768"
-  balloon     = "16384"
+  cores       = "8"
+  memory      = "40960"
 
   networks = [{
     id      = 0
@@ -361,9 +356,8 @@ module "rancher-node-staging-rke2-worker6" {
   hostname    = "rancher-node-staging-rke2-worker6"
   description = "elastic worker for computations (e.g. loader, lister, ...)"
   sockets     = "1"
-  cores       = "6"
-  memory      = "32768"
-  balloon     = "16384"
+  cores       = "8"
+  memory      = "40960"
 
   networks = [{
     id      = 0
