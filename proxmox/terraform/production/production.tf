@@ -76,33 +76,6 @@ module "counters1" {
   }]
 }
 
-module "scrubber1" {
-  source      = "../modules/node"
-  config      = local.config
-  vmid        = 153
-  onboot      = true
-
-  hostname    = "scrubber1"
-  description = "Scrubber checker services"
-  hypervisor  = "branly"
-  sockets     = "1"
-  cores       = "4"
-  memory      = "4096"
-
-  networks = [{
-    id      = 0
-    ip      = "192.168.100.90"
-    gateway = local.config["gateway_ip"]
-    macaddr = "B2:E5:3F:E2:77:13"
-    bridge  = local.config["bridge"]
-  }]
-}
-
-output "scrubber1_summary" {
-  value = module.scrubber1.summary
-}
-
-
 module "migration" {
   source      = "../modules/node"
   config      = local.config
