@@ -175,6 +175,7 @@ module "jenkins-docker01" {
   hostname    = "jenkins-docker01"
   description = "Docker-based jenkins agent"
   hypervisor  = "mucem"
+  cpu         = "host"
   sockets     = "2"
   cores       = "4"
   onboot      = true
@@ -206,6 +207,7 @@ module "jenkins-docker02" {
   hostname    = "jenkins-docker02"
   description = "Docker-based jenkins agent"
   hypervisor  = "mucem"
+  cpu         = "host"
   sockets     = "2"
   cores       = "4"
   onboot      = true
