@@ -112,17 +112,14 @@ prometheus:
       domain: production
       environment: production
       infrastructure: kubernetes
-    requests:
-      cpu: 250m
-      memory: 250Mi
-      retention: 10d
     resources:
       limits:
-        cpu: 2000m
+        cpu: 3000m
         memory: 6000Mi
       requests:
         cpu: 1000m
         memory: 3500Mi
+    retention: 5d
     thanos:
       objectStorageConfig:
         key: thanos.yaml
