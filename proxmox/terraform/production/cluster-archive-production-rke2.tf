@@ -115,10 +115,10 @@ prometheus:
     resources:
       limits:
         cpu: 3000m
-        memory: 6000Mi
+        memory: 8000Mi
       requests:
         cpu: 1000m
-        memory: 3500Mi
+        memory: 500Mi
     retention: 5d
     thanos:
       objectStorageConfig:
