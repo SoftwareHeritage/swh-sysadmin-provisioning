@@ -119,7 +119,7 @@ prometheus:
       requests:
         cpu: 1000m
         memory: 500Mi
-    retention: 5d
+    retention: 2d
     thanos:
       objectStorageConfig:
         key: thanos.yaml
