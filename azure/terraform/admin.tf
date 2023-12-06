@@ -230,6 +230,15 @@ resource "azurerm_virtual_machine" "thanos-compact" {
     managed_disk_type = "Standard_LRS"
   }
 
+  storage_data_disk {
+    name              = "thanos-compact-datadisk-0"
+    caching           = "ReadWrite"
+    create_option     = "Empty"
+    managed_disk_type = "Premium_LRS"
+    disk_size_gb      = 256
+    lun               = 0
+  }
+
   storage_image_reference {
     publisher = "debian"
     offer     = "debian-11"
