@@ -180,7 +180,7 @@ resource "azurerm_virtual_machine" "backup-server" {
   }
 
   lifecycle {
-    ignore_changes = [ storage_data_disk[0].create_option ]
+    ignore_changes = [storage_data_disk[0].create_option]
   }
 
   tags = {
