@@ -64,7 +64,7 @@ resource "azurerm_linux_virtual_machine" "indexer-worker" {
   }
 
   admin_ssh_key {
-    username = var.user_admin
+    username   = var.user_admin
     public_key = file("ssh-keys/id-rsa-ardumont.pub")
   }
 
@@ -86,13 +86,13 @@ resource "azurerm_linux_virtual_machine" "indexer-worker" {
 
   provisioner "file" {
     content = templatefile("templates/firstboot.sh.tpl", {
-      hostname        = each.key
-      fqdn            = format("%s.euwest.azure.internal.softwareheritage.org", each.key),
-      ip_address      = azurerm_network_interface.indexer-worker-interface[each.key].private_ip_address,
+      hostname          = each.key
+      fqdn              = format("%s.euwest.azure.internal.softwareheritage.org", each.key),
+      ip_address        = azurerm_network_interface.indexer-worker-interface[each.key].private_ip_address,
       facter_subnet     = "azure_euwest"
       facter_deployment = "production"
 
-      disk_setup      = {}
+      disk_setup = {}
     })
     destination = var.firstboot_script
 
@@ -117,7 +117,7 @@ resource "azurerm_linux_virtual_machine" "indexer-worker" {
   }
 
   lifecycle {
-    ignore_changes = [ user_data ]
+    ignore_changes = [user_data]
   }
 
   tags = {
