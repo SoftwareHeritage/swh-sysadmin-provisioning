@@ -28,5 +28,5 @@ resource "azurerm_storage_account" "deposit-storage-staging" {
 resource "azurerm_storage_container" "deposit-contents" {
   name                  = "deposit-contents"
   storage_account_name  = azurerm_storage_account.deposit-storage-staging.name
-  container_access_type = "private"
+  container_access_type = "blob"
 }
