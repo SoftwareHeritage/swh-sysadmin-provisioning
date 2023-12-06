@@ -15,9 +15,10 @@ locals {
 resource "azurerm_network_interface" "indexer-worker-interface" {
   for_each = local.indexer-workers
 
-  name                = format("%s-interface", each.key)
-  location            = "westeurope"
-  resource_group_name = "euwest-workers"
+  name                          = format("%s-interface", each.key)
+  location                      = "westeurope"
+  resource_group_name           = "euwest-workers"
+  enable_accelerated_networking = (each.key == "indexer-worker05")
 
   ip_configuration {
     name                          = "indexerWorkerNicConfiguration"
@@ -42,7 +43,7 @@ resource "azurerm_linux_virtual_machine" "indexer-worker" {
   location              = "westeurope"
   resource_group_name   = "euwest-workers"
   network_interface_ids = [azurerm_network_interface.indexer-worker-interface[each.key].id]
-  size                  = "Standard_B2ms"
+  size                  = (each.key == "indexer-worker05") ? "Standard_D2as_v4" : "Standard_B2ms"
   admin_username        = var.user_admin
 
   boot_diagnostics {
