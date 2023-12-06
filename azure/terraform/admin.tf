@@ -187,3 +187,131 @@ resource "azurerm_virtual_machine" "backup-server" {
     environment = "Backup"
   }
 }
+
+
+resource "azurerm_network_interface" "thanos-compact-interface" {
+  name                = "thanos-compact-interface"
+  location            = "westeurope"
+  resource_group_name = azurerm_resource_group.euwest-admin.name
+
+  ip_configuration {
+    name                          = "backupNicConfiguration"
+    subnet_id                     = data.azurerm_subnet.default.id
+    public_ip_address_id          = ""
+    private_ip_address_allocation = "Dynamic"
+  }
+}
+
+resource "azurerm_network_interface_security_group_association" "thanos-compact-interface-sga" {
+  network_interface_id      = azurerm_network_interface.thanos-compact-interface.id
+  network_security_group_id = data.azurerm_network_security_group.worker-nsg.id
+}
+
+resource "azurerm_virtual_machine" "thanos-compact" {
+  name                  = "thanos-compact"
+  location              = "westeurope"
+  resource_group_name   = azurerm_resource_group.euwest-admin.name
+  network_interface_ids = [azurerm_network_interface.thanos-compact-interface.id]
+  vm_size               = "Standard_B2s_v2"
+
+  delete_os_disk_on_termination    = true
+  delete_data_disks_on_termination = true
+
+  boot_diagnostics {
+    enabled     = true
+    storage_uri = var.boot_diagnostics_uri
+  }
+
+  storage_os_disk {
+    name              = "thanos-compact-osdisk"
+    caching           = "None"
+    create_option     = "FromImage"
+    disk_size_gb      = 32
+    managed_disk_type = "Standard_LRS"
+  }
+
+  storage_image_reference {
+    publisher = "debian"
+    offer     = "debian-11"
+    sku       = "11"
+    version   = "latest"
+  }
+
+  os_profile {
+    computer_name  = "thanos-compact"
+    admin_username = var.user_admin
+  }
+
+  os_profile_linux_config {
+    disable_password_authentication = true
+    ssh_keys {
+      path     = "/home/${var.user_admin}/.ssh/authorized_keys"
+      key_data = var.ssh_key_data_ardumont
+    }
+    ssh_keys {
+      path     = "/home/${var.user_admin}/.ssh/authorized_keys"
+      key_data = var.ssh_key_data_olasd
+    }
+    ssh_keys {
+      path     = "/home/${var.user_admin}/.ssh/authorized_keys"
+      key_data = var.ssh_key_data_vsellier
+    }
+  }
+
+  # Configuring the root user
+  provisioner "remote-exec" {
+    inline = [
+      "sudo mkdir -p /root/.ssh", # just in case
+      # Remove the content populated by the azure provisionning
+      # blocking the connection as root
+      "sudo rm -v /root/.ssh/authorized_keys",
+      "echo ${var.ssh_key_data_ardumont} | sudo tee -a /root/.ssh/authorized_keys",
+      "echo ${var.ssh_key_data_olasd} | sudo tee -a /root/.ssh/authorized_keys",
+      "echo ${var.ssh_key_data_vsellier} | sudo tee -a /root/.ssh/authorized_keys",
+    ]
+
+    connection {
+      type = "ssh"
+      user = var.user_admin
+      host = azurerm_network_interface.thanos-compact-interface.private_ip_address
+    }
+  }
+
+  # Copy the initial configuration script
+  provisioner "file" {
+    content = templatefile("templates/firstboot.sh.tpl", {
+      hostname          = "thanos-compact"
+      fqdn              = "thanos-compact.euwest.azure.internal.softwareheritage.org",
+      ip_address        = azurerm_network_interface.thanos-compact-interface.private_ip_address,
+      facter_subnet     = "azure_euwest"
+      facter_deployment = "admin"
+      disk_setup        = {}
+    })
+    destination = var.firstboot_script
+
+    connection {
+      type = "ssh"
+      user = "root"
+      host = azurerm_network_interface.thanos-compact-interface.private_ip_address
+    }
+  }
+
+  # Remove the tmpadmin user
+  provisioner "remote-exec" {
+    inline = [
+      "userdel -f ${var.user_admin}",
+      "chmod +x ${var.firstboot_script}",
+      "cat ${var.firstboot_script}",
+      var.firstboot_script,
+    ]
+    connection {
+      type = "ssh"
+      user = "root"
+      host = azurerm_network_interface.thanos-compact-interface.private_ip_address
+    }
+  }
+
+  tags = {
+    environment = "Thanos compaction"
+  }
+}
