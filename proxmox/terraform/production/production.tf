@@ -152,7 +152,7 @@ module "jenkins-docker01" {
   sockets     = "2"
   cores       = "4"
   onboot      = true
-  memory      = "16384"
+  memory      = "32768"
   balloon     = "2048"
 
   networks = [{
@@ -184,7 +184,7 @@ module "jenkins-docker02" {
   sockets     = "2"
   cores       = "4"
   onboot      = true
-  memory      = "16384"
+  memory      = "32768"
   balloon     = "2048"
 
   networks = [{
