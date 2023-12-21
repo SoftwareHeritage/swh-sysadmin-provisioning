@@ -1,6 +1,6 @@
 # will start from 1 storage01...
 variable "storage_servers" {
-  default = 1
+  default = 0
 }
 
 variable "storage_disk_size" {
