@@ -10,6 +10,21 @@ resource "rancher2_cluster_v2" "archive-production-rke2" {
       }
     }
 
+    chart_values = <<-EOT
+rke2-calico: {}
+rke2-coredns:
+  autoscaler:
+    max: 5
+    coresPerReplica: 64
+    preventSinglePointFailure: true
+  resources:
+    requests:
+      cpu: 500m
+      memory: 128Mi
+    limits:
+      cpu: 8 # Unset is not working
+EOT
+
     machine_global_config = <<EOF
 cni: "calico"
 kubelet-arg:
@@ -114,8 +129,8 @@ prometheus:
       infrastructure: kubernetes
     resources:
       limits:
-        cpu: 3000m
-        memory: 8000Mi
+        cpu: 4
+        memory: 10Gi
       requests:
         cpu: 1000m
         memory: 500Mi

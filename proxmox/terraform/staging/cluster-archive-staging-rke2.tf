@@ -10,6 +10,21 @@ resource "rancher2_cluster_v2" "archive-staging-rke2" {
       }
     }
 
+    chart_values = <<-EOT
+rke2-calico: {}
+rke2-coredns:
+  autoscaler:
+    max: 2
+    coresPerReplica: 64
+    preventSinglePointFailure: true
+  resources:
+    requests:
+      cpu: 500m
+      memory: 128Mi
+    limits:
+      cpu: 8 # Unset is not working
+EOT
+
     machine_global_config = <<EOF
 cni: "calico"
 kubelet-arg:
