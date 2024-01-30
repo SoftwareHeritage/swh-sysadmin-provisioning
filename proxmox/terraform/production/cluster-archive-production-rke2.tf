@@ -154,6 +154,9 @@ prometheus:
       - k8s-archive-production-rke2-thanos.internal.softwareheritage.org
       secretName: thanos-crt
 prometheus-node-exporter:
+  prometheus:
+    monitor:
+      scrapeTimeout: 30s
   resources:
     limits:
       memory: 100Mi
