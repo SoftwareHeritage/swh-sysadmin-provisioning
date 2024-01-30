@@ -124,17 +124,17 @@ prometheus:
     requests:
       cpu: 250m
       memory: 250Mi
+    resources:
+      limits:
+        cpu: 2000m
+        memory: 5000Mi
+      requests:
+        cpu: 750m
+        memory: 3500Mi
     thanos:
       objectStorageConfig:
         key: thanos.yaml
         name: thanos-objstore-config-secret
-    resources:
-      limits:
-        memory: 5000Mi
-        cpu: 2000m
-      requests:
-        memory: 3500Mi
-        cpu: 750m
   thanosIngress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-production-gandi
@@ -149,6 +149,10 @@ prometheus:
     - hosts:
       - k8s-archive-staging-rke2-thanos.internal.staging.swh.network
       secretName: thanos-crt
+prometheus-node-exporter:
+  prometheus:
+    monitor:
+      scrapeTimeout: 30s
 EOF
 depends_on = [rancher2_cluster_sync.archive-staging-rke2,
               rancher2_cluster_v2.archive-staging-rke2,
