@@ -48,7 +48,7 @@ output "rancher2_cluster_archive_staging_rke2_command" {
 }
 
 resource "rancher2_cluster_sync" "archive-staging-rke2" {
-  cluster_id =  rancher2_cluster_v2.archive-staging-rke2.cluster_v1_id
+  cluster_id    = rancher2_cluster_v2.archive-staging-rke2.cluster_v1_id
   state_confirm = 2
   timeouts {
     create = "45m"
@@ -56,10 +56,10 @@ resource "rancher2_cluster_sync" "archive-staging-rke2" {
 }
 
 module "rancher-node-staging-rke2-mgmt1" {
-  source      = "../modules/node"
-  config      = local.config
-  hypervisor  = "pompidou"
-  onboot      = true
+  source     = "../modules/node"
+  config     = local.config
+  hypervisor = "pompidou"
+  onboot     = true
 
   template    = var.templates["bullseye-zfs"]
   hostname    = "rancher-node-staging-rke2-mgmt1"
@@ -86,7 +86,7 @@ module "rancher-node-staging-rke2-mgmt1" {
   ]
 
   post_provision_steps = [
-    "systemctl restart docker",  # workaround
+    "systemctl restart docker", # workaround
     "${rancher2_cluster_v2.archive-staging-rke2.cluster_registration_token[0].node_command} --etcd --controlplane"
   ]
 }
@@ -154,18 +154,18 @@ prometheus-node-exporter:
     monitor:
       scrapeTimeout: 30s
 EOF
-depends_on = [rancher2_cluster_sync.archive-staging-rke2,
-              rancher2_cluster_v2.archive-staging-rke2,
-              module.rancher-node-staging-rke2-mgmt1,
-              module.rancher-node-staging-rke2-worker1]
+  depends_on = [rancher2_cluster_sync.archive-staging-rke2,
+    rancher2_cluster_v2.archive-staging-rke2,
+    module.rancher-node-staging-rke2-mgmt1,
+  module.rancher-node-staging-rke2-worker1]
 }
 
 # Dedicated node for rpc services (e.g. graphql, ...)
 module "rancher-node-staging-rke2-worker1" {
-  source      = "../modules/node"
-  config      = local.config
-  hypervisor  = "pompidou"
-  onboot      = true
+  source     = "../modules/node"
+  config     = local.config
+  hypervisor = "pompidou"
+  onboot     = true
 
   template    = var.templates["bullseye-zfs"]
   hostname    = "rancher-node-staging-rke2-worker1"
@@ -191,7 +191,7 @@ module "rancher-node-staging-rke2-worker1" {
   ]
 
   post_provision_steps = [
-    "systemctl restart docker",  # workaround
+    "systemctl restart docker", # workaround
     "${rancher2_cluster_v2.archive-staging-rke2.cluster_registration_token[0].node_command} --worker --label node_type=generic --label swh/rpc=true"
   ]
 }
@@ -203,10 +203,10 @@ output "rancher-node-staging-rke2-worker1_summary" {
 # loader nodes must have a 2nd disk on hypervisor local storage to avoid
 # unnecessary ceph traffic on ceph
 module "rancher-node-staging-rke2-worker2" {
-  source      = "../modules/node"
-  config      = local.config
-  hypervisor  = "pompidou"
-  onboot      = true
+  source     = "../modules/node"
+  config     = local.config
+  hypervisor = "pompidou"
+  onboot     = true
 
   template    = var.templates["bullseye-zfs"]
   hostname    = "rancher-node-staging-rke2-worker2"
@@ -232,7 +232,7 @@ module "rancher-node-staging-rke2-worker2" {
   ]
 
   post_provision_steps = [
-    "systemctl restart docker",  # workaround
+    "systemctl restart docker", # workaround
     "${rancher2_cluster_v2.archive-staging-rke2.cluster_registration_token[0].node_command} --worker --label node_type=worker --label swh/rpc=true --label swh/loader=true --label swh/lister=true"
   ]
 }
@@ -244,10 +244,10 @@ output "rancher-node-staging-rke2-worker2_summary" {
 # loader nodes must have a 2nd disk on hypervisor local storage to avoid
 # unnecessary ceph traffic on ceph
 module "rancher-node-staging-rke2-worker3" {
-  source      = "../modules/node"
-  config      = local.config
-  hypervisor  = "pompidou"
-  onboot      = true
+  source     = "../modules/node"
+  config     = local.config
+  hypervisor = "pompidou"
+  onboot     = true
 
   template    = var.templates["bullseye-zfs"]
   hostname    = "rancher-node-staging-rke2-worker3"
@@ -273,7 +273,7 @@ module "rancher-node-staging-rke2-worker3" {
   ]
 
   post_provision_steps = [
-    "systemctl restart docker",  # workaround
+    "systemctl restart docker", # workaround
     "${rancher2_cluster_v2.archive-staging-rke2.cluster_registration_token[0].node_command} --worker --label node_type=worker --label swh/rpc=true --label swh/loader=true --label swh/lister=true --label swh/indexer=true"
   ]
 }
@@ -285,10 +285,10 @@ output "rancher-node-staging-rke2-worker3_summary" {
 # loader nodes must have a 2nd disk on hypervisor local storage to avoid
 # unnecessary ceph traffic on ceph
 module "rancher-node-staging-rke2-worker4" {
-  source      = "../modules/node"
-  config      = local.config
-  hypervisor  = "pompidou"
-  onboot      = true
+  source     = "../modules/node"
+  config     = local.config
+  hypervisor = "pompidou"
+  onboot     = true
 
   template    = var.templates["bullseye-zfs"]
   hostname    = "rancher-node-staging-rke2-worker4"
@@ -314,7 +314,7 @@ module "rancher-node-staging-rke2-worker4" {
   ]
 
   post_provision_steps = [
-    "systemctl restart docker",  # workaround
+    "systemctl restart docker", # workaround
     "${rancher2_cluster_v2.archive-staging-rke2.cluster_registration_token[0].node_command} --worker --label node_type=worker --label swh/rpc=true --label swh/loader=true"
   ]
 }
@@ -326,10 +326,10 @@ output "rancher-node-staging-rke2-worker4_summary" {
 # loader nodes must have a 2nd disk on hypervisor local storage to avoid
 # unnecessary ceph traffic on ceph
 module "rancher-node-staging-rke2-worker5" {
-  source      = "../modules/node"
-  config      = local.config
-  hypervisor  = "pompidou"
-  onboot      = true
+  source     = "../modules/node"
+  config     = local.config
+  hypervisor = "pompidou"
+  onboot     = true
 
   template    = var.templates["bullseye-zfs"]
   hostname    = "rancher-node-staging-rke2-worker5"
@@ -355,7 +355,7 @@ module "rancher-node-staging-rke2-worker5" {
   ]
 
   post_provision_steps = [
-    "systemctl restart docker",  # workaround
+    "systemctl restart docker", # workaround
     "${rancher2_cluster_v2.archive-staging-rke2.cluster_registration_token[0].node_command} --worker --label node_type=worker --label swh/rpc=true --label swh/loader=true"
   ]
 }
@@ -367,10 +367,10 @@ output "rancher-node-staging-rke2-worker5_summary" {
 # loader nodes must have a 2nd disk on hypervisor local storage to avoid
 # unnecessary ceph traffic on ceph
 module "rancher-node-staging-rke2-worker6" {
-  source      = "../modules/node"
-  config      = local.config
-  hypervisor  = "uffizi"
-  onboot      = true
+  source     = "../modules/node"
+  config     = local.config
+  hypervisor = "uffizi"
+  onboot     = true
 
   template    = var.templates["bullseye-zfs"]
   hostname    = "rancher-node-staging-rke2-worker6"
@@ -396,7 +396,7 @@ module "rancher-node-staging-rke2-worker6" {
   ]
 
   post_provision_steps = [
-    "systemctl restart docker",  # workaround
+    "systemctl restart docker", # workaround
     "${rancher2_cluster_v2.archive-staging-rke2.cluster_registration_token[0].node_command} --worker --label node_type=worker --label swh/rpc=true --label swh/loader=true"
   ]
 }

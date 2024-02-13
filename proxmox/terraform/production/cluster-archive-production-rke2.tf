@@ -49,7 +49,7 @@ output "rancher2_cluster_archive_production_rke2_command" {
 }
 
 resource "rancher2_cluster_sync" "archive-production-rke2" {
-  cluster_id =  rancher2_cluster_v2.archive-production-rke2.cluster_v1_id
+  cluster_id    = rancher2_cluster_v2.archive-production-rke2.cluster_v1_id
   state_confirm = 2
   timeouts {
     create = "45m"
@@ -86,7 +86,7 @@ module "rancher-node-production-rke2-mgmt1" {
   ]
 
   post_provision_steps = [
-    "systemctl restart docker",  # workaround
+    "systemctl restart docker", # workaround
     "${rancher2_cluster_v2.archive-production-rke2.cluster_registration_token[0].node_command} --etcd --controlplane"
   ]
 }
@@ -161,7 +161,7 @@ prometheus-node-exporter:
     limits:
       memory: 100Mi
 EOF
-depends_on = [rancher2_cluster_sync.archive-production-rke2,
-              rancher2_cluster_v2.archive-production-rke2,
-              module.rancher-node-production-rke2-mgmt1]
+  depends_on = [rancher2_cluster_sync.archive-production-rke2,
+    rancher2_cluster_v2.archive-production-rke2,
+  module.rancher-node-production-rke2-mgmt1]
 }

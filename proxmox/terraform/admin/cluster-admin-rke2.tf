@@ -32,7 +32,7 @@ output "rancher2_cluster_cluster_admin_rke2_command" {
 }
 
 resource "rancher2_cluster_sync" "cluster-admin-rke2" {
-  cluster_id =  rancher2_cluster_v2.cluster-admin-rke2.cluster_v1_id
+  cluster_id    = rancher2_cluster_v2.cluster-admin-rke2.cluster_v1_id
   state_confirm = 2
   timeouts {
     create = "45m"
@@ -40,11 +40,11 @@ resource "rancher2_cluster_sync" "cluster-admin-rke2" {
 }
 
 module "rancher-node-admin-rke2-mgmt1" {
-  source      = "../modules/node"
-  config      = local.config
-  hypervisor  = "hypervisor3"
-  onboot      = true
-  vmid        = 175
+  source     = "../modules/node"
+  config     = local.config
+  hypervisor = "hypervisor3"
+  onboot     = true
+  vmid       = 175
 
   template    = var.templates["bullseye-zfs"]
   hostname    = "rancher-node-admin-rke2-mgmt1"
@@ -82,11 +82,11 @@ output "rancher-node-admin-rke2-mgmt1_summary" {
 }
 
 module "rancher-node-admin-rke2-node01" {
-  source      = "../modules/node"
-  config      = local.config
-  hypervisor  = "hypervisor3"
-  onboot      = true
-  vmid        = 176
+  source     = "../modules/node"
+  config     = local.config
+  hypervisor = "hypervisor3"
+  onboot     = true
+  vmid       = 176
 
 
   template    = var.templates["bullseye-zfs"]
@@ -125,11 +125,11 @@ output "rancher-node-admin-rke2-node01_summary" {
 }
 
 module "rancher-node-admin-rke2-node02" {
-  source      = "../modules/node"
-  config      = local.config
-  hypervisor  = "branly"
-  onboot      = true
-  vmid        = 177
+  source     = "../modules/node"
+  config     = local.config
+  hypervisor = "branly"
+  onboot     = true
+  vmid       = 177
 
 
   template    = var.templates["bullseye-zfs"]
@@ -168,11 +168,11 @@ output "rancher-node-admin-rke2-node03_summary" {
 }
 
 module "rancher-node-admin-rke2-node03" {
-  source      = "../modules/node"
-  config      = local.config
-  hypervisor  = "mucem"
-  onboot      = true
-  vmid        = 178
+  source     = "../modules/node"
+  config     = local.config
+  hypervisor = "mucem"
+  onboot     = true
+  vmid       = 178
 
 
   template    = var.templates["bullseye-zfs"]
@@ -269,8 +269,8 @@ prometheus:
 prometheusOperator:
   logLevel: debug
 EOF
-depends_on = [rancher2_cluster_sync.cluster-admin-rke2,
-              rancher2_cluster_v2.cluster-admin-rke2,
-              module.rancher-node-admin-rke2-mgmt1,
-              module.rancher-node-admin-rke2-node01]
+  depends_on = [rancher2_cluster_sync.cluster-admin-rke2,
+    rancher2_cluster_v2.cluster-admin-rke2,
+    module.rancher-node-admin-rke2-mgmt1,
+  module.rancher-node-admin-rke2-node01]
 }
