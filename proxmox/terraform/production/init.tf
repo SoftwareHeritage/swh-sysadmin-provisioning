@@ -20,5 +20,7 @@ locals {
     user_admin_ssh_public_key       = var.user_admin_ssh_public_key
     user_admin_ssh_private_key_path = var.user_admin_ssh_private_key_path
     bridge                          = "vmbr0"
+    # kubernetes cluster's max pods per node
+    max_pods_per_node               = 110
   }
 }

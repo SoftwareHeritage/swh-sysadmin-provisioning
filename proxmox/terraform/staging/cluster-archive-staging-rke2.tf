@@ -31,6 +31,7 @@ kubelet-arg:
   - --image-gc-high-threshold=70
   - --image-gc-low-threshold=50
   - --runtime-request-timeout=60m
+  - --max-pods=${local.config["max_pods_per_node"]}
 disable:
   - rke2-ingress-nginx
 EOF

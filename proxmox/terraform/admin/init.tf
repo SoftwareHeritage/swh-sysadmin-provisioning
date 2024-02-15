@@ -6,3 +6,10 @@ terraform {
     key                  = "admin.rocquencourt.terraform.tfstate"
   }
 }
+
+locals {
+  config = {
+    # kubernetes cluster's max pods per node
+    max_pods_per_node               = 110
+  }
+}
