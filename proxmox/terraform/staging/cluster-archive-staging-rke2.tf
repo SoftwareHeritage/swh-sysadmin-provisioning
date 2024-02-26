@@ -104,16 +104,6 @@ resource "rancher2_app_v2" "archive-staging-rke2-rancher-monitoring" {
   chart_name    = "rancher-monitoring"
   chart_version = "102.0.1+up40.1.2"
   values        = <<EOF
-nodeExporter:
-  serviceMonitor:
-    enabled: true
-    relabelings:
-    - action: replace
-      regex: ^(.*)$
-      replacement: $1
-      sourceLabels:
-      - __meta_kubernetes_pod_node_name
-      targetLabel: instance
 prometheus:
   enabled: true
   prometheusSpec:
@@ -154,6 +144,13 @@ prometheus-node-exporter:
   prometheus:
     monitor:
       scrapeTimeout: 30s
+      relabelings:
+        - sourceLabels: [__meta_kubernetes_pod_node_name]
+          regex: ^(.*)$
+          separator: ;
+          targetLabel: instance
+          replacement: $1.internal.staging.swh.network
+          action: replace
 EOF
   depends_on = [rancher2_cluster_sync.archive-staging-rke2,
     rancher2_cluster_v2.archive-staging-rke2,
