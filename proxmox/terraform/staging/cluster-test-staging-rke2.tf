@@ -35,6 +35,17 @@ kubelet-arg:
 disable:
   - rke2-ingress-nginx
 EOF
+
+    registries {
+      dynamic "mirrors" {
+        for_each = var.docker_registry_mirrors
+        content {
+          hostname  = mirrors.value.hostname
+          endpoints = [format("https://%s/%s/v2", var.docker_registry_mirror_hostname, mirrors.value.prefix)]
+        }
+      }
+    }
+
     # to disable when the cluster will be managed
     # by argocd as the other ones
     # disable:

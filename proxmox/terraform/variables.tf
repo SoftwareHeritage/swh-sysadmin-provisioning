@@ -61,3 +61,30 @@ variable "templates" {
     bookworm-zfs = "debian-bookworm-12.1-zfs-2023-08-30"
   }
 }
+
+variable "docker_registry_mirror_hostname" {
+  description = "Host for the docker registry mirror"
+  type        = string
+  default     = "docker-cache.internal.admin.swh.network"
+}
+
+variable "docker_registry_mirrors" {
+  description = "Docker image registry mirrors"
+  type        = list(object({ hostname = string, prefix = string }))
+  default = [{
+    hostname = "container-registry.softwareheritage.org"
+    prefix   = "swh"
+    }, {
+    hostname = "docker.io"
+    prefix   = "docker.io"
+    }, {
+    hostname = "ghcr.io"
+    prefix   = "ghcr.io"
+    }, {
+    hostname = "quay.io"
+    prefix   = "quay.io"
+    }, {
+    hostname = "registry.k8s.io"
+    prefix   = "registry.k8s.io"
+  }]
+}
