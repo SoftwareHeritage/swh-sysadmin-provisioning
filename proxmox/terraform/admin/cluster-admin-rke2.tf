@@ -105,8 +105,7 @@ module "rancher-node-admin-rke2-node01" {
   description = "Admin cluster node01"
   sockets     = "1"
   cores       = "4"
-  memory      = "16384"
-  balloon     = "16384"
+  memory      = "32768"
 
   networks = [{
     id      = 0
@@ -117,10 +116,10 @@ module "rancher-node-admin-rke2-node01" {
 
   storages = [{
     storage = "proxmox"
-    size    = "20G"
+    size    = "40G"
     }, {
     storage = "scratch"
-    size    = "20G"
+    size    = "40G"
     }
   ]
 
@@ -148,8 +147,7 @@ module "rancher-node-admin-rke2-node02" {
   description = "Admin cluster node02"
   sockets     = "1"
   cores       = "4"
-  memory      = "16384"
-  balloon     = "16384"
+  memory      = "32768"
 
   networks = [{
     id      = 0
@@ -160,10 +158,10 @@ module "rancher-node-admin-rke2-node02" {
 
   storages = [{
     storage = "proxmox"
-    size    = "20G"
+    size    = "40G"
     }, {
     storage = "scratch"
-    size    = "20G"
+    size    = "40G"
     }
   ]
 
@@ -191,8 +189,7 @@ module "rancher-node-admin-rke2-node03" {
   description = "Admin cluster node03"
   sockets     = "1"
   cores       = "4"
-  memory      = "16384"
-  balloon     = "16384"
+  memory      = "32768"
 
   networks = [{
     id      = 0
@@ -203,10 +200,10 @@ module "rancher-node-admin-rke2-node03" {
 
   storages = [{
     storage = "proxmox"
-    size    = "20G"
+    size    = "40G"
     }, {
     storage = "scratch"
-    size    = "20G"
+    size    = "40G"
     }
   ]
 
