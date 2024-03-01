@@ -62,8 +62,8 @@ module "rancher-node-admin-rke2-mgmt1" {
   description = "admin rke2 management node"
   sockets     = "1"
   cores       = "4"
-  memory      = "12288"
-  balloon     = "12288"
+  memory      = "16384"
+  balloon     = "16384"
 
   networks = [{
     id      = 0
