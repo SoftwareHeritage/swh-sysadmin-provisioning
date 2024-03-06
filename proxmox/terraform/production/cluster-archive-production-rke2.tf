@@ -92,7 +92,7 @@ module "rancher-node-production-rke2-mgmt1" {
     size    = "20G"
     }, {
     storage = "proxmox"
-    size    = "20G"
+    size    = "30G"
     }
   ]
 
