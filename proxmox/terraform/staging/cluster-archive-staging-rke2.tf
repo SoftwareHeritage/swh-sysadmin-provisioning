@@ -91,7 +91,7 @@ module "rancher-node-staging-rke2-mgmt1" {
     storage = "proxmox"
     size    = "20G"
     }, {
-    storage = "proxmox"
+    storage = "scratch"
     size    = "20G"
     }
   ]
@@ -104,6 +104,84 @@ module "rancher-node-staging-rke2-mgmt1" {
 
 output "rancher-node-staging-rke2-mgmt1_summary" {
   value = module.rancher-node-staging-rke2-mgmt1.summary
+}
+
+module "rancher-node-staging-rke2-mgmt2" {
+  source     = "../modules/node"
+  config     = local.config
+  hypervisor = "branly"
+  onboot     = true
+
+  template    = var.templates["bullseye-zfs"]
+  hostname    = "rancher-node-staging-rke2-mgmt2"
+  description = "staging rke2 management node"
+  sockets     = "1"
+  cores       = "4"
+  memory      = "16384"
+  balloon     = "16384"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.130.162"
+    gateway = local.config["gateway_ip"]
+    bridge  = local.config["bridge"]
+  }]
+
+  storages = [{
+    storage = "proxmox"
+    size    = "20G"
+    }, {
+    storage = "scratch"
+    size    = "20G"
+    }
+  ]
+
+  post_provision_steps = [
+    "${rancher2_cluster_v2.archive-staging-rke2.cluster_registration_token[0].node_command} --etcd --controlplane"
+  ]
+}
+
+output "rancher-node-staging-rke2-mgmt2_summary" {
+  value = module.rancher-node-staging-rke2-mgmt2.summary
+}
+
+module "rancher-node-staging-rke2-mgmt3" {
+  source     = "../modules/node"
+  config     = local.config
+  hypervisor = "mucem"
+  onboot     = true
+
+  template    = var.templates["bullseye-zfs"]
+  hostname    = "rancher-node-staging-rke2-mgmt3"
+  description = "staging rke2 management node"
+  sockets     = "1"
+  cores       = "4"
+  memory      = "16384"
+  balloon     = "16384"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.130.163"
+    gateway = local.config["gateway_ip"]
+    bridge  = local.config["bridge"]
+  }]
+
+  storages = [{
+    storage = "proxmox"
+    size    = "20G"
+    }, {
+    storage = "scratch"
+    size    = "20G"
+    }
+  ]
+
+  post_provision_steps = [
+    "${rancher2_cluster_v2.archive-staging-rke2.cluster_registration_token[0].node_command} --etcd --controlplane"
+  ]
+}
+
+output "rancher-node-staging-rke2-mgmt3_summary" {
+  value = module.rancher-node-staging-rke2-mgmt3.summary
 }
 
 resource "rancher2_app_v2" "archive-staging-rke2-rancher-monitoring" {
