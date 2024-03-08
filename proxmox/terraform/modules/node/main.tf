@@ -93,7 +93,7 @@ resource "proxmox_vm_qemu" "node" {
         # concurrency on apt
         "cloud-init status -w",
         # so puppet agent installs the node's role
-        "puppet agent --server ${var.config["puppet_master"]} --environment=${var.config["puppet_environment"]} --waitforcert 60 --test || echo 'Node provisionned!'",
+        "puppet agent --server ${var.config["puppet_master"]} --environment=${var.config["puppet_environment"]} --vardir=/var/lib/puppet --waitforcert 60 --test || echo 'Node provisioned!'",
       ],
       var.post_provision_steps,
       )
