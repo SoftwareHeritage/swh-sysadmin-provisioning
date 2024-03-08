@@ -91,19 +91,94 @@ module "rancher-node-production-rke2-mgmt1" {
     storage = "proxmox"
     size    = "20G"
     }, {
-    storage = "proxmox"
+    storage = "scratch"
     size    = "30G"
     }
   ]
 
   post_provision_steps = [
-    "systemctl restart docker", # workaround
     "${rancher2_cluster_v2.archive-production-rke2.cluster_registration_token[0].node_command} --etcd --controlplane"
   ]
 }
 
 output "rancher-node-production-rke2-mgmt1_summary" {
   value = module.rancher-node-production-rke2-mgmt1.summary
+}
+
+module "rancher-node-production-rke2-mgmt2" {
+  source      = "../modules/node"
+  template    = var.templates["bullseye-zfs"]
+  config      = local.config
+  hostname    = "rancher-node-production-rke2-mgmt2"
+  description = "production rke2 management node"
+  hypervisor  = "branly"
+  sockets     = "1"
+  cores       = "4"
+  onboot      = true
+  memory      = "8192"
+  balloon     = "8192"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.100.142"
+    gateway = local.config["gateway_ip"]
+    bridge  = local.config["bridge"]
+  }]
+
+  storages = [{
+    storage = "proxmox"
+    size    = "20G"
+    }, {
+    storage = "scratch"
+    size    = "30G"
+    }
+  ]
+
+  post_provision_steps = [
+    "${rancher2_cluster_v2.archive-production-rke2.cluster_registration_token[0].node_command} --etcd --controlplane"
+  ]
+}
+
+output "rancher-node-production-rke2-mgmt2_summary" {
+  value = module.rancher-node-production-rke2-mgmt2.summary
+}
+
+module "rancher-node-production-rke2-mgmt3" {
+  source      = "../modules/node"
+  template    = var.templates["bullseye-zfs"]
+  config      = local.config
+  hostname    = "rancher-node-production-rke2-mgmt3"
+  description = "production rke2 management node"
+  hypervisor  = "hypervisor3"
+  sockets     = "1"
+  cores       = "4"
+  onboot      = true
+  memory      = "8192"
+  balloon     = "8192"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.100.143"
+    gateway = local.config["gateway_ip"]
+    bridge  = local.config["bridge"]
+  }]
+
+  storages = [{
+    storage = "proxmox"
+    size    = "20G"
+    }, {
+    storage = "scratch"
+    size    = "30G"
+    }
+  ]
+
+  post_provision_steps = [
+    "${rancher2_cluster_v2.archive-production-rke2.cluster_registration_token[0].node_command} --etcd --controlplane"
+  ]
+}
+
+output "rancher-node-production-rke2-mgmt3_summary" {
+  value = module.rancher-node-production-rke2-mgmt3.summary
 }
 
 resource "rancher2_app_v2" "archive-production-rke2-rancher-monitoring" {
