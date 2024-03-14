@@ -196,11 +196,6 @@ module "thanos" {
     id      = 0
     storage = "proxmox"
     size    = "32G"
-  },
-  {
-    id      = 1
-    storage = "scratch"
-    size    = "256G"
   }]
 }
 

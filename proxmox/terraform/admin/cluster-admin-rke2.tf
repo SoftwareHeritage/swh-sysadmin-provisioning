@@ -311,16 +311,6 @@ global:
     clusterName: cluster-admin-rke2
     systemDefaultRegistry: ""
   systemDefaultRegistry: ""
-nodeExporter:
-  serviceMonitor:
-    enabled: true
-    relabelings:
-    - action: replace
-      regex: ^(.*)$
-      replacement: $1
-      sourceLabels:
-      - __meta_kubernetes_pod_node_name
-      targetLabel: instance
 prometheus:
   enabled: true
   prometheusSpec:
@@ -352,6 +342,17 @@ prometheus:
       secretName: thanos-crt
 prometheusOperator:
   logLevel: debug
+prometheus-node-exporter:
+  prometheus:
+    monitor:
+      scrapeTimeout: 30s
+      relabelings:
+        - sourceLabels: [__meta_kubernetes_pod_node_name]
+          regex: ^(.*)$
+          separator: ;
+          targetLabel: instance
+          replacement: $1.internal.admin.swh.network
+          action: replace
 EOF
   depends_on = [rancher2_cluster_sync.cluster-admin-rke2,
     rancher2_cluster_v2.cluster-admin-rke2,
