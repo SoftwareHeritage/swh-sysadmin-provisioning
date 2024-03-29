@@ -267,3 +267,48 @@ module "rancher-node-test-rke2-worker2" {
 output "rancher-node-test-rke2-worker2_summary" {
   value = module.rancher-node-test-rke2-worker2.summary
 }
+
+# loader nodes must have a 2nd disk on hypervisor local storage to avoid
+# unnecessary ceph traffic on ceph
+module "rancher-node-test-rke2-worker3" {
+  source     = "../modules/node"
+  config     = local.config
+  hypervisor = "uffizi"
+  onboot     = false
+  vmid       = 154
+
+  template    = var.templates["bullseye-zfs"]
+  hostname    = "rancher-node-test-rke2-worker3"
+  description = "elastic worker for computations (e.g. loader, lister, ...)"
+  sockets     = "1"
+  cores       = "6"
+  memory      = "32768"
+  balloon     = "16384"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.130.213"
+    gateway = local.config["gateway_ip"]
+    bridge  = local.config["bridge"]
+  }]
+
+  storages = [{
+    storage = "proxmox"
+    size    = "20G"
+    }, {
+    storage = "scratch"
+    size    = "100G"
+    }
+  ]
+
+  post_provision_steps = [
+    "systemctl restart docker", # workaround
+    "mkdir -p /etc/rancher/rke2/config.yaml.d",
+    "echo '{ \"snapshotter\": \"zfs\" }' >/etc/rancher/rke2/config.yaml.d/50-snapshotter.yaml",
+    "${rancher2_cluster_v2.test-staging-rke2.cluster_registration_token[0].node_command} --worker --label node_type=worker --label swh/lister=true --label swh/loader=true --label swh/rpc=true --label swh/toolbox=true --label swh/webhooks=true"
+  ]
+}
+
+output "rancher-node-test-rke2-worker3_summary" {
+  value = module.rancher-node-test-rke2-worker3.summary
+}
