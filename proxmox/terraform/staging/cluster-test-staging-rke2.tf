@@ -106,7 +106,7 @@ module "rancher-node-test-rke2-mgmt1" {
   post_provision_steps = [
     "systemctl restart docker", # workaround
     "mkdir -p /etc/rancher/rke2/config.yaml.d",
-    "echo '{ \"snapshotter\": \"native\" }' >/etc/rancher/rke2/config.yaml.d/50-snapshotter.yaml",
+    "echo '{ \"snapshotter\": \"zfs\" }' >/etc/rancher/rke2/config.yaml.d/50-snapshotter.yaml",
     "${rancher2_cluster_v2.test-staging-rke2.cluster_registration_token[0].node_command} --etcd --controlplane"
   ]
 }
@@ -214,8 +214,8 @@ module "rancher-node-test-rke2-worker1" {
   post_provision_steps = [
     "systemctl restart docker", # workaround
     "mkdir -p /etc/rancher/rke2/config.yaml.d",
-    "echo '{ \"snapshotter\": \"native\" }' >/etc/rancher/rke2/config.yaml.d/50-snapshotter.yaml",
-    "${rancher2_cluster_v2.test-staging-rke2.cluster_registration_token[0].node_command} --worker --label node_type=generic --label swh/rpc=true"
+    "echo '{ \"snapshotter\": \"zfs\" }' >/etc/rancher/rke2/config.yaml.d/50-snapshotter.yaml",
+    "${rancher2_cluster_v2.test-staging-rke2.cluster_registration_token[0].node_command} --worker --label node_type=generic --label --label swh/lister=true --label swh/loader=true --label swh/rpc=true --label swh/toolbox=true --label swh/webhooks=true"
   ]
 }
 
@@ -259,8 +259,8 @@ module "rancher-node-test-rke2-worker2" {
   post_provision_steps = [
     "systemctl restart docker", # workaround
     "mkdir -p /etc/rancher/rke2/config.yaml.d",
-    "echo '{ \"snapshotter\": \"native\" }' >/etc/rancher/rke2/config.yaml.d/50-snapshotter.yaml",
-    "${rancher2_cluster_v2.test-staging-rke2.cluster_registration_token[0].node_command} --worker --label node_type=worker --label swh/rpc=true --label swh/loader=true --label swh/lister=true"
+    "echo '{ \"snapshotter\": \"zfs\" }' >/etc/rancher/rke2/config.yaml.d/50-snapshotter.yaml",
+    "${rancher2_cluster_v2.test-staging-rke2.cluster_registration_token[0].node_command} --worker --label node_type=worker --label swh/lister=true --label swh/loader=true --label swh/rpc=true --label swh/toolbox=true --label swh/webhooks=true --label swh/storage=true"
   ]
 }
 
