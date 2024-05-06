@@ -195,7 +195,7 @@ module "thanos" {
   storages = [{
     id      = 0
     storage = "proxmox"
-    size    = "32G"
+    size    = "50G"
   }]
 }
 
