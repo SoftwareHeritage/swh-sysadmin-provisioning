@@ -206,10 +206,10 @@ prometheus:
     resources:
       limits:
         cpu: 4
-        memory: 10Gi
+        memory: 16Gi
       requests:
-        cpu: 1000m
-        memory: 500Mi
+        cpu: 2
+        memory: 10Gi
     retention: 2d
     thanos:
       objectStorageConfig:
