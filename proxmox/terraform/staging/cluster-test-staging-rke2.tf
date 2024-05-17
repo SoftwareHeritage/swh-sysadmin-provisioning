@@ -122,8 +122,14 @@ resource "rancher2_app_v2" "test-staging-rke2-rancher-monitoring" {
   namespace     = "cattle-monitoring-system"
   repo_name     = "rancher-charts"
   chart_name    = "rancher-monitoring"
-  chart_version = "102.0.1+up40.1.2"
+  chart_version = "103.1.0+up45.31.1"
   values        = <<EOF
+alertmanager:
+  alertmanagerSpec:
+    alertmanagerConfigMatcherStrategy:
+      type: None
+    configSecret: alertmanager-rancher-monitoring-alertmanager
+    useExistingSecret: true
 prometheus:
   enabled: true
   prometheusSpec:
@@ -135,10 +141,6 @@ prometheus:
     requests:
       cpu: 250m
       memory: 250Mi
-    # thanos:
-    #   objectStorageConfig:
-    #     key: thanos.yaml
-    #     name: thanos-objstore-config-secret
     resources:
       limits:
         cpu: 2000m
@@ -146,31 +148,26 @@ prometheus:
       requests:
         cpu: 750m
         memory: 3500Mi
-#   thanosIngress:
-#     annotations:
-#       cert-manager.io/cluster-issuer: letsencrypt-production-gandi
-#       metallb.universe.tf/allow-shared-ip: clusterIP
-#       nginx.ingress.kubernetes.io/backend-protocol: GRPC
-#     enabled: true
-#     hosts:
-#     - k8s-test-staging-rke2-thanos.internal.staging.swh.network
-#     loadBalancerIP: 192.168.130.129
-#     pathType: Prefix
-#     tls:
-#     - hosts:
-#       - k8s-test-staging-rke2-thanos.internal.staging.swh.network
-#       secretName: thanos-crt
 prometheus-node-exporter:
   prometheus:
     monitor:
-      scrapeTimeout: 30s
       relabelings:
-        - sourceLabels: [__meta_kubernetes_pod_node_name]
-          regex: ^(.*)$
-          separator: ;
-          targetLabel: instance
-          replacement: $1.internal.staging.swh.network
-          action: replace
+      - action: replace
+        regex: ^(.*)$
+        replacement: $1.internal.staging.swh.network
+        separator: ;
+        sourceLabels:
+        - __meta_kubernetes_pod_node_name
+        targetLabel: instance
+      scrapeTimeout: 30s
+rke2ControllerManager:
+  enabled: true
+rke2Etcd:
+  enabled: true
+rke2Proxy:
+  enabled: true
+rke2Scheduler:
+  enabled: true
 EOF
   depends_on = [rancher2_cluster_sync.test-staging-rke2,
     rancher2_cluster_v2.test-staging-rke2,
