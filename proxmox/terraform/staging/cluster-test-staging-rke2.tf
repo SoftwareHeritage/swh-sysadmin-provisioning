@@ -98,7 +98,7 @@ module "rancher-node-test-rke2-mgmt1" {
     storage = "proxmox"
     size    = "20G"
     }, {
-    storage = "proxmox"
+    storage = "scratch"
     size    = "20G"
     }
   ]

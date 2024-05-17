@@ -92,7 +92,7 @@ module "rancher-node-staging-rke2-mgmt1" {
     size    = "20G"
     }, {
     storage = "scratch"
-    size    = "20G"
+    size    = "40G"
     }
   ]
 
