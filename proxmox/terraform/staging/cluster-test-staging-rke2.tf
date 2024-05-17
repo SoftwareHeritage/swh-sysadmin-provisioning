@@ -275,7 +275,7 @@ module "rancher-node-test-rke2-worker3" {
   config     = local.config
   hypervisor = "uffizi"
   onboot     = false
-  vmid       = 154
+  #vmid       = 154 # specifying the vmid tells terraform to recreate the worker
 
   template    = var.templates["bullseye-zfs"]
   hostname    = "rancher-node-test-rke2-worker3"
