@@ -2,6 +2,9 @@ resource "rancher2_cluster_v2" "cluster-admin-rke2" {
   name               = "cluster-admin-rke2"
   kubernetes_version = "v1.26.13+rke2r1"
   rke_config {
+    etcd_snapshot_create {
+      generation = 1
+    }
     upgrade_strategy {
       worker_drain_options {
         enabled               = false
@@ -300,17 +303,14 @@ resource "rancher2_app_v2" "cluster-admin-rke2-rancher-monitoring" {
   namespace     = "cattle-monitoring-system"
   repo_name     = "rancher-charts"
   chart_name    = "rancher-monitoring"
-  chart_version = "102.0.1+up40.1.2"
+  chart_version = "103.1.0+up45.31.1"
   values        = <<EOF
 alertmanager:
   alertmanagerSpec:
-    logLevel: debug
-global:
-  cattle:
-    clusterId: c-m-682nvssh
-    clusterName: cluster-admin-rke2
-    systemDefaultRegistry: ""
-  systemDefaultRegistry: ""
+    alertmanagerConfigMatcherStrategy:
+      type: None
+    configSecret: alertmanager-rancher-monitoring-alertmanager
+    useExistingSecret: true
 prometheus:
   enabled: true
   prometheusSpec:
@@ -340,19 +340,26 @@ prometheus:
     - hosts:
       - k8s-admin-rke2-thanos.internal.admin.swh.network
       secretName: thanos-crt
-prometheusOperator:
-  logLevel: debug
 prometheus-node-exporter:
   prometheus:
     monitor:
-      scrapeTimeout: 30s
       relabelings:
-        - sourceLabels: [__meta_kubernetes_pod_node_name]
-          regex: ^(.*)$
-          separator: ;
-          targetLabel: instance
-          replacement: $1.internal.admin.swh.network
-          action: replace
+      - action: replace
+        regex: ^(.*)$
+        replacement: $1.internal.admin.swh.network
+        separator: ;
+        sourceLabels:
+        - __meta_kubernetes_pod_node_name
+        targetLabel: instance
+      scrapeTimeout: 30s
+rke2ControllerManager:
+  enabled: true
+rke2Etcd:
+  enabled: true
+rke2Proxy:
+  enabled: true
+rke2Scheduler:
+  enabled: true
 EOF
   depends_on = [rancher2_cluster_sync.cluster-admin-rke2,
     rancher2_cluster_v2.cluster-admin-rke2,
