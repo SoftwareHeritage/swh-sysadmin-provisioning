@@ -320,8 +320,12 @@ prometheus:
       environment: admin
       infrastructure: kubernetes
     resources:
+      limits:
+        cpu: 2000m
+        memory: 3500Mi
       requests:
-        memory: 1500Mi
+        cpu: 750m
+        memory: 200Mi
     thanos:
       objectStorageConfig:
         key: thanos.yaml
