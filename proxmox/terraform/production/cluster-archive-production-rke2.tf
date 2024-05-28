@@ -187,14 +187,14 @@ resource "rancher2_app_v2" "archive-production-rke2-rancher-monitoring" {
   namespace     = "cattle-monitoring-system"
   repo_name     = "rancher-charts"
   chart_name    = "rancher-monitoring"
-  chart_version = "102.0.1+up40.1.2"
+  chart_version = "103.1.0+up45.31.1"
   values        = <<EOF
-global:
-  cattle:
-    clusterId: c-m-75xcg59s
-    clusterName: archive-production-rke2
-    systemDefaultRegistry: ""
-  systemDefaultRegistry: ""
+alertmanager:
+  alertmanagerSpec:
+    alertmanagerConfigMatcherStrategy:
+      type: None
+    configSecret: alertmanager-rancher-monitoring-alertmanager
+    useExistingSecret: true
 prometheus:
   enabled: true
   prometheusSpec:
@@ -232,17 +232,26 @@ prometheus:
 prometheus-node-exporter:
   prometheus:
     monitor:
-      scrapeTimeout: 30s
       relabelings:
-        - sourceLabels: [__meta_kubernetes_pod_node_name]
-          regex: ^(.*)$
-          separator: ;
-          targetLabel: instance
-          replacement: $1.internal.softwareheritage.org
-          action: replace
+      - action: replace
+        regex: ^(.*)$
+        replacement: $1.internal.softwareheritage.org
+        separator: ;
+        sourceLabels:
+        - __meta_kubernetes_pod_node_name
+        targetLabel: instance
+      scrapeTimeout: 30s
   resources:
     limits:
       memory: 100Mi
+rke2ControllerManager:
+  enabled: true
+rke2Etcd:
+  enabled: true
+rke2Proxy:
+  enabled: true
+rke2Scheduler:
+  enabled: true
 EOF
   depends_on = [rancher2_cluster_sync.archive-production-rke2,
     rancher2_cluster_v2.archive-production-rke2,
