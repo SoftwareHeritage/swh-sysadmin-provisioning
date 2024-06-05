@@ -198,6 +198,9 @@ alertmanager:
       type: None
     configSecret: alertmanager-rancher-monitoring-alertmanager
     useExistingSecret: true
+defaultRules:
+  disabled:
+    KubeHpaMaxedOut: true
 prometheus:
   enabled: true
   prometheusSpec:
