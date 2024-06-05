@@ -198,12 +198,6 @@ alertmanager:
       type: None
     configSecret: alertmanager-rancher-monitoring-alertmanager
     useExistingSecret: true
-global:
-  cattle:
-    clusterId: c-m-9n5h9nrf
-    clusterName: archive-staging-rke2
-    systemDefaultRegistry: ""
-  systemDefaultRegistry: ""
 prometheus:
   enabled: true
   prometheusSpec:
@@ -216,6 +210,9 @@ prometheus:
       cpu: 250m
       memory: 250Mi
     resources:
+      limits:
+        cpu: 2000m
+        memory: 5000Mi
       requests:
         cpu: 750m
         memory: 3500Mi
