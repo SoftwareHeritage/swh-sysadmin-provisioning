@@ -13,7 +13,7 @@ module "rancher_aks_cluster" {
   cluster_name   = "euwest-rancher"
   resource_group = azurerm_resource_group.rancher_rg.name
 
-  minimal_pool_count     = 2
+  minimal_pool_count     = 3
   maximal_pool_count     = 3
   node_type              = "Standard_B2ms"
   public_ip_provisioning = false
