@@ -47,7 +47,6 @@ resource "azurerm_network_interface" "backup-interface" {
   ip_configuration {
     name                          = "backupNicConfiguration"
     subnet_id                     = data.azurerm_subnet.default.id
-    public_ip_address_id          = ""
     private_ip_address            = "192.168.200.50"
     private_ip_address_allocation = "Static"
   }
@@ -197,7 +196,6 @@ resource "azurerm_network_interface" "thanos-compact-interface" {
   ip_configuration {
     name                          = "backupNicConfiguration"
     subnet_id                     = data.azurerm_subnet.default.id
-    public_ip_address_id          = ""
     private_ip_address_allocation = "Dynamic"
   }
 }

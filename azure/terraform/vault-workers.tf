@@ -22,7 +22,6 @@ resource "azurerm_network_interface" "vault-worker-interface" {
   ip_configuration {
     name                          = "vaultWorkerNicConfiguration"
     subnet_id                     = data.azurerm_subnet.default.id
-    public_ip_address_id          = ""
     private_ip_address_allocation = "Dynamic"
   }
 }
