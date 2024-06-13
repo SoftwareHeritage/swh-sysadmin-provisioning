@@ -1,6 +1,6 @@
 resource "rancher2_cluster_v2" "test-staging-rke2" {
   name               = "test-staging-rke2"
-  kubernetes_version = "v1.26.13+rke2r1"
+  kubernetes_version = "v1.28.10+rke2r1"
   rke_config {
     upgrade_strategy {
       worker_drain_options {
@@ -24,6 +24,10 @@ rke2-coredns:
     limits:
       cpu: 8 # Unset is not working
 EOT
+
+  etcd_snapshot_create {
+                generation = 3
+              }
 
     machine_global_config = <<EOF
 cni: "calico"
