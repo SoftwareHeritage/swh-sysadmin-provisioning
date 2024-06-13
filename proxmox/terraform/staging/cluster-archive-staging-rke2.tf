@@ -36,6 +36,12 @@ disable:
   - rke2-ingress-nginx
 EOF
 
+    machine_selector_config {
+      config = {
+        cloud-provider-name = ""
+      }
+    }
+
     registries {
       dynamic "mirrors" {
         for_each = var.docker_registry_mirrors

@@ -25,10 +25,6 @@ rke2-coredns:
       cpu: 8 # Unset is not working
 EOT
 
-  etcd_snapshot_create {
-                generation = 3
-              }
-
     machine_global_config = <<EOF
 cni: "calico"
 kubelet-arg:
@@ -39,6 +35,16 @@ kubelet-arg:
 disable:
   - rke2-ingress-nginx
 EOF
+
+    etcd_snapshot_create {
+     generation = 3
+    }
+
+    machine_selector_config {
+      config = {
+        cloud-provider-name = ""
+      }
+    }
 
     registries {
       dynamic "mirrors" {
