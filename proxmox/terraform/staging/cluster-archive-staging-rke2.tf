@@ -1,6 +1,6 @@
 resource "rancher2_cluster_v2" "archive-staging-rke2" {
   name               = "archive-staging-rke2"
-  kubernetes_version = "v1.26.13+rke2r1"
+  kubernetes_version = "v1.28.10+rke2r1"
   rke_config {
     upgrade_strategy {
       worker_drain_options {
@@ -35,6 +35,10 @@ kubelet-arg:
 disable:
   - rke2-ingress-nginx
 EOF
+
+    etcd_snapshot_create {
+      generation = 4
+    }
 
     machine_selector_config {
       config = {
