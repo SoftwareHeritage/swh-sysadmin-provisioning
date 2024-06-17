@@ -209,7 +209,7 @@ prometheus:
     resources:
       limits:
         cpu: 4
-        memory: 24Gi
+        memory: 32Gi
       requests:
         cpu: 2
         memory: 10Gi
