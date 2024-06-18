@@ -1,10 +1,7 @@
 resource "rancher2_cluster_v2" "cluster-admin-rke2" {
   name               = "cluster-admin-rke2"
-  kubernetes_version = "v1.26.13+rke2r1"
+  kubernetes_version = "v1.28.10+rke2r1"
   rke_config {
-    etcd_snapshot_create {
-      generation = 1
-    }
     upgrade_strategy {
       worker_drain_options {
         enabled               = false
@@ -12,6 +9,10 @@ resource "rancher2_cluster_v2" "cluster-admin-rke2" {
         timeout               = 300
       }
     }
+
+    chart_values = <<-EOT
+rke2-calico: {}
+EOT
 
     machine_global_config = <<EOF
 cni: "calico"
@@ -22,6 +23,16 @@ kubelet-arg:
 disable:
   - rke2-ingress-nginx
 EOF
+
+    etcd_snapshot_create {
+      generation = 6
+    }
+
+    machine_selector_config {
+      config = {
+        cloud-provider-name = ""
+      }
+    }
 
     registries {
       dynamic "mirrors" {
