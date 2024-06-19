@@ -1,6 +1,6 @@
 resource "rancher2_cluster_v2" "archive-production-rke2" {
   name               = "archive-production-rke2"
-  kubernetes_version = "v1.26.15+rke2r1"
+  kubernetes_version = "v1.28.10+rke2r1"
   rke_config {
     upgrade_strategy {
       worker_drain_options {
@@ -38,7 +38,7 @@ disable:
 EOF
 
     etcd_snapshot_create {
-      generation = 1
+      generation = 3
     }
 
     machine_selector_config {
