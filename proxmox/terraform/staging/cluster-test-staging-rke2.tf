@@ -37,7 +37,7 @@ disable:
 EOF
 
     etcd_snapshot_create {
-     generation = 3
+     generation = 5
     }
 
     machine_selector_config {
