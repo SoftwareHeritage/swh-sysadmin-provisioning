@@ -125,6 +125,92 @@ output "rancher-node-test-rke2-mgmt1_summary" {
   value = module.rancher-node-test-rke2-mgmt1.summary
 }
 
+module "rancher-node-test-rke2-mgmt2" {
+  source     = "../modules/node"
+  config     = local.config
+  hypervisor = "uffizi"
+  onboot     = false
+  vmid       = 159
+
+  template    = var.templates["bullseye-zfs"]
+  hostname    = "rancher-node-test-rke2-mgmt2"
+  description = "test rke2 management node"
+  sockets     = "1"
+  cores       = "4"
+  memory      = "16384"
+  balloon     = "16384"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.130.214"
+    gateway = local.config["gateway_ip"]
+    bridge  = local.config["bridge"]
+  }]
+
+  storages = [{
+    storage = "proxmox"
+    size    = "20G"
+    }, {
+    storage = "scratch"
+    size    = "20G"
+    }
+  ]
+
+  post_provision_steps = [
+    "systemctl restart docker", # workaround
+    "mkdir -p /etc/rancher/rke2/config.yaml.d",
+    "echo '{ \"snapshotter\": \"zfs\" }' >/etc/rancher/rke2/config.yaml.d/50-snapshotter.yaml",
+    "${rancher2_cluster_v2.test-staging-rke2.cluster_registration_token[0].node_command} --etcd --controlplane"
+  ]
+}
+
+output "rancher-node-test-rke2-mgmt2_summary" {
+  value = module.rancher-node-test-rke2-mgmt2.summary
+}
+
+module "rancher-node-test-rke2-mgmt3" {
+  source     = "../modules/node"
+  config     = local.config
+  hypervisor = "uffizi"
+  onboot     = false
+  vmid       = 160
+
+  template    = var.templates["bullseye-zfs"]
+  hostname    = "rancher-node-test-rke2-mgmt3"
+  description = "test rke2 management node"
+  sockets     = "1"
+  cores       = "4"
+  memory      = "16384"
+  balloon     = "16384"
+
+  networks = [{
+    id      = 0
+    ip      = "192.168.130.215"
+    gateway = local.config["gateway_ip"]
+    bridge  = local.config["bridge"]
+  }]
+
+  storages = [{
+    storage = "proxmox"
+    size    = "20G"
+    }, {
+    storage = "scratch"
+    size    = "20G"
+    }
+  ]
+
+  post_provision_steps = [
+    "systemctl restart docker", # workaround
+    "mkdir -p /etc/rancher/rke2/config.yaml.d",
+    "echo '{ \"snapshotter\": \"zfs\" }' >/etc/rancher/rke2/config.yaml.d/50-snapshotter.yaml",
+    "${rancher2_cluster_v2.test-staging-rke2.cluster_registration_token[0].node_command} --etcd --controlplane"
+  ]
+}
+
+output "rancher-node-test-rke2-mgmt3_summary" {
+  value = module.rancher-node-test-rke2-mgmt3.summary
+}
+
 # Disabled, it should be created and maintained by argocd
 resource "rancher2_app_v2" "test-staging-rke2-rancher-monitoring" {
   cluster_id    = rancher2_cluster_v2.test-staging-rke2.cluster_v1_id
