@@ -53,14 +53,36 @@ resource "proxmox_vm_qemu" "node" {
   # will be empty, thus no secondary ip config
   ipconfig1 = try(lookup(var.networks[1], "ip"), "") != "" ? "ip=${var.networks[1]["ip"]}/24" : ""
 
+  dynamic disk {
+    for_each = var.cdrom_disk ? [1] : []
+    content {
+      type   = "cdrom"
+      slot   = var.cdrom_disk_slot
+      backup = false
+    }
+  }
+
   ####
   dynamic disk {
     for_each = var.storages
 
     content {
+      type         = "disk"
       storage      = disk.value["storage"]
       size         = disk.value["size"]
-      type         = "virtio"
+      backup       = true
+      replicate    = true
+      slot         = "virtio${disk.key}"
+    }
+  }
+
+  dynamic disk {
+    for_each = var.cloudinit_disk ? [1] : []
+    content {
+      type    = "cloudinit"
+      slot    = var.cloudinit_disk_slot
+      storage = "proxmox"
+      backup  = false
     }
   }
 

@@ -138,3 +138,27 @@ variable "onboot" {
   type        = bool
   default     = true
 }
+
+variable "cdrom_disk" {
+  description = "For legacy vms installed without cdrom"
+  type        = bool
+  default     = true
+}
+
+variable "cdrom_disk_slot" {
+  description = "For legacy vms, allow to adapt the cdrom slot id"
+  type        = string
+  default     = "ide2"
+}
+
+variable "cloudinit_disk" {
+  description = "For legacy vms installed without cloudinit disk"
+  type        = bool
+  default     = true
+}
+
+variable "cloudinit_disk_slot" {
+  description = "For legacy vms, allow to adapt the cloudinit slot id"
+  type        = string
+  default     = "ide0"
+}

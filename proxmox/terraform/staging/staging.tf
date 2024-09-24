@@ -41,6 +41,8 @@ module "webapp" {
   # to match the real vm configuration in proxmox
   # to remove
   args = "-device virtio-rng-pci"
+  cdrom_disk_slot =  "ide2"
+  cloudinit_disk_slot = "ide3"
   networks = [{
     id      = 0
     ip      = "192.168.130.30"
@@ -216,6 +218,7 @@ module "objstorage0" {
     macaddr = "5E:28:EA:7D:50:0D"
     bridge  = local.config["bridge"]
   }]
+  cloudinit_disk_slot = "ide3"
 }
 
 output "objstorage0_summary" {

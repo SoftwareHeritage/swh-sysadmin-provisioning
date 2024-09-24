@@ -2,8 +2,16 @@ terraform {
   required_version = ">= 0.13"
   required_providers {
     proxmox = {
+      source = "localhost/telmate/proxmox"
+      version = ">=3.0.0"
+    }
+    # proxmox = {
+    #   source = "telmate/proxmox"
+    #   version = "2.9.14"
+    # }
+    proxmox-origin = {
       source = "telmate/proxmox"
-      version = "2.9.10"
+      version = "3.0.1-rc4"
     }
     rancher2 = {
       source = "rancher/rancher2"
@@ -19,10 +27,10 @@ provider "proxmox" {
 
   # Uncomment this section to activate the proxmox execution logs
   # pm_log_enable = true
-  # pm_log_file = "terraform-plugin-proxmox.log"
-  # pm_debug = true
-  # pm_log_levels = {
-  #   _default = "debug"
+  pm_log_file = "terraform-plugin-proxmox.log"
+  pm_debug = true
+  pm_log_levels = {
+    _default = "debug"
   #   _capturelog = ""
-  # }
+  }
 }
