@@ -218,7 +218,7 @@ resource "rancher2_app_v2" "test-staging-rke2-rancher-monitoring" {
   namespace     = "cattle-monitoring-system"
   repo_name     = "rancher-charts"
   chart_name    = "rancher-monitoring"
-  chart_version = "103.1.0+up45.31.1"
+  chart_version = "103.2.0+up57.0.3"
   values        = <<EOF
 alertmanager:
   alertmanagerSpec:
