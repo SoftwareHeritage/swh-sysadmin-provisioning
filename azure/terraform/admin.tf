@@ -233,7 +233,7 @@ resource "azurerm_virtual_machine" "thanos-compact" {
     caching           = "ReadWrite"
     create_option     = "Empty"
     managed_disk_type = "Premium_LRS"
-    disk_size_gb      = 256
+    disk_size_gb      = 512
     lun               = 0
   }
 
