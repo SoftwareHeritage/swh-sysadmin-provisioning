@@ -229,6 +229,7 @@ prometheus:
       requests:
         cpu: 750m
         memory: 3500Mi
+    retention: 2d
     thanos:
       objectStorageConfig:
         existingSecret:
