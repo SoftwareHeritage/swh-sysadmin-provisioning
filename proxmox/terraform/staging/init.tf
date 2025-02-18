@@ -1,10 +1,13 @@
 terraform {
-  backend "azurerm" {
-    resource_group_name  = "euwest-admin"
-    storage_account_name = "swhterraform"
-    container_name       = "tfstate"
-    key                  = "staging.rocquencourt.terraform.tfstate"
+  backend "local" {
+    path="/home/gsamson/.local/terraform/terraform.tfstate"
   }
+  #backend "azurerm" {
+  #  resource_group_name  = "euwest-admin"
+  #  storage_account_name = "swhterraform"
+  #  container_name       = "tfstate"
+  #  key                  = "staging.rocquencourt.terraform.tfstate"
+  #}
 }
 
 # Default configuration passed along module calls
