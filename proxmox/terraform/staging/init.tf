@@ -1,6 +1,6 @@
 terraform {
   backend "local" {
-    path="/home/gsamson/.local/terraform/terraform.tfstate"
+    path="/home/gsamson/.local/terraform/staging/terraform.tfstate"
   }
   #backend "azurerm" {
   #  resource_group_name  = "euwest-admin"

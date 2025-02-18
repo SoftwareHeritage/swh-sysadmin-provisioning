@@ -5,6 +5,10 @@ terraform {
       source = "telmate/proxmox"
       version = "2.9.10"
     }
+    bpg-proxmox = {
+      source = "bpg/proxmox"
+      version = "0.72.0"
+    }
     rancher2 = {
       source = "rancher/rancher2"
       version = "1.24.0"
@@ -25,4 +29,7 @@ provider "proxmox" {
   #   _default = "debug"
   #   _capturelog = ""
   # }
+}
+provider "bpg-proxmox" {
+  endpoint = "https://chaillot.internal.softwareheritage.org:8006/"
 }
