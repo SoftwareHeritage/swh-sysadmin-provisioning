@@ -22,7 +22,12 @@ export PM_USER=<swh-login>@pam
 export PM_PASS=<swh-login-pass>
 export RANCHER_ACCESS_KEY="<rancher token id>"
 export RANCHER_SECRET_KEY="<rancher secret key>"
+export PROXMOX_VE_USERNAME=<swh-login>@pam
+export PROXMOX_VE_PASSWORD=<swh-login-pass>
 ```
+
+> `PM_USER` and `PM_PASS` are used with telmate/proxmox provider (deprecated).  
+> `PROXMOX_VE_USERNAME` and `PROXMOX_VE_PASSWORD` are used with bpg/proxmox provider.
 
 source it in your current shell session.
 
