@@ -324,10 +324,13 @@ resource "proxmox_virtual_environment_vm" "runner0" {
     disconnected = false
   }
 }
-
 output "runner0_summary" {
-  value = proxmox_virtual_environment_vm.runner0
-  sensitive = true
+  value = <<EOF
+
+hostname: ${proxmox_virtual_environment_vm.runner0.name}
+fqdn: ${proxmox_virtual_environment_vm.runner0.name}.${local.config["domain"]}
+network: ${proxmox_virtual_environment_vm.runner0.initialization[0].ip_config[0].ipv4[0].address}
+EOF
 }
 
 resource "proxmox_virtual_environment_vm" "maven-exporter0" {
@@ -415,6 +418,11 @@ resource "proxmox_virtual_environment_vm" "maven-exporter0" {
 }
 
 output "maven-exporter0_summary" {
-  value = proxmox_virtual_environment_vm.maven-exporter0
-  sensitive = true
+  value = <<EOF
+
+hostname: ${proxmox_virtual_environment_vm.maven-exporter0.name}
+fqdn: ${proxmox_virtual_environment_vm.maven-exporter0.name}.${local.config["domain"]}
+network: ${proxmox_virtual_environment_vm.maven-exporter0.initialization[0].ip_config[0].ipv4[0].address}
+EOF
 }
+
