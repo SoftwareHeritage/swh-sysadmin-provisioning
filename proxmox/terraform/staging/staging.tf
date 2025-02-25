@@ -247,77 +247,174 @@ output "counters0_summary" {
   value = module.counters0.summary
 }
 
-module "maven-exporter0" {
-  source      = "../modules/node"
-  config      = local.config
-  hypervisor  = "pompidou"
-  onboot      = true
+###### NEW ######
 
-  template    = var.templates["bullseye-zfs"]
-  vmid        = 122
-  hostname    = "maven-exporter0"
-  description = "Maven index exporter to run containers and expose export.fld files"
-  sockets     = "1"
-  cores       = "4"
+resource "proxmox_virtual_environment_vm" "runner0" {
+  provider      = bpg-proxmox
+  name          = "runner0"
+  description   = "Gitlab runner to process add-forge-now requests"
+  node_name     = "branly"
+  vm_id         = 148
+  tags          = ["staging","gitlab-runner",]
 
-  memory  = "4096"
-  balloon = "1024"
+  # do not uncomment otherwise it will destroy and create again
+  #clone {
+  #  vm_id = 10014 # debian-bookworm-12.1-zfs-2023-08-30
+  #}
 
-  networks = [{
-    id      = 0
-    ip      = "192.168.130.70"
-    gateway = local.config["gateway_ip"]
-    macaddr = "36:86:F6:F9:2A:5D"
-    bridge  = local.config["bridge"]
-  }]
+  cpu {
+    sockets   = 1
+    cores     = 4
+    type      = "kvm64"
+  }
 
-  storages = [{
-    storage = "proxmox"
-    size    = "20G"
-    }, {
-    storage = "proxmox"
-    size    = "50G"
+  memory {
+    dedicated = 4096
+    floating  = 1024
+  }
+
+  agent {
+    enabled = false
+  }
+
+  initialization {
+
+    datastore_id = "proxmox"
+    interface    = "ide0"
+    ip_config {
+      ipv4 {
+        address = "192.168.130.221/24"
+        gateway = local.config["gateway_ip"]
+      }
     }
-  ]
-}
-
-output "maven-exporter0_summary" {
-  value = module.maven-exporter0.summary
-}
-
-module "runner0" {
-  source      = "../modules/node"
-  config      = local.config
-  hypervisor  = "pompidou"
-  onboot      = true
-
-  template    = var.templates["bullseye-zfs"]
-  vmid        = 148
-  hostname    = "runner0"
-  description = "Gitlab runner to process add-forge-now requests"
-  sockets     = "1"
-  cores       = "4"
-
-  memory  = "4096"
-  balloon = "1024"
-
-  networks = [{
-    id      = 0
-    ip      = "192.168.130.221"
-    gateway = local.config["gateway_ip"]
-    bridge  = local.config["bridge"]
-  }]
-
-  storages = [{
-    storage = "proxmox"
-    size    = "20G"
-    }, {
-    storage = "proxmox"
-    size    = "30G"
+    dns {
+      domain  = local.config["domain"]
+      servers = [local.config["dns"],]
     }
-  ]
+
+    user_account {
+      keys     = [
+        local.config["user_admin_ssh_public_key"],
+      ]
+      username = local.config["user_admin"]
+    }
+  }
+
+  disk {
+    datastore_id = "proxmox"
+    interface    = "virtio0"
+    discard      = "ignore"
+    size         = 20
+    file_format  = "raw"
+    path_in_datastore = "base-10012-disk-0/vm-148-disk-0"
+  }
+
+  disk {
+    datastore_id = "proxmox"
+    interface    = "virtio1"
+    discard      = "ignore"
+    size         = 30
+    file_format  = "raw"
+    path_in_datastore = "vm-148-disk-1"
+  }
+
+  network_device {
+    bridge       = local.config["bridge"]
+    mac_address  = "1A:4B:96:85:01:64"
+    disconnected = false
+  }
 }
 
 output "runner0_summary" {
-  value = module.runner0.summary
+  value = proxmox_virtual_environment_vm.runner0
+  sensitive = true
+}
+
+resource "proxmox_virtual_environment_vm" "maven-exporter0" {
+  provider      = bpg-proxmox
+  name          = "maven-exporter0"
+  description   = "Maven index exporter to run containers and expose export.fld files"
+  node_name     = "chaillot"
+  vm_id         = 122
+  tags          = ["staging",]
+
+  # do not uncomment otherwise it will destroy and create again
+  #clone {
+  #  vm_id = 10014 # debian-bookworm-12.1-zfs-2023-08-30
+  #}
+
+  cpu {
+    sockets   = 1
+    cores     = 4
+    type      = "kvm64"
+  }
+
+  memory {
+    dedicated = 4096
+    floating  = 1024
+  }
+
+  agent {
+    enabled = false
+  }
+
+  cdrom {
+    file_id   = "proxmox:vm-122-cloudinit"
+  }
+
+  operating_system {
+    type = "l26"
+  }
+
+  initialization {
+
+    datastore_id = "proxmox"
+    interface    = "ide3"
+    ip_config {
+      ipv4 {
+        address = "192.168.130.70/24"
+        gateway = local.config["gateway_ip"]
+      }
+    }
+    dns {
+      domain  = local.config["domain"]
+      servers = [local.config["dns"],]
+    }
+
+    user_account {
+      keys     = [
+        local.config["user_admin_ssh_public_key"],
+      ]
+      username = local.config["user_admin"]
+    }
+  }
+
+  disk {
+    datastore_id = "proxmox"
+    interface    = "virtio0"
+    discard      = "ignore"
+    size         = 20
+    file_format  = "raw"
+    path_in_datastore = "base-10005-disk-0/vm-122-disk-0"
+  }
+
+  disk {
+    datastore_id = "proxmox"
+    interface    = "virtio1"
+    discard      = "ignore"
+    size         = 50
+    file_format  = "raw"
+    path_in_datastore = "vm-122-disk-1"
+  }
+
+  network_device {
+    bridge       = local.config["bridge"]
+    mac_address  = "36:86:F6:F9:2A:5D"
+    disconnected = false
+  }
+}
+
+output "maven-exporter0_summary" {
+  value = proxmox_virtual_environment_vm.maven-exporter0
+  sensitive = true
 }
