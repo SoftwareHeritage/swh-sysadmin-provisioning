@@ -1,5 +1,5 @@
 variable "hostname" {
-  description = "Node's hostname"
+  description = "Node hostname"
   type        = string
 }
 
@@ -10,7 +10,7 @@ variable "domainname" {
 }
 
 variable "description" {
-  description = "Node's description"
+  description = "Node description"
   type        = string
 }
 
@@ -31,13 +31,9 @@ variable "template" {
 
 variable "cpu" {
   description = "CPU hardware configuration (cores, sockets, types)"
-  type        = object({
-    # CPU type possible values (not exhaustive): kvm64, host, ... The default is kvm64 and must be specified to avoid issues on refresh
-    type    = optional(string)
-    cores   = optional(number)
-    sockets = optional(number)
-  })
+  type        = map(string)
   default = {
+    # CPU type possible values (not exhaustive): kvm64, host, ... The default is kvm64 and must be specified to avoid issues on refresh
     type    = "kvm64"
     cores   = 4
     sockets = 1
@@ -46,28 +42,12 @@ variable "cpu" {
 
 variable "ram" {
   description = "RAM hardware configuration (dedicated, floating)"
-  type        = object({
-    dedicated = optional(number)
-    # ballooning option
-    floating  = optional(number)
-  })
+  type        = map(string)
   default = {
     dedicated = 4096
     floating  = 1024
   }
 }
-
-variable "memory" {
-  description = "Memory in Mb"
-  type        = number
-  default     = 1024
-}
-variable "balloon" {
-  description = "ballooning option"
-  type        = number
-  default     = 0
-}
-
 
 variable "network" {
   description = "Default networks configuration (ip, gateway, macaddr, bridge)"
@@ -80,11 +60,8 @@ variable "network" {
 }
 
 variable "cdrom" {
-  description = "Default networks configuration (ip, gateway, macaddr, bridge)"
-  type = object({
-    file_id   = optional(string)
-    interface = optional(string)
-  })
+  description = "CDROM configuration (file_id, interface)"
+  type = map(string)
   default = {
     file_id   = "none"
     interface = "ide2"
@@ -93,10 +70,7 @@ variable "cdrom" {
 
 variable "cloudinit-drive" {
   description = "Default cloudinit drive configuration (datastore_id, interface)"
-  type = object({
-    datastore_id = optional(string)
-    interface    = optional(string)
-  })
+  type = map(string)
   default = {
     datastore_id = "proxmox"
     interface    = "ide0"
@@ -117,19 +91,14 @@ variable "vmid" {
 
 
 variable "disks" {
-  description = "List of disk configurations (datastore_id, size, ...)"
-  type = list(object({
-      datastore_id      = string
-      interface         = string
-      size              = number
-      discard           = optional(string)
-      file_format       = optional(string)
-      path_in_datastore = optional(string)
-  }))
+  description = "List of disk configurations (e.g. datastore_id, interface, size, dicard, file_format, path_in_datastore)"
+  type = list(map(string))
   default = [{
     datastore_id = "proxmox"
     interface    = "virtio0"
     size         = 32
+    discard      = "ignore"
+    file_format  = "raw"
   }]
 }
 
@@ -143,4 +112,10 @@ variable "onboot" {
   description = "Start the vm on hypervisor boot"
   type        = bool
   default     = true
+}
+
+variable "kvm_args" {
+  description = "Extra kvm arguments"
+  type        = string
+  default     = ""
 }

@@ -1,24 +1,29 @@
 module "scheduler0" {
-  source      = "../modules/node"
+  source      = "../modules/node_bpg"
   config      = local.config
-  hypervisor  = "pompidou"
+  hypervisor  = "branly"
   onboot      = true
-
+  tags        = ["staging",]
   vmid        = 116
   hostname    = "scheduler0"
   description = "Scheduler api services"
-  # to match the real vm configuration in proxmox
-  # to remove
-  args    = "-device virtio-rng-pci"
-  cores   = 4
-  memory  = 8192
-  balloon = 1024
-  networks = [{
-    id      = 0
+
+  # to match the real vm configuration in proxmox to remove
+  kvm_args    = "-device virtio-rng-pci"
+
+  ram = {
+    dedicated = 8192
+  }
+
+  network = {
     ip      = "192.168.130.50"
     gateway = local.config["gateway_ip"]
     macaddr = "92:02:7E:D0:B9:36"
     bridge  = local.config["bridge"]
+  }
+
+  disks = [{
+    path_in_datastore = "vm-116-disk-1"
   }]
 }
 
@@ -265,10 +270,10 @@ module "runner0" {
   }
 
   network = {
-    ip      = "192.168.130.221"
-    gateway = local.config["gateway_ip"]
-    macaddr = "1A:4B:96:85:01:64"
-    bridge  = local.config["bridge"]
+    ip          = "192.168.130.221"
+    gateway     = local.config["gateway_ip"]
+    mac_address = "1A:4B:96:85:01:64"
+    bridge      = local.config["bridge"]
   }
 
   disks = [{
@@ -300,10 +305,10 @@ module "maven-exporter0" {
   description = "Maven index exporter to run containers and expose export.fld files"
 
   network = {
-    ip      = "192.168.130.70"
-    gateway = local.config["gateway_ip"]
-    macaddr = "36:86:F6:F9:2A:5D"
-    bridge  = local.config["bridge"]
+    ip          = "192.168.130.70"
+    gateway     = local.config["gateway_ip"]
+    mac_address = "36:86:F6:F9:2A:5D"
+    bridge      = local.config["bridge"]
   }
 
   disks = [{

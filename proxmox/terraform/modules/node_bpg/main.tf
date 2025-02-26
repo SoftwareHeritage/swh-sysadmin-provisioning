@@ -6,6 +6,7 @@ resource "proxmox_virtual_environment_vm" "node" {
   vm_id         = var.vmid
   tags          = var.tags
   on_boot       = var.onboot
+  kvm_arguments = var.kvm_args != "" ? var.kvm_args : ""
 
   clone {
     vm_id = var.template
@@ -40,9 +41,9 @@ resource "proxmox_virtual_environment_vm" "node" {
     for_each = var.disks
 
     content {
-      datastore_id      = disk.value["datastore_id"]
-      interface         = disk.value["interface"]
-      size              = disk.value["size"]
+      datastore_id      = lookup(disk.value, "datastore_id", "proxmox")
+      interface         = lookup(disk.value, "interface", "virtio0")
+      size              = lookup(disk.value, "size", 32)
       path_in_datastore = lookup(disk.value, "path_in_datastore", "")
       discard           = lookup(disk.value, "discard", "ignore")
       file_format       = lookup(disk.value, "file_format", "raw")
