@@ -61,33 +61,38 @@ output "rp0_summary" {
 }
 
 module "search-esnode0" {
-  source      = "../modules/node"
+  source      = "../modules/node_bpg"
   config      = local.config
-  hypervisor  = "pompidou"
+  hypervisor  = "chaillot"
   onboot      = true
-
   vmid        = 130
   hostname    = "search-esnode0"
   description = "Node to host the elasticsearch instance"
-  cores       = "4"
-  memory      = "32768"
-  balloon     = 9216
-  networks = [{
-    id      = 0
+
+  ram = {
+    dedicated = 32768
+    floating  = 9216
+  }
+
+  network = {
     ip      = "192.168.130.80"
     gateway = local.config["gateway_ip"]
     macaddr = "96:74:49:BD:B5:08"
     bridge  = local.config["bridge"]
-  }]
-  storages = [{
-    id      = 0
-    storage = "proxmox"
-    size    = "32G"
-    }, {
-    id      = 1
-    storage = "proxmox"
-    size    = "200G"
-  }]
+  }
+
+  disks = [
+    {
+      storage   = "proxmox"
+      interface = "virtio0"
+      size      = 32
+    },
+    {
+      storage   = "proxmox"
+      interface = "virtio1"
+      size      = 200
+    }
+  ]
 }
 
 output "search-esnode0_summary" {
