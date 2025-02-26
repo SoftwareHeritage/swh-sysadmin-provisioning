@@ -7,7 +7,7 @@ terraform {
     }
     bpg-proxmox = {
       source = "bpg/proxmox"
-      version = "0.72.0"
+      version = "0.73.0"
     }
     rancher2 = {
       source = "rancher/rancher2"
