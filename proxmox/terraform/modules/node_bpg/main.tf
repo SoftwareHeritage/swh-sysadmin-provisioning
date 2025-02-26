@@ -4,7 +4,7 @@ resource "proxmox_virtual_environment_vm" "node" {
   description   = var.description
   node_name     = var.hypervisor
   vm_id         = var.vmid
-  tags          = var.tags
+  tags          = concat([var.config.facter_deployment], var.tags)
   on_boot       = var.onboot
   kvm_arguments = var.kvm_args != "" ? var.kvm_args : ""
 

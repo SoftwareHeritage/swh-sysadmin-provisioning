@@ -3,7 +3,6 @@ module "scheduler0" {
   config      = local.config
   hypervisor  = "branly"
   onboot      = true
-  tags        = ["staging",]
   vmid        = 116
   hostname    = "scheduler0"
   description = "Scheduler api services"
@@ -57,7 +56,6 @@ module "rp0" {
 output "rp0_summary" {
   value = module.rp0.summary
 }
-
 
 module "search-esnode0" {
   source      = "../modules/node"
@@ -125,7 +123,7 @@ module "runner0" {
   config      = local.config
   hypervisor  = "branly"
   onboot      = true
-  tags        = ["staging","gitlab-runner"]
+  tags        = ["gitlab-runner"]
 
   vmid        = 148
   hostname    = "runner0"
@@ -165,7 +163,6 @@ module "maven-exporter0" {
   config      = local.config
   hypervisor  = "chaillot"
   onboot      = true
-  tags        = ["staging",]
   vmid        = 122
   hostname    = "maven-exporter0"
   description = "Maven index exporter to run containers and expose export.fld files"
