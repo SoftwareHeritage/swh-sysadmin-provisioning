@@ -83,6 +83,38 @@ resource "proxmox_virtual_environment_vm" "node" {
     }
   }
 
+  #### provisioning: (creation time only) connect through ssh
+
+  # Prepare puppet facts, /etc/hosts and finally register node to puppet master
+  provisioner "remote-exec" {
+    inline = concat(
+      var.pre_provision_steps,
+      [
+        # clean the systemd logs dating from the vm creation
+        "journalctl --vacuum-time=1d",
+        # install facts...
+        "mkdir -p /etc/facter/facts.d",
+        "echo deployment=${var.config["facter_deployment"]} > /etc/facter/facts.d/deployment.txt",
+        "echo subnet=${var.config["facter_subnet"]} > /etc/facter/facts.d/subnet.txt",
+        "echo cloudinit_enabled=true > /etc/facter/facts.d/cloud-init.txt",
+        "sed -i 's/127.0.1.1/${var.network["ip"]}/g' /etc/hosts",
+        # Wait for cloud-init to finish its work to avoid
+        # concurrency on apt
+        "cloud-init status -w",
+        # so puppet agent installs the node's role
+        "puppet agent --server ${var.config["puppet_master"]} --environment=${var.config["puppet_environment"]} --vardir=/var/lib/puppet --waitforcert 60 --test || echo 'Node provisioned!'",
+      ],
+      var.post_provision_steps,
+    )
+
+    connection {
+      type        = "ssh"
+      user        = "root"
+      host        = var.network["ip"]
+      private_key = file(var.config["user_admin_ssh_private_key_path"])
+    }
+  }
+
   lifecycle {
     ignore_changes = [
       clone

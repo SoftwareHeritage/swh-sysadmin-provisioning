@@ -119,3 +119,15 @@ variable "kvm_args" {
   type        = string
   default     = ""
 }
+
+variable "pre_provision_steps" {
+  description = "Sequential provisioning steps to apply *before* common provision steps"
+  type        = list(string)
+  default     = []
+}
+
+variable "post_provision_steps" {
+  description = "Sequential provisioning steps to apply *after* common provision steps"
+  type        = list(string)
+  default     = []
+}
