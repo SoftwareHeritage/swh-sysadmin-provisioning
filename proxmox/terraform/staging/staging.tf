@@ -31,26 +31,29 @@ output "scheduler0_summary" {
 }
 
 module "rp0" {
-  source      = "../modules/node"
+  source      = "../modules/node_bpg"
   config      = local.config
-  hypervisor  = "pompidou"
+  hypervisor  = "branly"
   onboot      = true
-
   vmid        = 129
   hostname    = "rp0"
   description = "Node to host the reverse proxy"
-  cores       = 2
-  memory      = 2048
-  balloon     = 1024
-  networks = [{
-    id      = 0
+
+  cpu = {
+    cores = 2
+  }
+
+  ram = {
+    dedicated = 2048
+    floating  = 1024
+  }
+
+  network = {
     ip      = "192.168.130.20"
     gateway = local.config["gateway_ip"]
     macaddr = "4A:80:47:5D:DF:73"
     bridge  = local.config["bridge"]
-  }]
-  # facter_subnet     = "sesi_rocquencourt_staging"
-  # factor_deployment = "staging"
+  }
 }
 
 output "rp0_summary" {
