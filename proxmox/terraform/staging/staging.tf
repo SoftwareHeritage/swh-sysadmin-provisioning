@@ -100,31 +100,30 @@ output "search-esnode0_summary" {
 }
 
 module "counters0" {
-  source      = "../modules/node"
+  source      = "../modules/node_bpg"
   config      = local.config
-  hypervisor  = "pompidou"
+  hypervisor  = "branly"
   onboot      = true
-
   vmid        = 138
   hostname    = "counters0"
   description = "Counters server"
-  cores       = "4"
-  memory      = "6096"
-  balloon     = 2048
-  networks = [{
-    id      = 0
+
+  ram = {
+    dedicated = 6096
+    floating  = 2048
+  }
+
+  network = {
     ip      = "192.168.130.95"
     gateway = local.config["gateway_ip"]
     macaddr = "E2:6E:12:C7:3E:A4"
     bridge  = local.config["bridge"]
-  }]
+  }
 }
 
 output "counters0_summary" {
   value = module.counters0.summary
 }
-
-###### NEW BPG VMs######
 
 module "runner0" {
   source      = "../modules/node_bpg"
