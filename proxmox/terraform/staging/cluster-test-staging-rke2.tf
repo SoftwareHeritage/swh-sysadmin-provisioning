@@ -263,45 +263,49 @@ EOF
     rancher2_cluster_v2.test-staging-rke2,
     module.rancher-node-test-rke2-mgmt1,
     module.rancher-node-test-rke2-worker1,
-  module.rancher-node-test-rke2-worker2]
+    module.rancher-node-test-rke2-worker2
+  ]
 }
 
 # Dedicated node for rpc services (e.g. graphql, ...)
 module "rancher-node-test-rke2-worker1" {
-  source     = "../modules/node"
-  config     = local.config
-  hypervisor = "uffizi"
-  onboot     = false
-  vmid       = 146
-
-  template    = var.templates["bullseye-zfs"]
+  source       = "../modules/node_bpg"
+  config       = local.config
+  hypervisor   = "uffizi"
+  onboot       = false
+  vmid         = 146
   hostname    = "rancher-node-test-rke2-worker1"
   description = "elastic worker for rpc services (e.g. graphql, ...)"
-  sockets     = "1"
-  cores       = "6"
-  memory      = "32768"
-  balloon     = "16384"
+  tags        = ["test-staging-rke2"]
 
-  networks = [{
-    id      = 0
-    ip      = "192.168.130.211"
-    gateway = local.config["gateway_ip"]
-    bridge  = local.config["bridge"]
-  }]
+  cpu = {
+    type  = "host"
+    cores = 6
+  }
 
-  storages = [{
-    storage = "proxmox"
-    size    = "20G"
-    }, {
-    storage = "scratch"
-    size    = "100G"
+  ram = {
+    dedicated = 32768
+    floating  = 16384
+  }
+
+  network = {
+    ip          = "192.168.130.211"
+    mac_address = "92:30:9E:96:99:6B"
+  }
+
+  disks = [
+    {
+      interface = "virtio0"
+      size      = 20
+    },
+    {
+      datastore_id = "scratch"
+      interface    = "virtio1"
+      size         = 100
     }
   ]
 
   post_provision_steps = [
-    "systemctl restart docker", # workaround
-    "mkdir -p /etc/rancher/rke2/config.yaml.d",
-    "echo '{ \"snapshotter\": \"zfs\" }' >/etc/rancher/rke2/config.yaml.d/50-snapshotter.yaml",
     "${rancher2_cluster_v2.test-staging-rke2.cluster_registration_token[0].node_command} --worker --label node_type=generic --label --label swh/lister=true --label swh/loader=true --label swh/rpc=true --label swh/toolbox=true --label swh/webhooks=true"
   ]
 }
