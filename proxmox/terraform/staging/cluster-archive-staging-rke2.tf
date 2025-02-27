@@ -37,7 +37,7 @@ disable:
 EOF
 
     etcd_snapshot_create {
-      generation = 4
+      generation = 5
     }
 
     machine_selector_config {
@@ -202,6 +202,16 @@ resource "rancher2_app_v2" "archive-staging-rke2-rancher-monitoring" {
   chart_name    = "rancher-monitoring"
   chart_version = "103.2.0+up57.0.3"
   values        = <<EOF
+global:
+  cattle:
+    clusterId: ${rancher2_cluster_v2.archive-staging-rke2.cluster_v1_id}
+    clusterName: ${rancher2_cluster_v2.archive-staging-rke2.name}
+    rkePathPrefix: ""
+    rkeWindowsPathPrefix: ""
+    systemDefaultRegistry: ""
+    systemProjectId: p-xvw4h
+    url: https://rancher.euwest.azure.internal.softwareheritage.org
+  systemDefaultRegistry: ""
 alertmanager:
   alertmanagerSpec:
     alertmanagerConfigMatcherStrategy:
