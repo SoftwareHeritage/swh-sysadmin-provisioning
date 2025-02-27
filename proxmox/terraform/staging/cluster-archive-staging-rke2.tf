@@ -159,32 +159,34 @@ output "rancher-node-staging-rke2-mgmt2_summary" {
 }
 
 module "rancher-node-staging-rke2-mgmt3" {
-  source     = "../modules/node"
-  config     = local.config
-  hypervisor = "mucem"
-  onboot     = true
-
-  template    = var.templates["bullseye-zfs"]
+  source      = "../modules/node_bpg"
+  config      = local.config
+  hypervisor  = "mucem"
+  onboot      = true
   hostname    = "rancher-node-staging-rke2-mgmt3"
   description = "staging rke2 management node"
-  sockets     = "1"
-  cores       = "4"
-  memory      = "16384"
-  balloon     = "16384"
+  vmid        = 149
+  tags        = ["archive-staging-rke2"]
 
-  networks = [{
-    id      = 0
-    ip      = "192.168.130.163"
-    gateway = local.config["gateway_ip"]
-    bridge  = local.config["bridge"]
-  }]
+  ram = {
+    dedicated = 16384
+    floating  = 16384
+  }
 
-  storages = [{
-    storage = "proxmox"
-    size    = "20G"
-    }, {
-    storage = "scratch"
-    size    = "20G"
+  network = {
+    ip          = "192.168.130.163"
+    mac_address = "02:89:38:BE:87:28"
+  }
+
+  disks = [
+    {
+      interface = "virtio0"
+      size      = 20
+    },
+    {
+      datastore_id = "scratch"
+      interface    = "virtio1"
+      size         = 20
     }
   ]
 
