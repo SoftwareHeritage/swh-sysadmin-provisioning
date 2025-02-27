@@ -51,8 +51,8 @@ resource "proxmox_virtual_environment_vm" "node" {
   }
 
   network_device {
-    mac_address  = lookup(var.network, "mac_address", "")
-    bridge       = lookup(var.network, "bridge", "vmbr443")
+    mac_address  = var.network["mac_address"] != null ? var.network["mac_address"] : ""
+    bridge       = var.network["bridge"] != null ? var.network["bridge"] : var.config["bridge"]
     model        = "virtio"
     disconnected = false
     enabled      = true
@@ -65,8 +65,8 @@ resource "proxmox_virtual_environment_vm" "node" {
     interface    = lookup(var.cloudinit-drive, "interface", "ide0")
     ip_config {
       ipv4 {
-        address = format("%s/%s", var.network["ip"], lookup(var.network, "netmask", "24"))
-        gateway = var.network["gateway"]
+        address = format("%s/%s", var.network["ip"], (var.network["netmask"] != null ? var.network["netmask"] : "24"))
+        gateway = var.network["gateway"] != null ? var.network["gateway"] : var.config["gateway_ip"]
       }
     }
 

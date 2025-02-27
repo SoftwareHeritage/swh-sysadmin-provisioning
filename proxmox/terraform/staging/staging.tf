@@ -15,10 +15,8 @@ module "scheduler0" {
   }
 
   network = {
-    ip      = "192.168.130.50"
-    gateway = local.config["gateway_ip"]
-    macaddr = "92:02:7E:D0:B9:36"
-    bridge  = local.config["bridge"]
+    ip          = "192.168.130.50"
+    mac_address = "92:02:7E:D0:B9:36"
   }
 
   disks = [{
@@ -49,10 +47,8 @@ module "rp0" {
   }
 
   network = {
-    ip      = "192.168.130.20"
-    gateway = local.config["gateway_ip"]
-    macaddr = "4A:80:47:5D:DF:73"
-    bridge  = local.config["bridge"]
+    ip          = "192.168.130.20"
+    mac_address = "4A:80:47:5D:DF:73"
   }
 }
 
@@ -75,20 +71,16 @@ module "search-esnode0" {
   }
 
   network = {
-    ip      = "192.168.130.80"
-    gateway = local.config["gateway_ip"]
-    macaddr = "96:74:49:BD:B5:08"
-    bridge  = local.config["bridge"]
+    ip          = "192.168.130.80"
+    mac_address = "96:74:49:BD:B5:08"
   }
 
   disks = [
     {
-      storage   = "proxmox"
       interface = "virtio0"
       size      = 32
     },
     {
-      storage   = "proxmox"
       interface = "virtio1"
       size      = 200
     }
@@ -114,10 +106,8 @@ module "counters0" {
   }
 
   network = {
-    ip      = "192.168.130.95"
-    gateway = local.config["gateway_ip"]
-    macaddr = "E2:6E:12:C7:3E:A4"
-    bridge  = local.config["bridge"]
+    ip          = "192.168.130.95"
+    mac_address = "E2:6E:12:C7:3E:A4"
   }
 }
 
@@ -142,9 +132,7 @@ module "runner0" {
 
   network = {
     ip          = "192.168.130.221"
-    gateway     = local.config["gateway_ip"]
     mac_address = "1A:4B:96:85:01:64"
-    bridge      = local.config["bridge"]
   }
 
   disks = [{
@@ -176,9 +164,7 @@ module "maven-exporter0" {
 
   network = {
     ip          = "192.168.130.70"
-    gateway     = local.config["gateway_ip"]
     mac_address = "36:86:F6:F9:2A:5D"
-    bridge      = local.config["bridge"]
   }
 
   disks = [{

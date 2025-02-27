@@ -53,9 +53,10 @@ variable "network" {
   description = "Default networks configuration (ip, gateway, macaddr, bridge)"
   type        = object({
     ip          = string
-    gateway     = string
+    gateway     = optional(string)
     mac_address = optional(string)
-    bridge      = string
+    bridge      = optional(string)
+    netmask     = optional(string)
   })
 }
 
