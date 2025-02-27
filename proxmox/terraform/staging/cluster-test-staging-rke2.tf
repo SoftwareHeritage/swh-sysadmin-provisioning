@@ -83,40 +83,38 @@ resource "rancher2_cluster_sync" "test-staging-rke2" {
 }
 
 module "rancher-node-test-rke2-mgmt1" {
-  source     = "../modules/node"
-  config     = local.config
-  hypervisor = "uffizi"
-  onboot     = false
-  vmid       = 143
-
-  template    = var.templates["bullseye-zfs"]
+  source      = "../modules/node_bpg"
+  config      = local.config
+  hypervisor  = "branly"
+  onboot      = false
+  vmid        = 143
   hostname    = "rancher-node-test-rke2-mgmt1"
   description = "test rke2 management node"
-  sockets     = "1"
-  cores       = "4"
-  memory      = "16384"
-  balloon     = "16384"
+  tags        = ["test-staging-rke2"]
 
-  networks = [{
-    id      = 0
-    ip      = "192.168.130.210"
-    gateway = local.config["gateway_ip"]
-    bridge  = local.config["bridge"]
-  }]
+  ram = {
+    dedicated = 16384
+    floating  = 16384
+  }
 
-  storages = [{
-    storage = "proxmox"
-    size    = "20G"
-    }, {
-    storage = "scratch"
-    size    = "20G"
+  network = {
+    ip          = "192.168.130.210"
+    mac_address = "92:CF:4E:83:30:8A"
+  }
+
+  disks = [
+    {
+      interface = "virtio0"
+      size      = 20
+    },
+    {
+      datastore_id = "scratch"
+      interface    = "virtio1"
+      size         = 20
     }
   ]
 
   post_provision_steps = [
-    "systemctl restart docker", # workaround
-    "mkdir -p /etc/rancher/rke2/config.yaml.d",
-    "echo '{ \"snapshotter\": \"zfs\" }' >/etc/rancher/rke2/config.yaml.d/50-snapshotter.yaml",
     "${rancher2_cluster_v2.test-staging-rke2.cluster_registration_token[0].node_command} --etcd --controlplane"
   ]
 }
