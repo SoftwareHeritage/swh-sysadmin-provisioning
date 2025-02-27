@@ -365,40 +365,43 @@ output "rancher-node-test-rke2-worker2_summary" {
 # loader nodes must have a 2nd disk on hypervisor local storage to avoid
 # unnecessary ceph traffic on ceph
 module "rancher-node-test-rke2-worker3" {
-  source     = "../modules/node"
-  config     = local.config
-  hypervisor = "uffizi"
-  onboot     = false
-  #vmid       = 154 # specifying the vmid tells terraform to recreate the worker
-
-  template    = var.templates["bullseye-zfs"]
+  source      = "../modules/node_bpg"
+  config      = local.config
+  hypervisor  = "uffizi"
+  onboot      = false
+  vmid        = 154
   hostname    = "rancher-node-test-rke2-worker3"
   description = "elastic worker for computations (e.g. loader, lister, ...)"
-  sockets     = "1"
-  cores       = "6"
-  memory      = "32768"
-  balloon     = "16384"
+  tags        = ["test-staging-rke2"]
 
-  networks = [{
-    id      = 0
-    ip      = "192.168.130.213"
-    gateway = local.config["gateway_ip"]
-    bridge  = local.config["bridge"]
-  }]
+  cpu = {
+    type  = "host"
+    cores = 6
+  }
 
-  storages = [{
-    storage = "proxmox"
-    size    = "20G"
-    }, {
-    storage = "scratch"
-    size    = "100G"
+  ram = {
+    dedicated = 32768
+    floating  = 16384
+  }
+
+  network = {
+    ip          = "192.168.130.213"
+    mac_address = "3E:3A:20:B9:3B:39"
+  }
+
+  disks = [
+    {
+      interface = "virtio0"
+      size      = 20
+    },
+    {
+      datastore_id = "scratch"
+      interface    = "virtio1"
+      size         = 100
     }
   ]
 
   post_provision_steps = [
-    "systemctl restart docker", # workaround
-    "mkdir -p /etc/rancher/rke2/config.yaml.d",
-    "echo '{ \"snapshotter\": \"zfs\" }' >/etc/rancher/rke2/config.yaml.d/50-snapshotter.yaml",
     "${rancher2_cluster_v2.test-staging-rke2.cluster_registration_token[0].node_command} --worker --label node_type=worker --label swh/lister=true --label swh/loader=true --label swh/rpc=true --label swh/toolbox=true --label swh/webhooks=true"
   ]
 }
