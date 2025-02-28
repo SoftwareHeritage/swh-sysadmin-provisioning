@@ -22,7 +22,7 @@ variable "hypervisor" {
 variable "template" {
   description = "Debian image template vm id"
   type        = number
-  default     = 10014
+  default     = null
   # other possible template values (see in Proxmox UI):
   # - 10012: debian-bullseye-11.7-zfs-2023-08-29  (for extra zfs dependencies)
   # - 10013:  debian-bookworm-12.1-2023-08-30
