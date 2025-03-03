@@ -137,39 +137,39 @@ output "bojimans_summary" {
 }
 
 module "money" {
-  source = "../modules/node"
-  config = local.config
-
-  template    = var.templates["bullseye"]
+  source      = "../modules/node_bpg"
+  config      = local.config
+  hypervisor  = "chaillot"
+  onboot      = true
+  vmid        = 140
   hostname    = "money"
   description = "Azure billing reporting server"
-  hypervisor  = "branly"
-  # chromium (used by selenium to download the azure data) needs sse3 instructions not available
-  # by default n kvm64
-  cpu         = "host"
-  vmid        = 140
-  sockets     = 2
-  cores       = 1
-  memory      = 2048
-  balloon     = 1024
-  networks = [{
-    id      = 0
-    ip      = "192.168.50.65"
-    gateway = "192.168.50.1"
-    macaddr = ""
-    bridge  = local.config["bridge"]
-  }]
-  storages = [{
-    id      = 0
-    storage = "proxmox"
-    size    = "20G"
-  }]
+
+  cpu = {
+    cores   = 1
+    sockets = 2
+    type    = "host"
+  }
+
+  ram = {
+    dedicated = 2048
+    floating  = 1024
+  }
+
+  network = {
+    ip          = "192.168.50.65"
+    mac_address = "BE:45:F5:C3:BD:A3"
+  }
+
+  disks = [{
+      interface         = "virtio0"
+      size              = 20
+    }]
 }
 
 output "money_summary" {
   value = module.money.summary
 }
-
 
 module "thanos" {
   source      = "../modules/node_bpg"
