@@ -170,34 +170,33 @@ output "money_summary" {
   value = module.money.summary
 }
 
-module "thanos" {
-  source      = "../modules/node"
-  config      = local.config
-  onboot      = true
-  template    = var.templates["bullseye"]
 
+module "thanos" {
+  source      = "../modules/node_bpg"
+  config      = local.config
+  hypervisor  = "chaillot"
+  onboot      = true
+  vmid        = 158
   hostname    = "thanos"
   description = "Thanos query service"
-  hypervisor  = "branly"
-  sockets     = "1"
-  cores       = "4"
-  memory  = "32768"
 
-  networks = [{
-    id      = 0
-    ip      = "192.168.50.90"
-    gateway = local.config["gateway_ip"]
-    macaddr = "16:3C:72:26:70:34"
-    bridge  = local.config["bridge"]
-  }]
+  ram = {
+    dedicated = 32768
+    floating  = 0
+  }
 
-  storages = [{
-    id      = 0
-    storage = "proxmox"
-    size    = "50G"
-  }]
+  network = {
+    ip          = "192.168.50.90"
+    mac_address = "16:3C:72:26:70:34"
+  }
+
+  disks = [{
+      interface         = "virtio0"
+      size              = 50
+    }]
 }
 
 output "thanos_summary" {
   value = module.thanos.summary
 }
+
