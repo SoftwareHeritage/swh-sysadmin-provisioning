@@ -1,22 +1,32 @@
 module "bardo" {
-  source = "../modules/node"
-  config = local.config
-
+  source      = "../modules/node_bpg"
+  config      = local.config
+  hypervisor  = "chaillot"
+  onboot      = true
+  vmid        = 124
   hostname    = "bardo"
   description = "Hedgedoc instance"
-  hypervisor  = "branly"
-  vmid        = 124
-  cores       = "2"
-  memory      = "8192"
-  balloon     = 1024
-  full_clone  = true
-  networks = [{
-    id      = 0
-    ip      = "192.168.50.10"
-    gateway = local.config["gateway_ip"]
-    macaddr = "7A:CE:A2:72:FA:E8"
-    bridge  = local.config["bridge"]
-  }]
+
+  cpu = {
+    cores = 2
+  }
+
+  ram = {
+    dedicated = 8192
+  }
+
+  network = {
+    ip          = "192.168.50.10"
+    mac_address = "7A:CE:A2:72:FA:E8"
+  }
+
+  disks = [{
+      interface = "virtio0"
+    }]
+}
+
+output "bardo_summary" {
+  value = module.bardo.summary
 }
 
 module "rp1" {
