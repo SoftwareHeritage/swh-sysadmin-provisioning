@@ -99,6 +99,7 @@ resource "proxmox_virtual_environment_vm" "node" {
     model        = "virtio"
     disconnected = false
     enabled      = true
+    queues       = var.network["queues"] != null ? var.network["queues"] : 0
   }
 
   initialization {

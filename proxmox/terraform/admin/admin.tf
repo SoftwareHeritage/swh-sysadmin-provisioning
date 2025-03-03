@@ -105,31 +105,33 @@ output "grafana0_summary" {
 }
 
 module "bojimans" {
-  source = "../modules/node"
-  config = local.config
-
-  template    = var.templates["bullseye"]
+  source      = "../modules/node_bpg"
+  config      = local.config
+  hypervisor  = "mucem"
+  onboot      = true
+  vmid        = 127
   hostname    = "bojimans"
   description = "Inventory server (netbox)"
-  hypervisor  = "branly"
-  cpu         = "kvm64"
-  vmid        = 127
-  sockets     = 2
-  cores       = 1
-  memory      = 4096
-  balloon     = 2048
-  networks = [{
-    id      = 0
-    ip      = "192.168.50.60"
-    gateway = "192.168.50.1"
-    macaddr = "EE:ED:A6:A0:78:9F"
-    bridge  = local.config["bridge"]
-  }]
-  storages = [{
-    id      = 0
-    storage = "proxmox"
-    size    = "20G"
-  }]
+
+  cpu = {
+    cores   = 1
+    sockets = 2
+  }
+
+  ram = {
+    floating = 2048
+  }
+
+  network = {
+    ip          = "192.168.50.60"
+    mac_address = "EE:ED:A6:A0:78:9F"
+    queues      = 1
+  }
+
+  disks = [{
+      interface         = "virtio0"
+      size              = 20
+    }]
 }
 
 output "bojimans_summary" {

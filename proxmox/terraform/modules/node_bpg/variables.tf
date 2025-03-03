@@ -57,6 +57,7 @@ variable "network" {
     mac_address = optional(string)
     bridge      = optional(string)
     netmask     = optional(string)
+    queues      = optional(number)
   })
 }
 
