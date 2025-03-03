@@ -92,7 +92,7 @@ module "grafana0" {
   }
 
   disks = [{
-      interface         = "virtio0"
+      interface = "virtio0"
     }]
 }
 
@@ -125,8 +125,8 @@ module "bojimans" {
   }
 
   disks = [{
-      interface         = "virtio0"
-      size              = 20
+      interface = "virtio0"
+      size      = 20
     }]
 }
 
@@ -160,8 +160,8 @@ module "money" {
   }
 
   disks = [{
-      interface         = "virtio0"
-      size              = 20
+      interface = "virtio0"
+      size      = 20
     }]
 }
 
@@ -189,8 +189,8 @@ module "thanos" {
   }
 
   disks = [{
-      interface         = "virtio0"
-      size              = 50
+      interface = "virtio0"
+      size      = 50
     }]
 }
 
