@@ -80,24 +80,26 @@ output "dali_summary" {
 }
 
 module "grafana0" {
-  source = "../modules/node"
-  config = local.config
-
-  template    = var.templates["bullseye"]
+  source      = "../modules/node_bpg"
+  config      = local.config
+  hypervisor  = "chaillot"
+  onboot      = true
+  vmid        = 108
   hostname    = "grafana0"
   description = "Grafana server"
-  hypervisor  = "branly"
-  vmid        = 108
-  cores       = 4
-  memory      = 4096
-  balloon     = 2048
-  networks = [{
-    id      = 0
-    ip      = "192.168.50.30"
-    gateway = local.config["gateway_ip"]
-    macaddr = "B2:CB:D9:09:D3:3B"
-    bridge  = local.config["bridge"]
-  }]
+
+  ram = {
+    floating = 2048
+  }
+
+  network = {
+    ip          = "192.168.50.30"
+    mac_address = "B2:CB:D9:09:D3:3B"
+  }
+
+  disks = [{
+      interface         = "virtio0"
+    }]
 }
 
 output "grafana0_summary" {
