@@ -19,26 +19,31 @@ module "bardo" {
   }]
 }
 
-
 module "rp1" {
-  source = "../modules/node"
-  config = local.config
-
+  source      = "../modules/node_bpg"
+  config      = local.config
+  hypervisor  = "mucem"
+  onboot      = true
+  vmid        = 115
   hostname    = "rp1"
   description = "reverse-proxy"
-  hypervisor  = "branly"
-  vmid        = 115
-  cores       = 2
-  memory      = 4096
-  balloon     = 1024
-  full_clone  = true
-  networks = [{
-    id      = 0
-    ip      = "192.168.50.20"
-    gateway = local.config["gateway_ip"]
-    macaddr = "4E:42:20:E0:B6:65"
-    bridge  = local.config["bridge"]
-   }]
+
+  cpu = {
+    cores = 2
+  }
+
+  network = {
+    ip          = "192.168.50.20"
+    mac_address = "4E:42:20:E0:B6:65"
+  }
+
+  disks = [{
+      interface = "virtio0"
+    }]
+}
+
+output "rp1_summary" {
+  value = module.rp1.summary
 }
 
 module "dali" {
