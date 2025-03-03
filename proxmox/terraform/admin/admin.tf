@@ -41,38 +41,32 @@ module "rp1" {
    }]
 }
 
-
 module "dali" {
-  source = "../modules/node"
-  config = local.config
-
-  template    = var.templates["bullseye"]
+  source      = "../modules/node_bpg"
+  config      = local.config
+  hypervisor  = "mucem"
+  onboot      = true
+  vmid        = 144
   hostname    = "dali"
   description = "admin databases host"
-  hypervisor  = "branly"
-  vmid        = 144
-  cores       = 4
-  memory      = 16384
-  balloon     = 8192
-  networks = [{
-    id      = 0
-    ip      = "192.168.50.50"
-    gateway = local.config["gateway_ip"]
-    macaddr = "C2:7C:85:D0:E8:7C"
-    bridge  = local.config["bridge"]
-   }]
-  storages = [
-    {
-      id      = 0
-      storage = "proxmox"
-      size    = "32G"
+
+  ram = {
+    dedicated = 16384
+    floating  = 8192
+  }
+
+  network = {
+    ip          = "192.168.50.50"
+    mac_address = "C2:7C:85:D0:E8:7C"
+  }
+
+  disks = [{
+      interface = "virtio0"
     },
     {
-      id      = 1
-      storage = "proxmox"
-      size    = "350G"
-    }
-  ]
+      interface = "virtio1"
+      size      = 350
+    }]
 }
 
 output "dali_summary" {
