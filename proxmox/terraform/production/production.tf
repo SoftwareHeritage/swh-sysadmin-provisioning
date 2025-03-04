@@ -86,34 +86,38 @@ output "migration_summary" {
 }
 
 module "maven-exporter" {
-  source      = "../modules/node"
-  template    = var.templates["bullseye-zfs"]
+  source      = "../modules/node_bpg"
   config      = local.config
+  hypervisor  = "branly"
+  onboot      = true
+  vmid        = 150
   hostname    = "maven-exporter"
   description = "Maven index exporter to run containers and expose export.fld files"
-  hypervisor  = "mucem"
-  sockets     = "1"
-  cores       = "4"
-  onboot      = true
-  memory      = "4096"
-  balloon     = "2048"
 
-  networks = [{
-    id      = 0
-    ip      = "192.168.100.10"
-    gateway = local.config["gateway_ip"]
-    bridge  = local.config["bridge"]
-    macaddr = "D2:7E:0B:35:89:FF"
-  }]
+  ram = {
+    dedicated = 4096
+    floating  = 2048
+  }
 
-  storages = [{
-    storage = "proxmox"
-    size    = "20G"
-    }, {
-    storage = "proxmox"
-    size    = "50G"
+  network = {
+    ip          = "192.168.100.10"
+    mac_address = "D2:7E:0B:35:89:FF"
+  }
+
+  disks = [
+    {
+      interface = "virtio0"
+      size      = 20
+    },
+    {
+      interface = "virtio1"
+      size      = 50
     }
   ]
+}
+
+output "maven-exporter_summary" {
+  value = module.maven-exporter.summary
 }
 
 module "jenkins-docker01" {
