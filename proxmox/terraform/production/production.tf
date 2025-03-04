@@ -159,33 +159,39 @@ module "jenkins-docker01" {
 }
 
 module "jenkins-docker02" {
-  source      = "../modules/node"
-  template    = var.templates["bullseye-zfs"]
-  vmid        = 152
+  source      = "../modules/node_bpg"
   config      = local.config
+  hypervisor  = "branly"
+  onboot      = true
+  vmid        = 152
   hostname    = "jenkins-docker02"
   description = "Docker-based jenkins agent"
-  hypervisor  = "mucem"
-  cpu         = "host"
-  sockets     = "2"
-  cores       = "4"
-  onboot      = true
-  memory      = "32768"
-  balloon     = "2048"
 
-  networks = [{
-    id      = 0
-    ip      = "192.168.100.152"
-    gateway = local.config["gateway_ip"]
-    bridge  = local.config["bridge"]
-  }]
+  cpu = {
+    type    = "host"
+    sockets = 2
+    cores   = 4
+  }
 
-  storages = [{
-    storage = "proxmox"
-    size    = "20G"
-    }, {
-    storage = "scratch"
-    size    = "200G"
+  ram = {
+    dedicated = 32768
+    floating  = 2048
+  }
+
+  network = {
+    ip          = "192.168.100.152"
+    mac_address = "C6:B9:79:73:0D:23"
+  }
+
+  disks = [
+    {
+      interface = "virtio0"
+      size      = 20
+    },
+    {
+      datastore_id = "scratch"
+      interface    = "virtio1"
+      size         = 200
     }
   ]
 }
