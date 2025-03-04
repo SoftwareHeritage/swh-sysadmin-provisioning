@@ -78,31 +78,34 @@ resource "rancher2_cluster_sync" "archive-production-rke2" {
 }
 
 module "rancher-node-production-rke2-mgmt1" {
-  source      = "../modules/node"
-  template    = var.templates["bullseye-zfs"]
+  source      = "../modules/node_bpg"
   config      = local.config
+  hypervisor  = "mucem"
+  onboot      = true
+  vmid        = 126
   hostname    = "rancher-node-production-rke2-mgmt1"
   description = "production rke2 management node"
-  hypervisor  = "mucem"
-  sockets     = "1"
-  cores       = "4"
-  onboot      = true
-  memory      = "8192"
-  balloon     = "8192"
+  tags        = ["archive-production-rke2"]
 
-  networks = [{
-    id      = 0
-    ip      = "192.168.100.141"
-    gateway = local.config["gateway_ip"]
-    bridge  = local.config["bridge"]
-  }]
+  ram = {
+    dedicated = 8192
+    floating  = 8192
+  }
 
-  storages = [{
-    storage = "proxmox"
-    size    = "20G"
-    }, {
-    storage = "scratch"
-    size    = "30G"
+  network = {
+    ip          = "192.168.100.141"
+    mac_address = "EE:45:E8:41:45:31"
+  }
+
+  disks = [
+    {
+      interface = "virtio0"
+      size      = 20
+    },
+    {
+      datastore_id = "scratch"
+      interface    = "virtio1"
+      size         = 30
     }
   ]
 
