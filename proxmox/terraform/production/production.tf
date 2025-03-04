@@ -28,22 +28,26 @@ output "kelvingrove_summary" {
 }
 
 module "counters1" {
-  source = "../modules/node"
-  config = local.config
-
+  source      = "../modules/node_bpg"
+  config      = local.config
+  hypervisor  = "branly"
+  onboot      = true
+  vmid        = 139
   hostname    = "counters1"
   description = "swh-counters node"
-  hypervisor  = "branly"
-  cores       = "4"
-  memory      = "2048"
-  balloon     = 1024
-  networks = [{
-    id      = 0
-    ip      = "192.168.100.95"
-    gateway = local.config["gateway_ip"]
-    macaddr = "26:8E:7F:D1:F7:99"
-    bridge  = local.config["bridge"]
-  }]
+
+  ram = {
+    dedicated = 2048
+  }
+
+  network = {
+    ip          = "192.168.100.95"
+    mac_address = "26:8E:7F:D1:F7:99"
+  }
+}
+
+output "counters1_summary" {
+  value = module.counters1.summary
 }
 
 module "migration" {
