@@ -51,30 +51,32 @@ output "counters1_summary" {
 }
 
 module "migration" {
-  source      = "../modules/node"
+  source      = "../modules/node_bpg"
   config      = local.config
-  template    = var.templates["bullseye-zfs"]
-
+  hypervisor  = "branly"
+  onboot      = false
+  vmid        = 118
   hostname    = "migration"
   description = "Migration"
-  hypervisor  = "branly"
-  sockets     = "1"
-  cores       = "4"
-  memory      = "16192"
 
-  networks = [{
-    id      = 0
-    ip      = "192.168.100.140"
-    gateway = local.config["gateway_ip"]
-    bridge  = local.config["bridge"]
-  }]
+  ram = {
+    dedicated = 16384
+    floating  = 0
+  }
 
-  storages = [{
-    storage = "proxmox"
-    size    = "20G"
-    }, {
-    storage = "proxmox"
-    size    = "20G"
+  network = {
+    ip          = "192.168.100.140"
+    mac_address = "FE:29:E8:08:F1:93"
+  }
+
+  disks = [
+    {
+      interface = "virtio0"
+      size      = 20
+    },
+    {
+      interface = "virtio1"
+      size      = 20
     }
   ]
 }
