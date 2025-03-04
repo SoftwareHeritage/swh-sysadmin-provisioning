@@ -58,6 +58,7 @@ module "migration" {
   vmid        = 118
   hostname    = "migration"
   description = "Migration"
+  started     = false
 
   ram = {
     dedicated = 16384

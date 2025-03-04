@@ -49,6 +49,7 @@ resource "proxmox_virtual_environment_vm" "node" {
   tags          = concat([var.config.facter_deployment], var.tags)
   on_boot       = var.onboot
   kvm_arguments = var.kvm_args != "" ? var.kvm_args : ""
+  started       = var.started
 
   clone {
     node_name = data.proxmox_virtual_environment_vms.debian12_zfs_template.vms[0].node_name
@@ -61,7 +62,6 @@ resource "proxmox_virtual_environment_vm" "node" {
     type      = lookup(var.cpu, "type", "kvm64")
     numa      = lookup(var.cpu, "numa", false)
   }
-
 
   memory {
     dedicated = lookup(var.ram, "dedicated", 4096)

@@ -133,3 +133,9 @@ variable "post_provision_steps" {
   type        = list(string)
   default     = []
 }
+
+variable "started" {
+  description = "Start the vm or not"
+  type        = bool
+  default     = true
+}
