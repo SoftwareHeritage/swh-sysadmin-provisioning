@@ -19,44 +19,6 @@ module "kelvingrove" {
   }]
 }
 
-module "webapp1" {
-  source = "../modules/node"
-  config = local.config
-
-  hostname    = "webapp1"
-  description = "Webapp for swh-search tests"
-  hypervisor  = "branly"
-  cores       = "2"
-  memory      = "16384"
-  balloon     = 8192
-  networks = [{
-    id      = 0
-    ip      = "192.168.100.71"
-    gateway = local.config["gateway_ip"]
-    macaddr = "06:FF:02:95:31:CF"
-    bridge  = local.config["bridge"]
-  }]
-}
-
-module "search1" {
-  source = "../modules/node"
-  config = local.config
-
-  hostname    = "search1"
-  description = "swh-search node"
-  hypervisor  = "branly"
-  cores       = "4"
-  memory      = "6144"
-  balloon     = 1024
-  networks = [{
-    id      = 0
-    ip      = "192.168.100.85"
-    gateway = local.config["gateway_ip"]
-    macaddr = "3E:46:D3:88:44:F4"
-    bridge  = local.config["bridge"]
-  }]
-}
-
 module "counters1" {
   source = "../modules/node"
   config = local.config
