@@ -160,31 +160,34 @@ output "rancher-node-production-rke2-mgmt2_summary" {
 }
 
 module "rancher-node-production-rke2-mgmt3" {
-  source      = "../modules/node"
-  template    = var.templates["bullseye-zfs"]
+  source      = "../modules/node_bpg"
   config      = local.config
+  hypervisor  = "chaillot"
+  onboot      = true
+  vmid        = 132
   hostname    = "rancher-node-production-rke2-mgmt3"
   description = "production rke2 management node"
-  hypervisor  = "hypervisor3"
-  sockets     = "1"
-  cores       = "4"
-  onboot      = true
-  memory      = "8192"
-  balloon     = "8192"
+  tags        = ["archive-production-rke2"]
 
-  networks = [{
-    id      = 0
-    ip      = "192.168.100.143"
-    gateway = local.config["gateway_ip"]
-    bridge  = local.config["bridge"]
-  }]
+  ram = {
+    dedicated = 8192
+    floating  = 8192
+  }
 
-  storages = [{
-    storage = "proxmox"
-    size    = "20G"
-    }, {
-    storage = "scratch"
-    size    = "30G"
+  network = {
+    ip          = "192.168.100.143"
+    mac_address = "66:87:EE:C3:6A:BA"
+  }
+
+  disks = [
+    {
+      interface = "virtio0"
+      size      = 20
+    },
+    {
+      datastore_id = "scratch"
+      interface    = "virtio1"
+      size         = 30
     }
   ]
 
