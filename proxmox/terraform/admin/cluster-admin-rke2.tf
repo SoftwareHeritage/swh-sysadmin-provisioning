@@ -225,39 +225,40 @@ output "rancher-node-admin-rke2-node01_summary" {
 }
 
 module "rancher-node-admin-rke2-node02" {
-  source     = "../modules/node"
-  config     = local.config
-  hypervisor = "branly"
-  onboot     = true
-  vmid       = 177
-
-
-  template    = var.templates["bullseye-zfs"]
+  source      = "../modules/node_bpg"
+  config      = local.config
+  hypervisor  = "branly"
+  onboot      = true
+  vmid        = 177
   hostname    = "rancher-node-admin-rke2-node02"
   description = "Admin cluster node02"
-  sockets     = "1"
-  cores       = "4"
-  memory      = "32768"
+  tags        = ["cluster-admin-rke2"]
 
-  networks = [{
-    id      = 0
-    ip      = "192.168.50.142"
-    gateway = local.config["gateway_ip"]
-    bridge  = local.config["bridge"]
-  }]
+  cpu = {
+    type = "x86-64-v3"
+  }
 
-  storages = [{
-    storage = "proxmox"
-    size    = "40G"
-    }, {
-    storage = "scratch"
-    size    = "40G"
-    }
-  ]
+  ram = {
+    dedicated = 32768
+    floating  = 0
+  }
+
+  network = {
+    ip          = "192.168.50.142"
+    mac_address = "86:D2:59:92:61:3A"
+  }
+
+  disks = [{
+    interface = "virtio0"
+    size      = 40
+  },
+  {
+    datastore_id = "scratch"
+    interface    = "virtio1"
+    size         = 40
+    }]
 
   post_provision_steps = [
-    "mkdir -p etc/rancher/rke2/config.yaml.d",
-    "echo '{ \"snapshotter\": \"native\" }' >/etc/rancher/rke2/config.yaml.d/50-snapshotter.yaml",
     "${rancher2_cluster_v2.cluster-admin-rke2.cluster_registration_token[0].node_command} --worker"
   ]
 }
