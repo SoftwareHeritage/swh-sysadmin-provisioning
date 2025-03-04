@@ -65,35 +65,34 @@ resource "rancher2_cluster_sync" "cluster-admin-rke2" {
 }
 
 module "rancher-node-admin-rke2-mgmt1" {
-  source     = "../modules/node"
-  config     = local.config
-  hypervisor = "hypervisor3"
-  onboot     = true
-  vmid       = 175
-
-  template    = var.templates["bullseye-zfs"]
+  source      = "../modules/node_bpg"
+  config      = local.config
+  hypervisor  = "chaillot"
+  onboot      = true
+  vmid        = 175
   hostname    = "rancher-node-admin-rke2-mgmt1"
-  description = "admin rke2 management node"
-  sockets     = "1"
-  cores       = "4"
-  memory      = "16384"
-  balloon     = "16384"
+  description = "Admin rke2 management node 1"
+  tags        = ["cluster-admin-rke2"]
 
-  networks = [{
-    id      = 0
-    ip      = "192.168.50.140"
-    gateway = local.config["gateway_ip"]
-    bridge  = local.config["bridge"]
-  }]
+  ram = {
+    dedicated = 16384
+    floating  = 16384
+  }
 
-  storages = [{
-    storage = "proxmox"
-    size    = "20G"
-    }, {
-    storage = "scratch"
-    size    = "20G"
-    }
-  ]
+  network = {
+    ip          = "192.168.50.140"
+    mac_address = "76:5B:C2:49:14:9B"
+  }
+
+  disks = [{
+    interface = "virtio0"
+    size      = 20
+  },
+  {
+    datastore_id = "scratch"
+    interface    = "virtio1"
+    size         = 20
+    }]
 
   post_provision_steps = [
     "${rancher2_cluster_v2.cluster-admin-rke2.cluster_registration_token[0].node_command} --etcd --controlplane"
