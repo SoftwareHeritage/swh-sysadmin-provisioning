@@ -25,7 +25,7 @@ disable:
 EOF
 
     etcd_snapshot_create {
-      generation = 6
+      generation = 8
     }
 
     machine_selector_config {
@@ -262,50 +262,51 @@ module "rancher-node-admin-rke2-node02" {
   ]
 }
 
-output "rancher-node-admin-rke2-node03_summary" {
-  value = module.rancher-node-admin-rke2-node03.summary
+output "rancher-node-admin-rke2-node02_summary" {
+  value = module.rancher-node-admin-rke2-node02.summary
 }
 
 module "rancher-node-admin-rke2-node03" {
-  source     = "../modules/node"
-  config     = local.config
-  hypervisor = "mucem"
-  onboot     = true
-  vmid       = 178
-
-
-  template    = var.templates["bullseye-zfs"]
+  source      = "../modules/node_bpg"
+  config      = local.config
+  hypervisor  = "mucem"
+  onboot      = true
+  vmid        = 178
   hostname    = "rancher-node-admin-rke2-node03"
   description = "Admin cluster node03"
-  sockets     = "1"
-  cores       = "4"
-  memory      = "32768"
+  tags        = ["cluster-admin-rke2"]
 
-  networks = [{
-    id      = 0
-    ip      = "192.168.50.143"
-    gateway = local.config["gateway_ip"]
-    bridge  = local.config["bridge"]
-  }]
+  cpu = {
+    type = "x86-64-v3"
+  }
 
-  storages = [{
-    storage = "proxmox"
-    size    = "40G"
-    }, {
-    storage = "scratch"
-    size    = "40G"
-    }
-  ]
+  ram = {
+    dedicated = 32768
+    floating  = 0
+  }
+
+  network = {
+    ip          = "192.168.50.143"
+    mac_address = "1A:B9:ED:59:2F:B4"
+  }
+
+  disks = [{
+    interface = "virtio0"
+    size      = 40
+  },
+  {
+    datastore_id = "scratch"
+    interface    = "virtio1"
+    size         = 40
+    }]
 
   post_provision_steps = [
-    "mkdir -p etc/rancher/rke2/config.yaml.d",
-    "echo '{ \"snapshotter\": \"native\" }' >/etc/rancher/rke2/config.yaml.d/50-snapshotter.yaml",
     "${rancher2_cluster_v2.cluster-admin-rke2.cluster_registration_token[0].node_command} --worker"
   ]
 }
 
-output "rancher-node-admin-rke2-node02_summary" {
-  value = module.rancher-node-admin-rke2-node02.summary
+output "rancher-node-admin-rke2-node03_summary" {
+  value = module.rancher-node-admin-rke2-node03.summary
 }
 
 resource "rancher2_app_v2" "cluster-admin-rke2-rancher-monitoring" {
