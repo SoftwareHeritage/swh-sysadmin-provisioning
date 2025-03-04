@@ -318,6 +318,16 @@ resource "rancher2_app_v2" "cluster-admin-rke2-rancher-monitoring" {
   chart_name    = "rancher-monitoring"
   chart_version = "103.2.0+up57.0.3"
   values        = <<EOF
+global:
+  cattle:
+    clusterId: ${rancher2_cluster_v2.cluster-admin-rke2.cluster_v1_id}
+    clusterName: ${rancher2_cluster_v2.cluster-admin-rke2.name}
+    rkePathPrefix: ""
+    rkeWindowsPathPrefix: ""
+    systemDefaultRegistry: ""
+    systemProjectId: p-kbxrp
+    url: https://rancher.euwest.azure.internal.softwareheritage.org
+  systemDefaultRegistry: ""
 alertmanager:
   alertmanagerSpec:
     alertmanagerConfigMatcherStrategy:
@@ -325,7 +335,6 @@ alertmanager:
     configSecret: alertmanager-rancher-monitoring-alertmanager
     useExistingSecret: true
 prometheus:
-  enabled: true
   prometheusSpec:
     externalLabels:
       cluster: ${rancher2_cluster_v2.cluster-admin-rke2.name}
