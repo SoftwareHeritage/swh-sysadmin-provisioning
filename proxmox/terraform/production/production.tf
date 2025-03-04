@@ -1,22 +1,30 @@
 module "kelvingrove" {
-  source = "../modules/node"
-  config = local.config
-
+  source      = "../modules/node_bpg"
+  config      = local.config
+  hypervisor  = "chaillot"
+  onboot      = true
+  vmid        = 123
   hostname    = "kelvingrove"
   description = "Keycloak server"
-  hypervisor  = "hypervisor3"
-  cores       = "4"
-  memory      = "8192"
-  cpu         = "host"
-  numa        = true
-  balloon     = 0
-  networks = [{
-    id      = 0
-    ip      = "192.168.100.106"
-    gateway = local.config["gateway_ip"]
-    macaddr = "72:55:5E:58:01:0B"
-    bridge  = local.config["bridge"]
-  }]
+
+  ram = {
+    dedicated = 8192
+    floating  = 0
+  }
+
+  cpu = {
+    type = "host"
+    numa = true
+  }
+
+  network = {
+    ip          = "192.168.100.106"
+    mac_address = "72:55:5E:58:01:0B"
+  }
+}
+
+output "kelvingrove_summary" {
+  value = module.kelvingrove.summary
 }
 
 module "counters1" {

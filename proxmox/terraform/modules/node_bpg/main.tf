@@ -59,7 +59,9 @@ resource "proxmox_virtual_environment_vm" "node" {
     sockets   = lookup(var.cpu, "sockets", 1)
     cores     = lookup(var.cpu, "cores", 4)
     type      = lookup(var.cpu, "type", "kvm64")
+    numa      = lookup(var.cpu, "numa", false)
   }
+
 
   memory {
     dedicated = lookup(var.ram, "dedicated", 4096)
