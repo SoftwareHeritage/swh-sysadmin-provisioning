@@ -163,7 +163,8 @@ resource "proxmox_virtual_environment_vm" "node" {
 
   lifecycle {
     ignore_changes = [
-      clone
+      clone,
+      node_name
     ]
   }
 }
