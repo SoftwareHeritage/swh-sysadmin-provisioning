@@ -149,40 +149,6 @@ output "bojimans_summary" {
   value = module.bojimans.summary
 }
 
-module "money" {
-  source      = "../modules/node_bpg"
-  config      = local.config
-  hypervisor  = "chaillot"
-  onboot      = true
-  vmid        = 140
-  hostname    = "money"
-  description = "Azure billing reporting server"
-
-  cpu = {
-    cores   = 1
-    sockets = 2
-    type    = "host"
-  }
-
-  ram = {
-    dedicated = 2048
-    floating  = 1024
-  }
-
-  network = {
-    ip          = "192.168.50.65"
-    mac_address = "BE:45:F5:C3:BD:A3"
-  }
-
-  disks = [{
-      interface = "virtio0"
-      size      = 20
-    }]
-}
-
-output "money_summary" {
-  value = module.money.summary
-}
 
 module "thanos" {
   source      = "../modules/node_bpg"
@@ -212,4 +178,3 @@ module "thanos" {
 output "thanos_summary" {
   value = module.thanos.summary
 }
-
