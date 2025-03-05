@@ -315,7 +315,7 @@ module "rancher-node-test-rke2-worker1" {
   ]
 
   post_provision_steps = [
-    "${rancher2_cluster_v2.test-staging-rke2.cluster_registration_token[0].node_command} --worker --label node_type=generic --label --label swh/lister=true --label swh/loader=true --label swh/rpc=true --label swh/toolbox=true --label swh/webhooks=true"
+    "${rancher2_cluster_v2.test-staging-rke2.cluster_registration_token[0].node_command} --worker --label node_type=worker --label swh/lister=true --label swh/loader=true --label swh/rpc=true --label swh/toolbox=true --label swh/webhooks=true"
   ]
 }
 

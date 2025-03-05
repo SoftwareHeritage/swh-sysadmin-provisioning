@@ -138,6 +138,8 @@ resource "proxmox_virtual_environment_vm" "node" {
       [
         # clean the systemd logs dating from the vm creation
         "journalctl --vacuum-time=1d",
+        # delete unclean cdrom references in sources.list
+        "sed -i.back '/.*/d' /etc/apt/sources.list",
         # install facts...
         "mkdir -p /etc/facter/facts.d",
         "echo deployment=${var.config["facter_deployment"]} > /etc/facter/facts.d/deployment.txt",
@@ -148,7 +150,7 @@ resource "proxmox_virtual_environment_vm" "node" {
         # concurrency on apt
         "cloud-init status -w",
         # so puppet agent installs the node's role
-        "puppet agent --server ${var.config["puppet_master"]} --environment=${var.config["puppet_environment"]} --vardir=/var/lib/puppet --waitforcert 60 --test || echo 'Node provisioned!'",
+        "puppet agent --server ${var.config["puppet_master"]} --environment=${var.config["puppet_environment"]} --vardir=/var/lib/puppet --waitforcert 60 --test && echo 'Node provisioned!'",
       ],
       var.post_provision_steps,
     )
