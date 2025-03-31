@@ -57,8 +57,8 @@ variable "templates" {
     buster       = "debian-buster-10.10-2021-09-09"
     bullseye     = "debian-bullseye-11.7-2023-08-29"
     bullseye-zfs = "debian-bullseye-11.7-zfs-2023-08-29"
-    bookworm     = "debian-bookworm-12.1-2023-08-30"
-    bookworm-zfs = "debian-bookworm-12.1-zfs-2023-08-30"
+    bookworm     = "debian-bookworm-12.10-2025-03-31"
+    bookworm-zfs = "debian-bookworm-12.10-zfs-2025-03-31"
   }
 }
 
