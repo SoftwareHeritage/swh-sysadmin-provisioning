@@ -1,10 +1,10 @@
 export PROXMOX_USER=myuser@pam
 export PROXMOX_PASSWORD=mysecretpassword
-export PROXMOX_URL=https://branly.internal.softwareheritage.org:8006/api2/json
-export PROXMOX_NODE=branly
+export PROXMOX_URL=https://chaillot.internal.softwareheritage.org:8006/api2/json
+export PROXMOX_NODE=chaillot
 
 # URL where the vm could reach the local http server started by packer
-export HTTP_SERVER_URL=http://branly.internal.softwareheritage.org:8888
+export HTTP_SERVER_URL=http://chaillot.internal.softwareheritage.org:8888
 
 # Build environment
 export TEMPLATE_IP=192.168.100.214

@@ -22,7 +22,7 @@
       "username": "{{ user `username` }}",
       "password": "{{ user `password` }}",
       "node": "{{ user `proxmox_node` }}",
-      "vm_id": 10013,
+      "vm_id": 10015,
       "memory": 1024,
       "sockets": "1",
       "cores": 2,
@@ -44,12 +44,14 @@
       "cloud_init": "true",
       "cloud_init_storage_pool": "proxmox",
 
-      "iso_urls": [
-        "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-12.1.0-amd64-netinst.iso"
-      ],
-      "iso_checksum": "9f181ae12b25840a508786b1756c6352a0e58484998669288c4eec2ab16b8559",
-      "iso_storage_pool": "proxmox-cephfs",
-      "unmount_iso": "true",
+      "boot_iso": {
+        "iso_urls": [
+          "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-12.10.0-amd64-netinst.iso"
+        ],
+        "iso_checksum": "ee8d8579128977d7dc39d48f43aec5ab06b7f09e1f40a9d98f2a9d149221704a",
+        "iso_storage_pool": "proxmox-cephfs",
+        "unmount": "true"
+      },
 
       "http_directory": "config",
       "http_port_min": "8888",
@@ -87,7 +89,7 @@
       "ssh_timeout": "15m",
       "ssh_password": "installer",
 
-      "template_name": "debian-bookworm-12.1-{{ user `template-suffix` }}",
+      "template_name": "debian-bookworm-12.10-{{ user `template-suffix` }}",
       "template_description": "debian bookworm, generated on {{ user `template-date` }}"
     }
   ],
