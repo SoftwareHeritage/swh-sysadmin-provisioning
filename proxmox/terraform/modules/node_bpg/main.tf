@@ -1,45 +1,3 @@
-data "proxmox_virtual_environment_vms" "debian12_zfs_template" {
-  provider = bpg-proxmox
-  tags     = ["debian12"]
-
-  filter {
-    name   = "template"
-    values = [true]
-  }
-
-  filter {
-    name   = "status"
-    values = ["stopped"]
-  }
-
-  filter {
-    name   = "name"
-    regex  = true
-    values = ["^debian-bookworm-12.*zfs-2023-08-30$"]
-  }
-}
-
-data "proxmox_virtual_environment_vms" "debian12_template" {
-  provider = bpg-proxmox
-  tags     = ["debian12"]
-
-  filter {
-    name   = "template"
-    values = [true]
-  }
-
-  filter {
-    name   = "status"
-    values = ["stopped"]
-  }
-
-  filter {
-    name   = "name"
-    regex  = true
-    values = ["^debian-bookworm-12.*-2023-08-30$"]
-  }
-}
-
 resource "proxmox_virtual_environment_vm" "node" {
   provider      = bpg-proxmox
   name          = var.hostname
@@ -52,8 +10,8 @@ resource "proxmox_virtual_environment_vm" "node" {
   started       = var.started
 
   clone {
-    node_name = data.proxmox_virtual_environment_vms.debian12_zfs_template.vms[0].node_name
-    vm_id     = var.template != null ? var.template : data.proxmox_virtual_environment_vms.debian12_zfs_template.vms[0].vm_id
+    node_name = var.template_node
+    vm_id     = lookup(var.templates, "${var.template}")
   }
 
   cpu {

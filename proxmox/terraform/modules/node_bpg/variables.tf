@@ -19,14 +19,29 @@ variable "hypervisor" {
   type        = string
 }
 
+# Hashmap of debian release to our associated vm templates
+# This should be maintained up-to-date with most recent built templates
+variable "templates" {
+  description = "Debian image templates created by packer"
+  type = map(number)
+  default = {
+    bullseye     = 10012 // debian-buster-10.10-2021-09-09
+    bullseye-zfs = 10013 // debian-bullseye-11.7-2023-08-29
+    bookworm     = 10015 // debian-bookworm-12.10-2025-03-31
+    bookworm-zfs = 10016 // debian-bookworm-12.10-zfs-2025-03-31
+  }
+}
+
+variable "template_node" {
+    description = "The proxmox host where the templates are stored"
+    type = string
+    default = "chaillot"
+}
+
 variable "template" {
-  description = "Debian image template vm id"
-  type        = number
-  default     = null
-  # other possible template values (see in Proxmox UI):
-  # - 10012: debian-bullseye-11.7-zfs-2023-08-29  (for extra zfs dependencies)
-  # - 10013:  debian-bookworm-12.1-2023-08-30
-  # - 10014: debian-bookworm-12.1-zfs-2023-08-30  (for extra zfs dependencies)
+  description = "One of the default values of `templates`"
+  type        = string
+  default     = "bookworm"
 }
 
 variable "cpu" {

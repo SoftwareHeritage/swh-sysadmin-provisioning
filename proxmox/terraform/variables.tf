@@ -48,20 +48,6 @@ variable "user_admin_ssh_private_key_path" {
   default = "~/.ssh/id-rsa-terraform-proxmox-root"
 }
 
-# Hashmap of debian release to our associated vm templates
-# This should be maintained up-to-date with most recent built templates
-variable "templates" {
-  description = "Debian image templates created by packer"
-  type = map(string)
-  default = {
-    buster       = "debian-buster-10.10-2021-09-09"
-    bullseye     = "debian-bullseye-11.7-2023-08-29"
-    bullseye-zfs = "debian-bullseye-11.7-zfs-2023-08-29"
-    bookworm     = "debian-bookworm-12.10-2025-03-31"
-    bookworm-zfs = "debian-bookworm-12.10-zfs-2025-03-31"
-  }
-}
-
 variable "docker_registry_mirror_hostname" {
   description = "Host for the docker registry mirror"
   type        = string
