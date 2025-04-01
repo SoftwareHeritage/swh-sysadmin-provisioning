@@ -153,6 +153,38 @@ output "runner0_summary" {
   value = module.runner0.summary
 }
 
+module "runner1" {
+  source      = "../modules/node_bpg"
+  config      = local.config
+  hypervisor  = "chaillot"
+  onboot      = true
+  tags        = ["gitlab-runner"]
+
+  hostname    = "runner1"
+  description = "Gitlab runner for code-commons wp1 ci"
+
+  template = "bookworm-zfs"
+
+  network = {
+    ip          = "192.168.130.220"
+  }
+
+  disks = [{
+      datastore_id      = "proxmox"
+      interface         = "virtio0"
+      size              = 20
+    },
+    {
+      datastore_id      = "proxmox"
+      interface         = "virtio1"
+      size              = 30
+    }]
+}
+
+output "runner1_summary" {
+  value = module.runner1.summary
+}
+
 module "maven-exporter0" {
   source      = "../modules/node_bpg"
   config      = local.config
