@@ -32,7 +32,7 @@ module "gitlab-staging" {
   source             = "./modules/gitlab"
   name               = "euwest-gitlab-staging"
   blob_storage_name  = "swheuwestgitlabstaging"
-  kubernetes_version = "1.29.4"
+  kubernetes_version = "1.32.3"
   container_insights = false
 }
 
