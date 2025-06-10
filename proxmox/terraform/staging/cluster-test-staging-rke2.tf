@@ -62,6 +62,11 @@ EOF
     #   - rke2-ingress-nginx
 
   }
+
+  local_auth_endpoint {
+      enabled  = true
+    }
+
 }
 
 output "rancher2_cluster_test_staging_rke2_summary" {

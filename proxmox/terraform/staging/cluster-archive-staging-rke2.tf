@@ -56,6 +56,13 @@ EOF
       }
     }
   }
+
+  local_auth_endpoint {
+      enabled  = true
+    }
+
+  timeouts {}
+
 }
 
 output "rancher2_cluster_archive_staging_rke2_summary" {
