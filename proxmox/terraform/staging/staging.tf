@@ -167,6 +167,7 @@ module "runner1" {
 
   network = {
     ip          = "192.168.130.220"
+    mac_address = "BC:24:11:F1:44:37"
   }
 
   disks = [{
