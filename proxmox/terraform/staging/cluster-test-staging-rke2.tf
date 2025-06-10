@@ -1,6 +1,6 @@
 resource "rancher2_cluster_v2" "test-staging-rke2" {
   name               = "test-staging-rke2"
-  kubernetes_version = "v1.28.15+rke2r1"
+  kubernetes_version = "v1.29.15+rke2r1"
   rke_config {
     upgrade_strategy {
       worker_drain_options {
