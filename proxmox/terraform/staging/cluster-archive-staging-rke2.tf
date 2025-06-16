@@ -1,6 +1,6 @@
 resource "rancher2_cluster_v2" "archive-staging-rke2" {
   name               = "archive-staging-rke2"
-  kubernetes_version = "v1.29.15+rke2r1"
+  kubernetes_version = "v1.30.13+rke2r1"
   rke_config {
     upgrade_strategy {
       worker_drain_options {
