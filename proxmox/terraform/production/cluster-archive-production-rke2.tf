@@ -1,6 +1,6 @@
 resource "rancher2_cluster_v2" "archive-production-rke2" {
   name               = "archive-production-rke2"
-  kubernetes_version = "v1.28.15+rke2r1"
+  kubernetes_version = "v1.29.15+rke2r1"
   rke_config {
     upgrade_strategy {
       worker_drain_options {
@@ -57,6 +57,9 @@ EOF
       }
     }
   }
+
+  timeouts {}
+
 }
 
 output "rancher2_cluster_archive_production_rke2_summary" {
