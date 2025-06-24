@@ -1,6 +1,6 @@
 resource "rancher2_cluster_v2" "cluster-admin-rke2" {
   name               = "cluster-admin-rke2"
-  kubernetes_version = "v1.31.9+rke2r1"
+  kubernetes_version = "v1.32.5+rke2r1"
   rke_config {
     upgrade_strategy {
       worker_drain_options {
