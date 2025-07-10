@@ -14,7 +14,7 @@ module "rancher_aks_cluster" {
   resource_group = azurerm_resource_group.rancher_rg.name
 
   minimal_pool_count     = 3
-  maximal_pool_count     = 3
+  maximal_pool_count     = 5
   node_type              = "Standard_B2ms"
   public_ip_provisioning = false
 

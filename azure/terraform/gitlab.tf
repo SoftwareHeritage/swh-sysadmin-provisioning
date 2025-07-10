@@ -12,7 +12,7 @@ module "gitlab-production" {
   blob_storage_name  = "swheuwestgitlabprod" #can only consist of lowercase letters and numbers, and must be between 3 and 24 characters long
   kubernetes_version = "1.32.4"
   container_insights = false
-  minimal_pool_count = 4
+  minimal_pool_count = 6
   maximal_pool_count = 6
 }
 
@@ -34,6 +34,7 @@ module "gitlab-staging" {
   blob_storage_name  = "swheuwestgitlabstaging"
   kubernetes_version = "1.32.4"
   container_insights = false
+  maximal_pool_count = 5
 }
 
 output "gitlab-staging_aks_summary" {
