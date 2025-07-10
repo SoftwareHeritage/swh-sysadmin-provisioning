@@ -10,18 +10,6 @@ resource "azurerm_resource_group" "euwest-vault" {
   }
 }
 
-resource "azurerm_network_interface" "vangogh-interface" {
-  name                = "vangogh-interface"
-  location            = "westeurope"
-  resource_group_name = "euwest-vault"
-
-  ip_configuration {
-    name                          = "vaultNicConfiguration"
-    subnet_id                     = data.azurerm_subnet.default.id
-    private_ip_address_allocation = "Dynamic"
-  }
-}
-
 resource "azurerm_network_interface_security_group_association" "vangogh-interface-sga" {
   network_interface_id      = azurerm_network_interface.vangogh-interface.id
   network_security_group_id = data.azurerm_network_security_group.worker-nsg.id
@@ -49,42 +37,3 @@ resource "azurerm_storage_container" "contents" {
   container_access_type = "private"
 }
 
-resource "azurerm_virtual_machine" "vault-server" {
-  name                  = "vangogh"
-  location              = "westeurope"
-  resource_group_name   = "euwest-vault"
-  network_interface_ids = [azurerm_network_interface.vangogh-interface.id]
-  vm_size               = "Standard_B2ms"
-
-  storage_os_disk {
-    name              = "vangogh-osdisk"
-    caching           = "ReadWrite"
-    create_option     = "FromImage"
-    managed_disk_type = "Premium_LRS"
-  }
-
-  storage_image_reference {
-    publisher = "credativ"
-    offer     = "Debian"
-    sku       = "9"
-    version   = "latest"
-  }
-
-  # (Va)ngogh <-> (Va)ult
-  os_profile {
-    computer_name  = "vangogh"
-    admin_username = "ardumont"
-  }
-
-  os_profile_linux_config {
-    disable_password_authentication = true
-    ssh_keys {
-      path     = "/home/${var.user_admin}/.ssh/authorized_keys"
-      key_data = var.ssh_key_data_ardumont
-    }
-  }
-
-  tags = {
-    environment = "SWH Vault"
-  }
-}
