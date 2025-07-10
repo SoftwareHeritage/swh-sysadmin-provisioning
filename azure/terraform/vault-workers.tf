@@ -1,6 +1,6 @@
 # will start from 1 vault-worker01...
 variable "vault-workers" {
-  default = 2
+  default = 0
 }
 
 locals {
