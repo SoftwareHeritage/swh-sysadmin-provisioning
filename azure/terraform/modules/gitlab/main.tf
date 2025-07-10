@@ -62,6 +62,7 @@ resource "azurerm_storage_account" "gitlab_storage" {
   account_replication_type = "LRS"
 
   blob_properties {
+    last_access_time_enabled = true
     delete_retention_policy {
       days = 7
     }
