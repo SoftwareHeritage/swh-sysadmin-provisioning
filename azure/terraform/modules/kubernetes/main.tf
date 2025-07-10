@@ -25,7 +25,7 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
     #   container_log_max_size_mb = "1024"
     # }
     upgrade_settings {
-      max_surge = ""
+      max_surge = "10%"
     }
   }
 
