@@ -1,6 +1,6 @@
 # will start from 1 indexer-worker01...
 variable "indexer-workers" {
-  default = 6
+  default = 0
 }
 
 locals {
