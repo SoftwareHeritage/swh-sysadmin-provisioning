@@ -56,41 +56,6 @@ output "rp0_summary" {
   value = module.rp0.summary
 }
 
-module "search-esnode0" {
-  source      = "../modules/node_bpg"
-  config      = local.config
-  hypervisor  = "chaillot"
-  onboot      = true
-  vmid        = 130
-  hostname    = "search-esnode0"
-  description = "Node to host the elasticsearch instance"
-
-  ram = {
-    dedicated = 32768
-    floating  = 9216
-  }
-
-  network = {
-    ip          = "192.168.130.80"
-    mac_address = "96:74:49:BD:B5:08"
-  }
-
-  disks = [
-    {
-      interface = "virtio0"
-      size      = 32
-    },
-    {
-      interface = "virtio1"
-      size      = 200
-    }
-  ]
-}
-
-output "search-esnode0_summary" {
-  value = module.search-esnode0.summary
-}
-
 module "counters0" {
   source      = "../modules/node_bpg"
   config      = local.config
