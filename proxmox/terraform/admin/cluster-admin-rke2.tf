@@ -199,7 +199,7 @@ module "rancher-node-admin-rke2-node01" {
   }
 
   ram = {
-    dedicated = 32768
+    dedicated = 49152
     floating  = 0
   }
 
@@ -242,7 +242,7 @@ module "rancher-node-admin-rke2-node02" {
   }
 
   ram = {
-    dedicated = 32768
+    dedicated = 49152
     floating  = 0
   }
 
@@ -285,7 +285,7 @@ module "rancher-node-admin-rke2-node03" {
   }
 
   ram = {
-    dedicated = 32768
+    dedicated = 49152
     floating  = 0
   }
 
