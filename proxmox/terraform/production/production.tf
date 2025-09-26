@@ -196,3 +196,41 @@ module "jenkins-docker02" {
     }
   ]
 }
+
+module "jenkins-docker03" {
+  source      = "../modules/node_bpg"
+  config      = local.config
+  hypervisor  = "chaillot"
+  onboot      = true
+  vmid        = 156
+  hostname    = "jenkins-docker03"
+  description = "Docker-based jenkins agent"
+
+  cpu = {
+    type    = "host"
+    sockets = 2
+    cores   = 4
+  }
+
+  ram = {
+    dedicated = 32768
+    floating  = 2048
+  }
+
+  network = {
+    ip          = "192.168.100.153"
+    mac_address = ""
+  }
+
+  disks = [
+    {
+      interface = "virtio0"
+      size      = 20
+    },
+    {
+      datastore_id = "scratch"
+      interface    = "virtio1"
+      size         = 200
+    }
+  ]
+}
