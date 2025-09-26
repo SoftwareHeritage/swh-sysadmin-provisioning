@@ -171,7 +171,7 @@ module "thanos" {
 
   disks = [{
       interface = "virtio0"
-      size      = 50
+      size      = 100
     }]
 }
 
