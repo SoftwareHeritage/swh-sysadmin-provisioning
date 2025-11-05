@@ -86,41 +86,6 @@ output "migration_summary" {
   value = module.migration.summary
 }
 
-module "maven-exporter" {
-  source      = "../modules/node_bpg"
-  config      = local.config
-  hypervisor  = "branly"
-  onboot      = true
-  vmid        = 150
-  hostname    = "maven-exporter"
-  description = "Maven index exporter to run containers and expose export.fld files"
-
-  ram = {
-    dedicated = 4096
-    floating  = 2048
-  }
-
-  network = {
-    ip          = "192.168.100.10"
-    mac_address = "D2:7E:0B:35:89:FF"
-  }
-
-  disks = [
-    {
-      interface = "virtio0"
-      size      = 20
-    },
-    {
-      interface = "virtio1"
-      size      = 50
-    }
-  ]
-}
-
-output "maven-exporter_summary" {
-  value = module.maven-exporter.summary
-}
-
 module "jenkins-docker01" {
   source      = "../modules/node_bpg"
   config      = local.config
