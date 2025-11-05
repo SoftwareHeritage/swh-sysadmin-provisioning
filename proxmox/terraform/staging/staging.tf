@@ -150,35 +150,3 @@ module "runner1" {
 output "runner1_summary" {
   value = module.runner1.summary
 }
-
-module "maven-exporter0" {
-  source      = "../modules/node_bpg"
-  config      = local.config
-  hypervisor  = "chaillot"
-  onboot      = true
-  vmid        = 122
-  hostname    = "maven-exporter0"
-  description = "Maven index exporter to run containers and expose export.fld files"
-
-  network = {
-    ip          = "192.168.130.70"
-    mac_address = "36:86:F6:F9:2A:5D"
-  }
-
-  disks = [{
-      datastore_id      = "proxmox"
-      interface         = "virtio0"
-      size              = 20
-      path_in_datastore = "base-10005-disk-0/vm-122-disk-0"
-    },
-    {
-      datastore_id      = "proxmox"
-      interface         = "virtio1"
-      size              = 50
-      path_in_datastore = "vm-122-disk-1"
-    }]
-}
-
-output "maven-exporter0_summary" {
-  value = module.maven-exporter0.summary
-}
