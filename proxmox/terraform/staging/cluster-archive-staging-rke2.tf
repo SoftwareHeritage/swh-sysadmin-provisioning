@@ -40,10 +40,10 @@ EOF
       generation = 6
     }
 
-    machine_selector_config {
-      config = {
-        cloud-provider-name = ""
-      }
+    etcd_snapshot_restore {
+      generation         = 1
+      name               = "archive-staging-rke2-etcd-snapshot-rancher-node-staging-r-8df82"
+      restore_rke_config = "none"
     }
 
     registries {
