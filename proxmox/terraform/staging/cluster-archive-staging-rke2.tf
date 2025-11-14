@@ -46,6 +46,12 @@ EOF
       restore_rke_config = "none"
     }
 
+    # machine_selector_config {
+    #   config = {
+    #     cloud-provider-name = ""
+    #   }
+    # }
+
     registries {
       dynamic "mirrors" {
         for_each = var.docker_registry_mirrors
