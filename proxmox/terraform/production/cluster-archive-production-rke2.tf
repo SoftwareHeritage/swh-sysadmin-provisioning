@@ -41,11 +41,11 @@ EOF
       generation = 5
     }
 
-    machine_selector_config {
-      config = {
-        cloud-provider-name = ""
-      }
-    }
+    # machine_selector_config {
+    #   config = {
+    #     cloud-provider-name = ""
+    #   }
+    # }
 
     registries {
       dynamic "mirrors" {
