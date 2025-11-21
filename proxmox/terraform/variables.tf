@@ -74,3 +74,21 @@ variable "docker_registry_mirrors" {
     prefix   = "registry.k8s.io"
   }]
 }
+
+# TODO password should be managed by tf (HashiCorp Vault?), not swh password store
+variable "argocd_user_password" {
+  description = "ArgoCD user password (populated from env)"
+  type        = string
+  sensitive   = true
+}
+
+# TODO load this map from tf data source instead of hardcoding it
+variable "clusters_map" {
+  type = map(string)
+  default = {
+    production   = "c-m-75xcg59s"
+    admin        = "c-m-682nvssh"
+    staging      = "c-m-9n5h9nrf"
+    test-staging = "c-m-hb9j7h5g"
+  }
+}
