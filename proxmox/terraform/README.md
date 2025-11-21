@@ -18,6 +18,17 @@ Go to rancher, in your account detail[1] generate a new access key without scope
 Create a `setup.sh` file holding the PM_{USER,PASS} information:
 
 ```
+# Path to credentials store repository
+SWH_PASSWORD_STORE_DIR=~/workspace/credentials/
+function swhpass() {
+    PASSWORD_STORE_DIR=$SWH_PASSWORD_STORE_DIR pass $@
+}
+
+export PASSWORD_STORE_DIR=$SWH_PASSWORD_STORE_DIR
+
+# Required to inject passwords into terraform provisioning, without versioning in code
+export TF_VAR_argocd_user_password=$(swhpass operations/rancher/users/argocd)
+
 export PM_USER=<swh-login>@pam
 export PM_PASS=<swh-login-pass>
 export RANCHER_ACCESS_KEY="<rancher token id>"
