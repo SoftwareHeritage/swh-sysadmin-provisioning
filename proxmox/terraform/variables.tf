@@ -104,8 +104,45 @@ data "rancher2_cluster" "by_name" {
   name     = each.value
 }
 
+# TODO support project names (not always "default")
 locals {
   clusters_map = { for k, d in data.rancher2_cluster.by_name : k => d.id }
+  cluster_admins = ["ops"] # usernames
+  project_permissions = {
+    # cluster_name : {
+    #   project_name : {
+    #     role_name = [usernames]
+    #   }
+    # }
+    production = { # cluster name
+      Default : { # project name
+        # role_name = [usernames]
+        ro = ["developer"] # usernames
+        rw = ["super-developer"]
+      }
+    }
+    admin = { # cluster name
+      Default : { # project name
+        # role_name = [usernames]
+        ro = [] # usernames
+        rw = ["super-developer"]
+      }
+    }
+    staging = { # cluster name
+      Default : { # project name
+        # role_name = [usernames]
+        ro = ["developer"] # usernames
+        rw = ["super-developer"]
+      }
+    }
+    test-staging = { # cluster name
+      Default : { # project name
+        # role_name = [usernames]
+        ro = [] # usernames
+        rw = []
+      }
+    }
+  }
 }
 
 output "clusters" {
