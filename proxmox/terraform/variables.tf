@@ -82,13 +82,32 @@ variable "argocd_user_password" {
   sensitive   = true
 }
 
-# TODO load this map from tf data source instead of hardcoding it
-variable "clusters_map" {
-  type = map(string)
+# Use the rancher2 provider to fetch cluster information instead of the
+# kubernetes provider.
+# We'll construct `clusters_map` dynamically by resolving cluster names to ids
+# via the rancher2 provider. Keep this minimal: add a `cluster_names` map
+# variable you can override, then build `local.clusters_map` from data sources.
+
+variable "cluster_names" {
+  description = "Map environment -> rancher cluster name to resolve to id"
+  type        = map(string)
   default = {
-    production   = "c-m-75xcg59s"
-    admin        = "c-m-682nvssh"
-    staging      = "c-m-9n5h9nrf"
-    test-staging = "c-m-hb9j7h5g"
+    production   = "archive-production-rke2"
+    admin        = "cluster-admin-rke2"
+    staging      = "archive-staging-rke2"
+    test-staging = "test-staging-rke2"
   }
+}
+
+data "rancher2_cluster" "by_name" {
+  for_each = var.cluster_names
+  name     = each.value
+}
+
+locals {
+  clusters_map = { for k, d in data.rancher2_cluster.by_name : k => d.id }
+}
+
+output "clusters" {
+  value = local.clusters_map
 }
