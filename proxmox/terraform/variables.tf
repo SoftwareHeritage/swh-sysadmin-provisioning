@@ -125,7 +125,7 @@ locals {
       Default : { # project name
         # role_name = [usernames]
         ro = [] # usernames
-        rw = ["super-developer"]
+        rw = []
       }
     }
     staging = { # cluster name
