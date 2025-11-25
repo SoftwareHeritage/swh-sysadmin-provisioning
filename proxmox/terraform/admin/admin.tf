@@ -27,6 +27,7 @@ module "bardo" {
 
 output "bardo_summary" {
   value = module.bardo.summary
+  sensitive = true
 }
 
 module "rp1" {
@@ -54,6 +55,7 @@ module "rp1" {
 
 output "rp1_summary" {
   value = module.rp1.summary
+  sensitive = true
 }
 
 module "dali" {
@@ -86,6 +88,7 @@ module "dali" {
 
 output "dali_summary" {
   value = module.dali.summary
+  sensitive = true
 }
 
 module "grafana0" {
@@ -113,6 +116,7 @@ module "grafana0" {
 
 output "grafana0_summary" {
   value = module.grafana0.summary
+  sensitive = true
 }
 
 module "bojimans" {
@@ -147,6 +151,7 @@ module "bojimans" {
 
 output "bojimans_summary" {
   value = module.bojimans.summary
+  sensitive = true
 }
 
 
@@ -177,4 +182,5 @@ module "thanos" {
 
 output "thanos_summary" {
   value = module.thanos.summary
+  sensitive = true
 }

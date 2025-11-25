@@ -104,6 +104,7 @@ module "rancher-node-admin-rke2-mgmt1" {
 
 output "rancher-node-admin-rke2-mgmt1_summary" {
   value = module.rancher-node-admin-rke2-mgmt1.summary
+  sensitive = true
 }
 
 module "rancher-node-admin-rke2-mgmt2" {
@@ -143,6 +144,7 @@ module "rancher-node-admin-rke2-mgmt2" {
 
 output "rancher-node-admin-rke2-mgmt2_summary" {
   value = module.rancher-node-admin-rke2-mgmt2.summary
+  sensitive = true
 }
 
 module "rancher-node-admin-rke2-mgmt3" {
@@ -182,6 +184,7 @@ module "rancher-node-admin-rke2-mgmt3" {
 
 output "rancher-node-admin-rke2-mgmt3_summary" {
   value = module.rancher-node-admin-rke2-mgmt3.summary
+  sensitive = true
 }
 
 module "rancher-node-admin-rke2-node01" {
@@ -225,6 +228,7 @@ module "rancher-node-admin-rke2-node01" {
 
 output "rancher-node-admin-rke2-node01_summary" {
   value = module.rancher-node-admin-rke2-node01.summary
+  sensitive = true
 }
 
 module "rancher-node-admin-rke2-node02" {
@@ -268,6 +272,7 @@ module "rancher-node-admin-rke2-node02" {
 
 output "rancher-node-admin-rke2-node02_summary" {
   value = module.rancher-node-admin-rke2-node02.summary
+  sensitive = true
 }
 
 module "rancher-node-admin-rke2-node03" {
@@ -311,6 +316,7 @@ module "rancher-node-admin-rke2-node03" {
 
 output "rancher-node-admin-rke2-node03_summary" {
   value = module.rancher-node-admin-rke2-node03.summary
+  sensitive = true
 }
 
 resource "rancher2_app_v2" "cluster-admin-rke2-rancher-monitoring" {
