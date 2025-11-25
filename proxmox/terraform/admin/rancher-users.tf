@@ -67,15 +67,15 @@ resource "rancher2_global_role_binding" "ops-role-binding" {
   user_id         = each.value
 }
 
-resource "rancher2_cluster_role_template_binding" "users-role-template-binding" {
+resource "rancher2_project_role_template_binding" "users-role-template-binding" {
   # project_permission_tuples: [{ cluster_id, cluster_name, project_id, project_role_template_id, user_id }]
   for_each = {
     for index, config in tolist(local.project_permission_tuples):
     "${config.project_id}|${config.project_role_template_id}|${config.user_id}" => config
   }
 
-  name             = each.value.cluster_name
-  cluster_id       = each.value.cluster_id
+  name             = "prtb-${replace(each.value.project_id, ":", "-")}-${each.value.project_role_template_id}-${each.value.user_id}"
+  project_id       = each.value.project_id
   role_template_id = each.value.project_role_template_id
   user_id          = each.value.user_id
 }
