@@ -84,9 +84,9 @@ variable "argocd_user_password" {
 
 # Use the rancher2 provider to fetch cluster information instead of the
 # kubernetes provider.
-# We'll construct `clusters_map` dynamically by resolving cluster names to ids
+# We'll construct `cluster_id_map` dynamically by resolving cluster names to ids
 # via the rancher2 provider. Keep this minimal: add a `cluster_names` map
-# variable you can override, then build `local.clusters_map` from data sources.
+# variable you can override, then build `local.cluster_id_map` from data sources.
 
 variable "cluster_names" {
   description = "Map environment -> rancher cluster name to resolve to id"
@@ -99,15 +99,8 @@ variable "cluster_names" {
   }
 }
 
-# TODO: Move the data block inside the data.tf
-data "rancher2_cluster" "by_name" {
-  for_each = var.cluster_names
-  name     = each.value
-}
-
 # TODO support project names (not always "default")
 locals {
-  clusters_map = { for k, d in data.rancher2_cluster.by_name : k => d.id }
   cluster_admins = ["ops"] # usernames
 
   # Project role template name "read-only" restricts to read permissions to a
@@ -152,5 +145,5 @@ locals {
 }
 
 output "clusters" {
-  value = local.clusters_map
+  value = local.cluster_id_map
 }

@@ -1,4 +1,5 @@
-# Collect user names from locals.project_permissions and local.cluster_admins
+# Collect information from locals.project_permissions which is the data
+# structure driving the overall permission setup in the rancher clusters
 locals {
   # Step 0: nested lists { cluster -> project -> role -> [usernames] }
   nested_userlists_by_cluster = [
@@ -15,16 +16,6 @@ locals {
   # Step 2: flatten second level -> [ role -> [usernames] ]
   flat_userlists_by_role = flatten(local.flat_userlists_by_project)
 
-  # Retrieve all project role template names without duplicates
-  # distinct_roles = distinct(keys(local.flat_userlists_by_role))
-  # distinct_roles = toset(distinct(flatten([
-  #   for cluster_name in keys(local.project_permissions) : [
-  #     for project_name in keys(local.project_permissions[cluster_name]) : [
-  #       for role_name_id in keys(local.project_permissions[cluster_name][project_name]) : role_name_id
-  #     ]
-  #   ]
-  # ])))
-
   # Step 3: flatten third level -> [ username strings ]
   flat_usernames = flatten(local.flat_userlists_by_role)
 
@@ -33,9 +24,7 @@ locals {
 
   # Final: set of usernames
   usernames_from_project_permissions = toset(local.distinct_usernames)
-}
 
-locals {
   # keep the rest of the derived locals here (use usernames_from_project_permissions defined above)
   cluster_admin_usernames = toset(local.cluster_admins)
   all_usernames          = toset(concat([
@@ -60,23 +49,19 @@ locals {
   ]))
 }
 
-# Fetch existing users by username and build map {name: data.rancher2_user}
+# Fetch existing users by username
 data "rancher2_user" "by_name" {
   for_each = local.all_usernames
   username = each.value
 }
 
-locals {
-  user_id_map = { for uname, d in data.rancher2_user.by_name : uname => d.id }
+# Fetch existing clusters by clustername
+data "rancher2_cluster" "by_name" {
+  for_each = var.cluster_names
+  name     = each.value
 }
 
-# NOTE: clusters are resolved in variables.tf via var.cluster_names and data.rancher2_cluster.by_name
-# build a cluster name -> id map from that
-locals {
-  cluster_id_map = local.clusters_map
-}
-
-# Fetch projects by name + cluster and build a lookup map
+# Fetch projects by name + cluster
 data "rancher2_project" "by_pair" {
   for_each = local.project_pair_keys
 
@@ -85,7 +70,13 @@ data "rancher2_project" "by_pair" {
 }
 
 locals {
-  # map of "cluster||project" => project_id
+  # map of {user name => user id}
+  user_id_map = { for uname, d in data.rancher2_user.by_name : uname => d.id }
+
+  # map of {cluster name => cluster id} map
+  cluster_id_map = { for k, d in data.rancher2_cluster.by_name : k => d.id }
+
+  # map of { "cluster||project" => project_id }
   projects_by_pair = { for pair, d in data.rancher2_project.by_pair : pair => d.id }
 
   # list of distinct clusters present in the projects_by_pair keys
@@ -96,6 +87,34 @@ locals {
     for c in local.project_clusters : c => {
       for pair, id in local.projects_by_pair : split("||", pair)[1] => id if split("||", pair)[0] == c
     }
+  }
+
+  # Compute ro and rw usernames directly from project_permissions (use lookup to avoid missing keys)
+  ro_usernames = toset(distinct(flatten([
+    for cluster_name in local.cluster_names : flatten([
+      for project_name in lookup(local.project_names_by_cluster, cluster_name, []) : lookup(local.project_permissions[cluster_name][project_name], "ro", [])
+    ])
+  ])))
+
+  rw_usernames = toset(distinct(flatten([
+    for cluster_name in local.cluster_names : flatten([
+      for project_name in lookup(local.project_names_by_cluster, cluster_name, []) : lookup(local.project_permissions[cluster_name][project_name], "rw", [])
+    ])
+  ])))
+
+  # Build maps of {username => user_id} for each role we care about (filter
+  # empty ids)
+  developers_user_ids = {
+    for u in local.ro_usernames :
+    u => lookup(local.user_id_map, u, "") if lookup(local.user_id_map, u, "") != ""
+  }
+  super_developers_user_ids = {
+    for u in local.rw_usernames :
+    u => lookup(local.user_id_map, u, "") if lookup(local.user_id_map, u, "") != ""
+  }
+  ops_user_ids = {
+    for u in local.cluster_admin_usernames :
+    u => lookup(local.user_id_map, u, "") if lookup(local.user_id_map, u, "") != ""
   }
 
   # Build set of tuples { cluster_id, cluster_name, project_id, project_role_template_id, user_id }
@@ -114,25 +133,6 @@ locals {
       ]
     ]
   ]))
-
-  # Compute ro and rw usernames directly from project_permissions (use lookup to avoid missing keys)
-  ro_usernames = toset(distinct(flatten([
-    for cluster_name in local.cluster_names : flatten([
-      for project_name in lookup(local.project_names_by_cluster, cluster_name, []) : lookup(local.project_permissions[cluster_name][project_name], "ro", [])
-    ])
-  ])))
-
-  rw_usernames = toset(distinct(flatten([
-    for cluster_name in local.cluster_names : flatten([
-      for project_name in lookup(local.project_names_by_cluster, cluster_name, []) : lookup(local.project_permissions[cluster_name][project_name], "rw", [])
-    ])
-  ])))
-
-  # maps username -> user_id for each role we care about (filter empty ids)
-  developers_user_ids = { for u in local.ro_usernames : u => lookup(local.user_id_map, u, "") if lookup(local.user_id_map, u, "") != "" }
-  super_developers_user_ids = { for u in local.rw_usernames : u => lookup(local.user_id_map, u, "") if lookup(local.user_id_map, u, "") != "" }
-  ops_user_ids = { for u in local.cluster_admin_usernames : u => lookup(local.user_id_map, u, "") if lookup(local.user_id_map, u, "") != "" }
-
 }
 
 output "project_permission_tuples" {
@@ -220,8 +220,3 @@ output "ops_user_ids" {
   value       = local.ops_user_ids
   description = "Map username -> user_id for cluster admins (filtered)"
 }
-
-# output "distinct_roles" {
-#   value       = local.distinct_roles
-#   description = "List of distinct project role template names"
-# }
