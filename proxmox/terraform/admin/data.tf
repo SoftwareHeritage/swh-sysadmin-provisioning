@@ -92,13 +92,13 @@ locals {
   # Compute ro and rw usernames directly from project_permissions (use lookup to avoid missing keys)
   ro_usernames = toset(distinct(flatten([
     for cluster_name in local.cluster_names : flatten([
-      for project_name in lookup(local.project_names_by_cluster, cluster_name, []) : lookup(local.project_permissions[cluster_name][project_name], "ro", [])
+      for project_name in lookup(local.project_names_by_cluster, cluster_name, []) : lookup(local.project_permissions[cluster_name][project_name], "read-only", [])
     ])
   ])))
 
   rw_usernames = toset(distinct(flatten([
     for cluster_name in local.cluster_names : flatten([
-      for project_name in lookup(local.project_names_by_cluster, cluster_name, []) : lookup(local.project_permissions[cluster_name][project_name], "rw", [])
+      for project_name in lookup(local.project_names_by_cluster, cluster_name, []) : lookup(local.project_permissions[cluster_name][project_name], "project-owner", [])
     ])
   ])))
 
