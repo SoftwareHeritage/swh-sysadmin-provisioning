@@ -46,7 +46,7 @@ output "argocd-token-value" {
 resource "rancher2_global_role_binding" "developer-role-binding" {
   for_each       = local.developers_user_ids
 
-  name            = "developer-${each.key}-role-binding"
+  name            = "user-base-${each.key}-role-binding"
   global_role_id  = "user-base"
   user_id         = each.value
 }
@@ -54,7 +54,7 @@ resource "rancher2_global_role_binding" "developer-role-binding" {
 resource "rancher2_global_role_binding" "super-developer-role-binding" {
   for_each       = local.super_developers_user_ids
 
-  name            = "super-developer-${each.key}-role-binding"
+  name            = "user-base-${each.key}-role-binding"
   global_role_id  = "user-base"
   user_id         = each.value
 }
@@ -62,7 +62,7 @@ resource "rancher2_global_role_binding" "super-developer-role-binding" {
 resource "rancher2_global_role_binding" "ops-role-binding" {
   for_each       = local.ops_user_ids
 
-  name            = "ops-${each.key}-role-binding"
+  name            = "admin-${each.key}-role-binding"
   global_role_id  = "admin"
   user_id         = each.value
 }
