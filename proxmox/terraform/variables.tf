@@ -123,8 +123,8 @@ locals {
     production = { # cluster name
       Default : { # project name
         # project_role_template_name = [usernames]
-        read-only = ["developer"] # usernames
-        project-owner = ["super-developer"]
+        read-only = [] # usernames
+        project-owner = []
       }
     }
     admin = { # cluster name
@@ -144,8 +144,8 @@ locals {
     test-staging = { # cluster name
       Default : { # project name
         # project_role_template_name = [usernames]
-        read-only = [] # usernames
-        project-owner = []
+        read-only = ["developer"] # usernames
+        project-owner = ["super-developer"]
       }
     }
   }
