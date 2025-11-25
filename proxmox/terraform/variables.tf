@@ -99,6 +99,7 @@ variable "cluster_names" {
   }
 }
 
+# TODO: Move the data block inside the data.tf
 data "rancher2_cluster" "by_name" {
   for_each = var.cluster_names
   name     = each.value
@@ -108,38 +109,43 @@ data "rancher2_cluster" "by_name" {
 locals {
   clusters_map = { for k, d in data.rancher2_cluster.by_name : k => d.id }
   cluster_admins = ["ops"] # usernames
+
+  # Project role template name "read-only" restricts to read permissions to a
+  # user on a specific project. While project role template name
+  # ""Project Owner"" allows read-write permissions to user on a specific
+  # project
   project_permissions = {
     # cluster_name : {
     #   project_name : {
-    #     role_name = [usernames]
+    #     project_role_template_name = [usernames]
     #   }
     # }
     production = { # cluster name
       Default : { # project name
-        # role_name = [usernames]
-        ro = ["developer"] # usernames
-        rw = ["super-developer"]
+        # project_role_template_name = [usernames]
+        "Read-only" = ["developer"] # usernames
+        "Project Owner" = ["super-developer"]
       }
     }
     admin = { # cluster name
       Default : { # project name
-        # role_name = [usernames]
-        ro = [] # usernames
-        rw = []
+        # project_role_template_name = [usernames]
+        "Read-only" = [] # usernames
+        "Project Owner" = []
       }
     }
     staging = { # cluster name
       Default : { # project name
-        # role_name = [usernames]
-        ro = ["developer"] # usernames
-        rw = ["super-developer"]
+        # project_role_template_name = [usernames]
+        "Read-only" = ["developer"] # usernames
+        "Project Owner" = ["super-developer"]
       }
     }
     test-staging = { # cluster name
       Default : { # project name
-        # role_name = [usernames]
-        ro = [] # usernames
-        rw = []
+        # project_role_template_name = [usernames]
+        "Read-only" = [] # usernames
+        "Project Owner" = []
       }
     }
   }

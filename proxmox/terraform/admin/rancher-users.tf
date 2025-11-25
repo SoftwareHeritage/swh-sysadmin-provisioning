@@ -78,3 +78,13 @@ resource "rancher2_global_role_binding" "ops-role-binding" {
 #   role_template_id = "<role_template_id>"
 #   user_id = "<user_id>"
 # }
+
+resource "rancher2_cluster_role_template_binding" "users-role-template-binding" {
+  # project_permission_tuples: [{ cluster_id, cluster_name, project_id, project_role_template_id, user_id }]
+  for_each = local.project_permission_tuples
+
+  name     = each.value.cluster_name
+  cluster_id = each.value.cluster_id
+  role_template_id = each.value.project_role_template_id
+  user_id  = each.value.user_id
+}
