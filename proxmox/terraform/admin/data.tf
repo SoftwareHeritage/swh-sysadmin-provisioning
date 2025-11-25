@@ -4,7 +4,7 @@ locals {
   nested_userlists_by_cluster = [
     for cluster_name in keys(local.project_permissions) : [
       for project_name in keys(local.project_permissions[cluster_name]) : [
-        for role_name in keys(local.project_permissions[cluster_name][project_name]) : local.project_permissions[cluster_name][project_name][role_name]
+        for role_name_id in keys(local.project_permissions[cluster_name][project_name]) : local.project_permissions[cluster_name][project_name][role_name_id]
       ]
     ]
   ]
@@ -17,13 +17,13 @@ locals {
 
   # Retrieve all project role template names without duplicates
   # distinct_roles = distinct(keys(local.flat_userlists_by_role))
-  distinct_roles = toset(distinct(flatten([
-    for cluster_name in keys(local.project_permissions) : [
-      for project_name in keys(local.project_permissions[cluster_name]) : [
-        for role_name in keys(local.project_permissions[cluster_name][project_name]) : role_name
-      ]
-    ]
-  ])))
+  # distinct_roles = toset(distinct(flatten([
+  #   for cluster_name in keys(local.project_permissions) : [
+  #     for project_name in keys(local.project_permissions[cluster_name]) : [
+  #       for role_name_id in keys(local.project_permissions[cluster_name][project_name]) : role_name_id
+  #     ]
+  #   ]
+  # ])))
 
   # Step 3: flatten third level -> [ username strings ]
   flat_usernames = flatten(local.flat_userlists_by_role)
@@ -35,16 +35,7 @@ locals {
   usernames_from_project_permissions = toset(local.distinct_usernames)
 }
 
-data "rancher2_role_template" "by_name" {
-  for_each = local.distinct_roles
-
-  context = "project"
-  name = each.value
-}
-
 locals {
-  map_role_template_name_id = { for name, role_data in data.rancher2_role_template.by_name : name => role_data.id }
-
   # keep the rest of the derived locals here (use usernames_from_project_permissions defined above)
   cluster_admin_usernames = toset(local.cluster_admins)
   all_usernames          = toset(concat([
@@ -111,12 +102,12 @@ locals {
   project_permission_tuples = toset(flatten([
     for cluster_name in local.cluster_names : [
       for project_name in lookup(local.project_names_by_cluster, cluster_name, []) : [
-        for role_name in keys(local.project_permissions[cluster_name][project_name]) : [
-          for username in local.project_permissions[cluster_name][project_name][role_name] : {
+        for role_name_id in keys(local.project_permissions[cluster_name][project_name]) : [
+          for username in local.project_permissions[cluster_name][project_name][role_name_id] : {
             cluster_id = lookup(local.cluster_id_map, cluster_name, "")
             cluster_name = cluster_name
             project_id = lookup(lookup(local.projects_map, cluster_name, {}), project_name, "")
-            project_role_template_id = lookup(local.map_role_template_name_id, role_name, "")
+            project_role_template_id = role_name_id
             user_id = lookup(local.user_id_map, username, "")
           }
         ]
@@ -146,7 +137,7 @@ locals {
 
 output "project_permission_tuples" {
   value       = local.project_permission_tuples
-  description = "Set of {cluster_id, cluster_name, project_id, role_name, user_id} derived from local.project_permissions"
+  description = "Set of {cluster_id, cluster_name, project_id, role_name_id, user_id} derived from local.project_permissions"
 }
 
 # Outputs pour chaque étape et maps
@@ -230,12 +221,7 @@ output "ops_user_ids" {
   description = "Map username -> user_id for cluster admins (filtered)"
 }
 
-output "distinct_roles" {
-  value       = local.distinct_roles
-  description = "List of distinct project role template names"
-}
-
-output "map_role_template_name_id" {
-  value       = local.map_role_template_name_id
-  description = "List of distinct project role templates objects"
-}
+# output "distinct_roles" {
+#   value       = local.distinct_roles
+#   description = "List of distinct project role template names"
+# }

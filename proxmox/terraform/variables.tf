@@ -112,8 +112,8 @@ locals {
 
   # Project role template name "read-only" restricts to read permissions to a
   # user on a specific project. While project role template name
-  # ""Project Owner"" allows read-write permissions to user on a specific
-  # project
+  # "project-owner" allows read-write permissions to user on a specific
+  # project. Those are already the rancher identifier.
   project_permissions = {
     # cluster_name : {
     #   project_name : {
@@ -123,29 +123,29 @@ locals {
     production = { # cluster name
       Default : { # project name
         # project_role_template_name = [usernames]
-        "Read-only" = ["developer"] # usernames
-        "Project Owner" = ["super-developer"]
+        read-only = ["developer"] # usernames
+        project-owner = ["super-developer"]
       }
     }
     admin = { # cluster name
       Default : { # project name
         # project_role_template_name = [usernames]
-        "Read-only" = [] # usernames
-        "Project Owner" = []
+        read-only = [] # usernames
+        project-owner = []
       }
     }
     staging = { # cluster name
       Default : { # project name
         # project_role_template_name = [usernames]
-        "Read-only" = ["developer"] # usernames
-        "Project Owner" = ["super-developer"]
+        read-only = ["developer"] # usernames
+        project-owner = ["super-developer"]
       }
     }
     test-staging = { # cluster name
       Default : { # project name
         # project_role_template_name = [usernames]
-        "Read-only" = [] # usernames
-        "Project Owner" = []
+        read-only = [] # usernames
+        project-owner = []
       }
     }
   }
