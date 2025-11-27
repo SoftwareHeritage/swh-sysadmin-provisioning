@@ -42,25 +42,16 @@ output "argocd-token-value" {
   sensitive = true
 }
 
-
-resource "rancher2_global_role_binding" "developer-role-binding" {
-  for_each       = local.developers_user_ids
-
-  name            = "user-base-${each.key}-role-binding"
-  global_role_id  = "user-base"
-  user_id         = each.value
-}
-
-resource "rancher2_global_role_binding" "super-developer-role-binding" {
-  for_each       = local.super_developers_user_ids
+resource "rancher2_global_role_binding" "user-base-role-binding" {
+  for_each       = local.base_user_ids
 
   name            = "user-base-${each.key}-role-binding"
   global_role_id  = "user-base"
   user_id         = each.value
 }
 
-resource "rancher2_global_role_binding" "ops-role-binding" {
-  for_each       = local.ops_user_ids
+resource "rancher2_global_role_binding" "admin-role-binding" {
+  for_each       = local.admin_user_ids
 
   name            = "admin-${each.key}-role-binding"
   global_role_id  = "admin"
@@ -68,14 +59,14 @@ resource "rancher2_global_role_binding" "ops-role-binding" {
 }
 
 resource "rancher2_project_role_template_binding" "users-role-template-binding" {
-  # project_permission_tuples: [{ cluster_id, cluster_name, project_id, project_role_template_id, user_id }]
+  # project_permission_tuples: [{ cluster_id, cluster_name, project_id, project_name, role_template_id, user_id, user_name }]
   for_each = {
     for index, config in tolist(local.project_permission_tuples):
-    "${config.project_id}|${config.project_role_template_id}|${config.user_id}" => config
+    lower("${config.cluster_name}---${config.project_name}---${config.role_template_id}---${config.user_name}") => config
   }
 
-  name             = "prtb-${replace(each.value.project_id, ":", "-")}-${each.value.project_role_template_id}-${each.value.user_id}"
+  name             = each.key
   project_id       = each.value.project_id
-  role_template_id = each.value.project_role_template_id
+  role_template_id = each.value.role_template_id
   user_id          = each.value.user_id
 }

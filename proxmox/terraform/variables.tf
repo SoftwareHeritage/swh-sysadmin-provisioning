@@ -101,7 +101,7 @@ variable "cluster_names" {
 
 # TODO support project names (not always "default")
 locals {
-  cluster_admins = ["ops"] # usernames
+  admin_usernames = toset(["ops"]) # usernames
 
   # Project role template name "read-only" restricts to read permissions to a
   # user on a specific project. While project role template name
@@ -142,8 +142,4 @@ locals {
       }
     }
   }
-}
-
-output "clusters" {
-  value = local.cluster_id_map
 }
