@@ -60,16 +60,16 @@ variable "docker_registry_mirrors" {
   default = [{
     hostname = "container-registry.softwareheritage.org"
     prefix   = "swh"
-    }, {
+  }, {
     hostname = "docker.io"
     prefix   = "docker.io"
-    }, {
+  }, {
     hostname = "ghcr.io"
     prefix   = "ghcr.io"
-    }, {
+  }, {
     hostname = "quay.io"
     prefix   = "quay.io"
-    }, {
+  }, {
     hostname = "registry.k8s.io"
     prefix   = "registry.k8s.io"
   }]
@@ -99,48 +99,47 @@ variable "cluster_names" {
   }
 }
 
-# TODO support project names (not always "default")
-locals {
-  # TODO create variable
-  admin_user_names = toset(["ops"]) # usernames
+variable "admin_user_names" {
+  description = "Map environment -> rancher cluster name to resolve to id"
+  type        = set(string)
+  default = [
+    "ops"
+  ]
+}
 
-  # Project role template name "read-only" restricts to read permissions to a
-  # user on a specific project. While project role template name
-  # "project-owner" allows read-write permissions to user on a specific
-  # project. Those are already the rancher identifier.
-  # TODO create variable
-  project_permissions = {
-    # cluster_name : {
-    #   project_name : {
-    #     project_role_template_name = [usernames]
-    #   }
-    # }
-    production = { # cluster name
-      Default : { # project name
+# TODO use types instead of map of map of map of list of string?
+# noinspection TfIncorrectVariableType
+variable "project_permissions" {
+  description = "Map of project permissions to assign to users"
+  type        = map(map(map(list(string))))
+  default = {
+    # cluster_name : { project_name : { project_role_template_name = [usernames] }}
+    "production" = { # cluster name
+      "Default" = { # project name
         # project_role_template_name = [usernames]
-        read-only = [] # usernames
-        project-owner = []
+        "read-only" = [] # usernames
+        "project-owner" = []
       }
     }
-    admin = { # cluster name
-      Default : { # project name
+    "admin" = { # cluster name
+      "Default" = { # project name
         # project_role_template_name = [usernames]
-        read-only = [] # usernames
-        project-owner = []
+        "read-only" = [] # usernames
+        "project-owner" = []
       }
     }
-    staging = { # cluster name
-      Default : { # project name
+    "staging" = { # cluster name
+      "Default" = { # project name
         # project_role_template_name = [usernames]
-        read-only = ["developer"] # usernames
-        project-owner = ["super-developer"]
+        "read-only" = ["developer"] # usernames
+        "project-owner" = ["super-developer"]
       }
     }
-    test-staging = { # cluster name
-      Default : { # project name
+    "test-staging" = { # cluster name
+      "Default" = { # project name
         # project_role_template_name = [usernames]
-        read-only = ["developer"] # usernames
-        project-owner = ["super-developer"]
+        "read-only" = ["developer"] # usernames
+        "project-owner" = ["super-developer"]
       }
     }
   }
