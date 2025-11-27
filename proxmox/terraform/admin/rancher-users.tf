@@ -42,18 +42,6 @@ output "argocd-token-value" {
   sensitive = true
 }
 
-# Collect information from var.project_permissions which is the data
-# structure driving the overall permission setup in the rancher clusters
-# locals {
-#   # TODO do we really need to build the key like this? (cluster_name||project_name)
-#   # nested map { cluster_name => { project_name => project_id } }
-#   project_id_by_cluster_name_and_project_name = {
-#     for c in local.project_clusters : c => {
-#       for  in values(local.project_pairs_map) : split("||", pair)[1] => id if split("||", pair)[0] == c
-#     }
-#   }
-# }
-
 locals {
   # Final: set of usernames collected directly from var.project_permissions
   project_permissions_user_names = toset(distinct(flatten([
