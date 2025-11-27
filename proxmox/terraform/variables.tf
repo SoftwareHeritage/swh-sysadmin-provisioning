@@ -101,12 +101,14 @@ variable "cluster_names" {
 
 # TODO support project names (not always "default")
 locals {
-  admin_usernames = toset(["ops"]) # usernames
+  # TODO create variable
+  admin_user_names = toset(["ops"]) # usernames
 
   # Project role template name "read-only" restricts to read permissions to a
   # user on a specific project. While project role template name
   # "project-owner" allows read-write permissions to user on a specific
   # project. Those are already the rancher identifier.
+  # TODO create variable
   project_permissions = {
     # cluster_name : {
     #   project_name : {
