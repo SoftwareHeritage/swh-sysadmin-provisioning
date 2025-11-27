@@ -88,8 +88,8 @@ variable "argocd_user_password" {
 # via the rancher2 provider. Keep this minimal: add a `cluster_names` map
 # variable you can override, then build `local.cluster_id_map` from data sources.
 
-variable "cluster_names" {
-  description = "Map environment -> rancher cluster name to resolve to id"
+variable "cluster_names_by_alias" {
+  description = "Map environment alias -> rancher cluster name to resolve to id"
   type        = map(string)
   default = {
     production   = "archive-production-rke2"
