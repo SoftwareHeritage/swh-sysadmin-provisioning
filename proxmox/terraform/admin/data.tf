@@ -20,14 +20,14 @@ locals {
   user_id_by_name = { for uname, d in data.rancher2_user.by_name : uname => d.id }
 }
 
-# Build a list of (cluster, project) pairs instead of a composite key string
+# Build a list of project (cluster_alias, name) pairs
 locals {
   cluster_project_list = tolist(flatten([
     for cluster_alias, projects in var.project_permissions : [
-      for project_name in keys(projects) :
+      for name in keys(projects) :
       {
         cluster_alias = cluster_alias
-        project_name  = project_name
+        name  = name
       }
     ]
   ]))
@@ -46,12 +46,11 @@ output "cluster_project_list" {
 
 # Fetch projects by name + cluster using the indexed map (no composite key)
 data "rancher2_project" "by_project_id" {
-  for_each = {
-    for idx, d in local.cluster_project_list:
-    idx => d
+  for_each = { for idx, project in local.cluster_project_list:
+    "${project.cluster_alias}---${project.name}" => project
   }
 
-  name       = each.value.project_name
+  name       = each.value.name
   cluster_id = lookup(local.cluster_id_by_alias, each.value.cluster_alias)
 }
 
@@ -59,13 +58,13 @@ locals {
   # nested map { cluster_alias => { project_name => project_id } }
   project_id_by_cluster_alias_and_name = {
     # iterate over the set of distinct cluster aliases present in the list
-    for cluster in toset([for p in local.cluster_project_list : p.cluster_alias]) :
-    cluster => {
+    for cluster_alias in keys(local.cluster_id_by_alias) :
+    cluster_alias => {
       # for each pair (index, pair) in the list, add project_name => project_id
-      for idx, p in local.cluster_project_list :
-      p.project_name => data.rancher2_project.by_project_id[tostring(idx)].id
+      for idx, project in local.cluster_project_list :
+      project.name => data.rancher2_project.by_project_id["${project.cluster_alias}---${project.name}"].id
       # keep only the projects belonging to the current cluster alias
-      if p.cluster_alias == cluster
+      if project.cluster_alias == cluster_alias
     }
   }
 
