@@ -35,6 +35,7 @@ locals {
 
 output "cluster_project_list" {
   value = local.cluster_project_list
+  sensitive = true
 }
 
 # Fetch projects by name + cluster using the indexed map (no composite key)

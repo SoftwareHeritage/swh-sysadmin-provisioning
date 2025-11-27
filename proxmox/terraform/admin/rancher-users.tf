@@ -124,4 +124,5 @@ output "clusters" {
 output "project_permissions" {
   value       = local.project_permission_tuples
   description = "Set of {cluster_alias, project_id, role_name_id, user_id} derived from var.project_permissions"
+  sensitive   = true
 }
