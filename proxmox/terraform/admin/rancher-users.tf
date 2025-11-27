@@ -97,18 +97,17 @@ resource "rancher2_global_role_binding" "admin-role-binding" {
 }
 
 locals {
-  # Build set of tuples { cluster_id, cluster_name, project_id, project_role_template_id, user_id }
+  # Build set of tuples { cluster_name, project_id, project_role_template_id, user_id }
   project_permission_tuples = toset(flatten([
-    for cluster_alias in keys(var.project_permissions) : [
-      for project_name in keys(var.project_permissions[cluster_alias]) : [
-        for role_template_id in keys(var.project_permissions[cluster_alias][project_name]) : [
-          for user_name in var.project_permissions[cluster_alias][project_name][role_template_id] : {
+    for cluster_alias, cluster_config in var.project_permissions : [
+      for project_name, project_config in cluster_config : [
+        for role_template_id, usernames in project_config : [
+          for user_name in usernames : {
             cluster_alias = cluster_alias
-            cluster_id = lookup(local.cluster_id_by_alias, cluster_alias, cluster_alias)
             project_name = project_name
-            project_id = lookup(lookup(local.project_id_by_cluster_alias_and_name, cluster_alias, {}), project_name, "")
+            project_id = local.project_id_by_cluster_alias_and_name[cluster_alias][project_name]
             role_template_id = role_template_id
-            user_id = lookup(local.user_id_by_name, user_name, user_name)
+            user_id = local.user_id_by_name[user_name]
             user_name = user_name
           }
         ]
@@ -118,7 +117,7 @@ locals {
 }
 
 resource "rancher2_project_role_template_binding" "users-role-template-binding" {
-  # project_permission_tuples: [{ cluster_id, cluster_alias, project_id, project_name, role_template_id, user_id, user_name }]
+  # project_permission_tuples: [{ cluster_alias, project_id, project_name, role_template_id, user_id, user_name }]
   for_each = {
     for index, config in tolist(local.project_permission_tuples):
     lower("${config.cluster_alias}---${config.project_name}---${config.role_template_id}---${config.user_name}") => config
@@ -136,5 +135,5 @@ output "clusters" {
 
 output "project_permissions" {
   value       = local.project_permission_tuples
-  description = "Set of {cluster_id, cluster_alias, project_id, role_name_id, user_id} derived from var.project_permissions"
+  description = "Set of {cluster_alias, project_id, role_name_id, user_id} derived from var.project_permissions"
 }
