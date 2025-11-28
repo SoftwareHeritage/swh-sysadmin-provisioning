@@ -131,15 +131,15 @@ variable "project_permissions" {
     "staging" = { # cluster name
       "Default" = { # project name
         # project_role_template_name = [usernames]
-        "read-only" = ["developer"] # usernames
-        "project-owner" = ["super-developer"]
+        "read-only" = ["dev"] # usernames
+        "project-owner" = ["lead-dev"]
       }
     }
     "test-staging" = { # cluster name
       "Default" = { # project name
         # project_role_template_name = [usernames]
-        "read-only" = ["developer"] # usernames
-        "project-owner" = ["super-developer"]
+        "read-only" = ["dev"] # usernames
+        "project-owner" = ["lead-dev"]
       }
     }
   }
