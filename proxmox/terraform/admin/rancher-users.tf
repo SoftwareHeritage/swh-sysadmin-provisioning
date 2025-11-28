@@ -119,6 +119,7 @@ resource "rancher2_project_role_template_binding" "users-role-template-binding" 
 
 output "clusters" {
   value = local.cluster_id_by_alias
+  sensitive = true
 }
 
 output "project_permissions" {
