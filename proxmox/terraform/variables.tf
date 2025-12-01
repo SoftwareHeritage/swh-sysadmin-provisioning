@@ -115,7 +115,7 @@ variable "lead_dev_user_names" {
   description = "Lead Dev user names"
   type        = set(string)
   default = [
-    "ddouard"
+    # "ddouard"  # Remove from dev_user_names later
   ]
 }
 
@@ -128,6 +128,7 @@ variable "dev_user_names" {
     "varasterix",
     "martin",
     "rboyer",
-    "ukuchler"
+    "ukuchler",
+    "ddouard"  # Move to lead_dev_user_names later
   ]
 }
