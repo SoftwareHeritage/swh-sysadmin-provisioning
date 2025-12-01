@@ -107,7 +107,8 @@ variable "admin_user_names" {
     "ardumont",
     "vsellier",
     "thibaultd",
-    "athiam"
+    "athiam",
+    "ukuchler"
   ]
 }
 
