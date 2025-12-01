@@ -130,35 +130,3 @@ variable "dev_user_names" {
     "rboyer"
   ]
 }
-
-# noinspection TfIncorrectVariableType
-variable "project_permissions" {
-  description = "Map of project permissions to assign to users"
-  type        = map(map(map(list(string))))
-  default = {
-    "production" = {
-      "Default" = {
-        "read-only" = var.lead_dev_user_names
-        "project-owner" = []
-      }
-    }
-    "admin" = {
-      "Default" = {
-        "read-only" = []
-        "project-owner" = []
-      }
-    }
-    "staging" = {
-      "Default" = {
-        "read-only" = var.dev_user_names
-        "project-owner" = var.lead_dev_user_names
-      }
-    }
-    "test-staging" = {
-      "Default" = {
-        "read-only" = var.dev_user_names
-        "project-owner" = var.lead_dev_user_names
-      }
-    }
-  }
-}

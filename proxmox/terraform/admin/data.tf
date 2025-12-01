@@ -23,7 +23,7 @@ locals {
 # Build a list of project (cluster_alias, name) pairs
 locals {
   cluster_project_list = tolist(flatten([
-    for cluster_alias, projects in var.project_permissions : [
+    for cluster_alias, projects in local.project_permissions : [
       for name in keys(projects) :
       {
         cluster_alias = cluster_alias

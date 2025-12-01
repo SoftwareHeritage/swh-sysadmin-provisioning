@@ -1,3 +1,35 @@
+locals {
+  lead_developers = var.lead_dev_user_names
+  developers = var.dev_user_names
+  all_users = setunion(local.lead_developers, local.developers)
+  project_permissions = {
+    "production" = {
+      "Default" = {
+        "read-only" = local.all_users
+        "project-owner" = []
+      }
+    }
+    "admin" = {
+      "Default" = {
+        "read-only" = []
+        "project-owner" = []
+      }
+    }
+    "staging" = {
+      "Default" = {
+        "read-only" = local.developers
+        "project-owner" = local.lead_developers
+      }
+    }
+    "test-staging" = {
+      "Default" = {
+        "read-only" = []
+        "project-owner" = []
+      }
+    }
+  }
+}
+
 resource "rancher2_user" "argocd" {
   name     = "ArgoCD"
   username = "argocd"
@@ -45,7 +77,7 @@ output "argocd-token-value" {
 locals {
   # Final: set of usernames collected directly from var.project_permissions
   project_permissions_user_names = toset(distinct(flatten([
-    for cluster_name, projects in var.project_permissions : [
+    for cluster_name, projects in local.project_permissions : [
       for project_name, roles in projects : flatten([
         for role_name, users in roles : users
       ])
@@ -87,7 +119,7 @@ resource "rancher2_global_role_binding" "admin-role-binding" {
 locals {
   # Build set of tuples { cluster_name, project_id, project_role_template_id, user_id }
   project_permission_tuples = toset(flatten([
-    for cluster_alias, cluster_config in var.project_permissions : [
+    for cluster_alias, cluster_config in local.project_permissions : [
       for project_name, project_config in cluster_config : [
         for role_template_id, usernames in project_config : [
           for user_name in usernames : {
