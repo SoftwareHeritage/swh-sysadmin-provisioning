@@ -107,8 +107,7 @@ variable "admin_user_names" {
     "ardumont",
     "vsellier",
     "thibaultd",
-    "athiam",
-    "ukuchler"
+    "athiam"
   ]
 }
 
@@ -128,6 +127,7 @@ variable "dev_user_names" {
     "vlorentz",
     "varasterix",
     "martin",
-    "rboyer"
+    "rboyer",
+    "ukuchler"
   ]
 }
