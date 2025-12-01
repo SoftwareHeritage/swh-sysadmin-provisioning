@@ -100,46 +100,64 @@ variable "cluster_names_by_alias" {
 }
 
 variable "admin_user_names" {
-  description = "Map environment -> rancher cluster name to resolve to id"
+  description = "Admin usernames"
   type        = set(string)
   default = [
-    "ops"
+    "olasd",
+    "ardumont",
+    "vsellier",
+    "thibaultd",
+    "athiam"
   ]
 }
 
-# TODO use types instead of map of map of map of list of string?
+variable "lead_dev_user_names" {
+  description = "Lead Dev user names"
+  type        = set(string)
+  default = [
+    "ddouard"
+  ]
+}
+
+variable "dev_user_names" {
+  description = "Dev user names"
+  type        = set(string)
+  default = [
+    "anlambert",
+    "vlorentz",
+    "varasterix",
+    "martin",
+    "rboyer"
+  ]
+}
+
 # noinspection TfIncorrectVariableType
 variable "project_permissions" {
   description = "Map of project permissions to assign to users"
   type        = map(map(map(list(string))))
   default = {
-    # cluster_name : { project_name : { project_role_template_name = [usernames] }}
-    "production" = { # cluster name
-      "Default" = { # project name
-        # project_role_template_name = [usernames]
-        "read-only" = [] # usernames
+    "production" = {
+      "Default" = {
+        "read-only" = var.lead_dev_user_names
         "project-owner" = []
       }
     }
-    "admin" = { # cluster name
-      "Default" = { # project name
-        # project_role_template_name = [usernames]
-        "read-only" = [] # usernames
+    "admin" = {
+      "Default" = {
+        "read-only" = []
         "project-owner" = []
       }
     }
-    "staging" = { # cluster name
-      "Default" = { # project name
-        # project_role_template_name = [usernames]
-        "read-only" = ["dev"] # usernames
-        "project-owner" = ["lead-dev"]
+    "staging" = {
+      "Default" = {
+        "read-only" = var.dev_user_names
+        "project-owner" = var.lead_dev_user_names
       }
     }
-    "test-staging" = { # cluster name
-      "Default" = { # project name
-        # project_role_template_name = [usernames]
-        "read-only" = ["dev"] # usernames
-        "project-owner" = ["lead-dev"]
+    "test-staging" = {
+      "Default" = {
+        "read-only" = var.dev_user_names
+        "project-owner" = var.lead_dev_user_names
       }
     }
   }
