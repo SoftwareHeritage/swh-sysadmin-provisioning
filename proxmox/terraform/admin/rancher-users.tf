@@ -1,3 +1,7 @@
+###############################################
+# Declare user roles across clusters/projects #
+###############################################
+
 locals {
   lead_developers = var.lead_dev_user_names
   developers = var.dev_user_names
@@ -28,54 +32,6 @@ locals {
       }
     }
   }
-}
-
-resource "rancher2_user" "argocd" {
-  name     = "ArgoCD"
-  username = "argocd"
-  password = var.argocd_user_password
-  enabled  = true
-}
-
-resource "rancher2_global_role_binding" "argocd-role-binding" {
-  name            = "argocd-role-binding"
-  global_role_id  = "user"
-  user_id         = rancher2_user.argocd.id
-}
-
-resource "rancher2_cluster_role_template_binding" "argocd-role-template-binding" {
-  for_each = tomap(local.cluster_id_by_alias)
-
-  name     = each.key
-  cluster_id = each.value
-  role_template_id = "cluster-owner"
-  user_id  = rancher2_user.argocd.id
-}
-
-resource "rancher2_custom_user_token" "argocd-token" {
-  for_each = tomap(local.cluster_id_by_alias)
-
-  username = rancher2_user.argocd.username
-  password = rancher2_user.argocd.password
-  cluster_id = each.value
-  description = "argocd token for cluster ${each.key}"
-  ttl = 0
-
-  lifecycle {
-    ignore_changes = [ttl]
-  }
-  depends_on = [
-    rancher2_cluster_role_template_binding.argocd-role-template-binding
-  ]
-}
-
-output "argocd-token-value" {
-  value     = { for k, t in rancher2_custom_user_token.argocd-token : k => t.token }
-  sensitive = true
-}
-
-locals {
-  # Final: set of usernames collected directly from var.project_permissions
   project_permissions_user_names = toset(distinct(flatten([
     for cluster_name, projects in local.project_permissions : [
       for project_name, roles in projects : flatten([
@@ -89,13 +45,34 @@ locals {
   # keep the rest of the derived locals here (use usernames_from_project_permissions defined above)
   # union of admin and base usernames as a set
   all_user_names          = setunion(var.admin_user_names, local.base_usernames)
+}
 
-  base_user_ids = {
-    for u in local.base_usernames :
-    u => lookup(local.user_id_by_name, u, "") if lookup(local.user_id_by_name, u, "") != ""
-  }
+########################
+# [GLOBAL] admin users #
+########################
+
+locals {
   admin_user_ids = {
     for u in var.admin_user_names :
+    u => lookup(local.user_id_by_name, u, "") if lookup(local.user_id_by_name, u, "") != ""
+  }
+}
+
+resource "rancher2_global_role_binding" "admin-role-binding" {
+  for_each       = local.admin_user_ids
+
+  name            = "admin-${each.key}-role-binding"
+  global_role_id  = "admin"
+  user_id         = each.value
+}
+
+############################
+# [GLOBAL] non-admin users #
+############################
+
+locals {
+  base_user_ids = {
+    for u in local.base_usernames :
     u => lookup(local.user_id_by_name, u, "") if lookup(local.user_id_by_name, u, "") != ""
   }
 }
@@ -108,13 +85,67 @@ resource "rancher2_global_role_binding" "user-base-role-binding" {
   user_id         = each.value
 }
 
-resource "rancher2_global_role_binding" "admin-role-binding" {
-  for_each       = local.admin_user_ids
+###################################################################
+# [CLUSTER] reader role template and bindings for non-admin users #
+###################################################################
 
-  name            = "admin-${each.key}-role-binding"
-  global_role_id  = "admin"
-  user_id         = each.value
+# Create a cluster-scoped role template that inherits from the built-in 'read-only'
+# and adds explicit permissions to read/list namespaces.
+resource "rancher2_role_template" "reader" {
+  name        = "Reader"
+  description = "Cluster role that inherits from read-only and adds get/list on namespaces"
+  context = "cluster"
+  default_role     = false
+  role_template_ids = ["read-only"]
+  rules {
+    api_groups = [""]
+    resources  = ["namespaces"]
+    verbs      = ["get", "list"]
+  }
 }
+
+locals {
+  # Build map: { alias: { cluster_id, user_id } } for all non-admin users (alias is TF resource key: "cluster---user")
+  cluster_readers = {
+    for item in flatten([
+      for cluster_alias, projects in local.project_permissions : [
+        for username in distinct(flatten([
+          for project_name, roles in projects : flatten([
+            for role_name, usernames in roles : setsubtract(usernames, var.admin_user_names)
+          ])
+        ])) : {
+          alias      = lower("${cluster_alias}---${username}")
+          cluster_id = local.cluster_id_by_alias[cluster_alias]
+          user_id    = local.user_id_by_name[username]
+        }
+      ]
+    ]) : item.alias => {
+      cluster_id = item.cluster_id
+      user_id    = item.user_id
+    }
+  }
+}
+
+output "cluster_readers" {
+  value       = local.cluster_readers
+  description = "Map: { alias: { cluster_id, user_id } } derived from var.project_permissions"
+  sensitive   = true
+}
+
+resource "rancher2_cluster_role_template_binding" "reader" {
+  # create one binding per cluster/username pair
+  for_each = tomap(local.cluster_readers)
+
+  name             = each.key
+  cluster_id       = each.value.cluster_id
+  role_template_id = rancher2_role_template.reader.id
+  user_id          = each.value.user_id
+  depends_on = [rancher2_role_template.reader]
+}
+
+#############################################################
+# [PROJECT] Create project role template bindings for users #
+#############################################################
 
 locals {
   # Build set of tuples { cluster_name, project_id, project_role_template_id, user_id }
@@ -158,4 +189,52 @@ output "project_permissions" {
   value       = local.project_permission_tuples
   description = "Set of {cluster_alias, project_id, role_name_id, user_id} derived from var.project_permissions"
   sensitive   = true
+}
+
+####################################################################
+# Create ArgoCD user and assign cluster-owner role on all clusters #
+####################################################################
+
+resource "rancher2_user" "argocd" {
+  name     = "ArgoCD"
+  username = "argocd"
+  password = var.argocd_user_password
+  enabled  = true
+}
+
+resource "rancher2_global_role_binding" "argocd-role-binding" {
+  name            = "argocd-role-binding"
+  global_role_id  = "user"
+  user_id         = rancher2_user.argocd.id
+}
+
+resource "rancher2_cluster_role_template_binding" "argocd-role-template-binding" {
+  for_each = tomap(local.cluster_id_by_alias)
+
+  name     = each.key
+  cluster_id = each.value
+  role_template_id = "cluster-owner"
+  user_id  = rancher2_user.argocd.id
+}
+
+resource "rancher2_custom_user_token" "argocd-token" {
+  for_each = tomap(local.cluster_id_by_alias)
+
+  username = rancher2_user.argocd.username
+  password = rancher2_user.argocd.password
+  cluster_id = each.value
+  description = "argocd token for cluster ${each.key}"
+  ttl = 0
+
+  lifecycle {
+    ignore_changes = [ttl]
+  }
+  depends_on = [
+    rancher2_cluster_role_template_binding.argocd-role-template-binding
+  ]
+}
+
+output "argocd-token-value" {
+  value     = { for k, t in rancher2_custom_user_token.argocd-token : k => t.token }
+  sensitive = true
 }
