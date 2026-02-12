@@ -123,10 +123,11 @@ module "bojimans" {
   source      = "../modules/node_bpg"
   config      = local.config
   hypervisor  = "mucem"
-  onboot      = true
+  onboot      = false
   vmid        = 127
   hostname    = "bojimans"
   description = "Inventory server (netbox)"
+  started     = false
 
   cpu = {
     cores   = 1
