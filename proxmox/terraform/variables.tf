@@ -96,6 +96,7 @@ variable "cluster_names_by_alias" {
     admin        = "cluster-admin-rke2"
     staging      = "archive-staging-rke2"
     test-staging = "test-staging-rke2"
+    rancher      = "local"
   }
 }
 
