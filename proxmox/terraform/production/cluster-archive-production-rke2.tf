@@ -91,8 +91,8 @@ module "rancher-node-production-rke2-mgmt1" {
   tags        = ["archive-production-rke2"]
 
   ram = {
-    dedicated = 8192
-    floating  = 8192
+    dedicated = 16384
+    floating  = 16384
   }
 
   network = {
@@ -132,8 +132,8 @@ module "rancher-node-production-rke2-mgmt2" {
   tags        = ["archive-production-rke2"]
 
   ram = {
-    dedicated = 8192
-    floating  = 8192
+    dedicated = 16384
+    floating  = 16384
   }
 
   network = {
@@ -173,8 +173,8 @@ module "rancher-node-production-rke2-mgmt3" {
   tags        = ["archive-production-rke2"]
 
   ram = {
-    dedicated = 8192
-    floating  = 8192
+    dedicated = 16384
+    floating  = 16384
   }
 
   network = {
