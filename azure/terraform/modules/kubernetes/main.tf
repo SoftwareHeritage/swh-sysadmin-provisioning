@@ -58,18 +58,12 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic" {
   target_resource_id         = azurerm_kubernetes_cluster.aks_cluster.id
   log_analytics_workspace_id = var.log_analytics_workspace_id
 
-  dynamic "log" {
+  dynamic "enabled_log" {
     for_each = ["cluster-autoscaler", "kube-apiserver", "kube-audit", "kube-audit-admin", "kube-controller-manager"]
     iterator = category
 
     content {
       category = category.value
-      enabled  = true
-
-      retention_policy {
-        enabled = true
-        days    = 30
-      }
     }
   }
 }
