@@ -10,11 +10,6 @@ resource "azurerm_resource_group" "euwest-vault" {
   }
 }
 
-resource "azurerm_network_interface_security_group_association" "vangogh-interface-sga" {
-  network_interface_id      = azurerm_network_interface.vangogh-interface.id
-  network_security_group_id = data.azurerm_network_security_group.worker-nsg.id
-}
-
 # Blobstorage as defined in task
 resource "azurerm_storage_account" "vault-storage" {
   name                      = "swhvaultstorage"
