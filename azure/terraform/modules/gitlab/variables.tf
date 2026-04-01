@@ -46,3 +46,15 @@ variable "maximal_pool_count" {
   type        = number
   default     = 5
 }
+
+variable "pool_node_type" {
+  description = "node type for pools"
+  type        = string
+  default     = "Standard_B2ms"
+}
+
+variable "pool_name" {
+  description = "name of default node pool"
+  type        = string
+  default     = "default"
+}

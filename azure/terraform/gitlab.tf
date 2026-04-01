@@ -7,13 +7,16 @@
 # Production instance
 #######
 module "gitlab-production" {
-  source             = "./modules/gitlab"
-  name               = "euwest-gitlab-production"
-  blob_storage_name  = "swheuwestgitlabprod" #can only consist of lowercase letters and numbers, and must be between 3 and 24 characters long
-  kubernetes_version = "1.32.4"
-  container_insights = false
-  minimal_pool_count = 6
-  maximal_pool_count = 6
+  source               = "./modules/gitlab"
+  name                 = "euwest-gitlab-production"
+  blob_storage_name    = "swheuwestgitlabprod"  #can only consist of lowercase letters and numbers, and must be between 3 and 24 characters long
+  kubernetes_version   = "1.32.4"
+  container_insights   = false
+  minimal_pool_count   = 2
+  maximal_pool_count   = 4
+  pool_node_type       = "Standard_F4as_v7"
+  pool_name            = "newer"
+
 }
 
 output "gitlab-production_aks_summary" {

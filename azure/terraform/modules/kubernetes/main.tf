@@ -8,7 +8,7 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
   kubernetes_version = var.kubernetes_version
 
   default_node_pool {
-    name = "default"
+    name = var.node_pool_name
     # node_count          = 1
     vm_size              = var.node_type
     enable_auto_scaling  = true

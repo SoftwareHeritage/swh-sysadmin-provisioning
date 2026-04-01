@@ -8,6 +8,12 @@ variable "cluster_name" {
   type        = string
 }
 
+variable "node_pool_name" {
+  description = "Name of the default node pool"
+  default     = "default"
+  type        = string
+}
+
 variable "node_type" {
   description = "Type of vms in the default node pool"
   default     = "Standard_B2ms"
