@@ -12,3 +12,12 @@ principal_secret: ${azurerm_storage_account.gitlab_storage.primary_connection_st
 
 EOF
 }
+
+output "backups_storage_secret_yaml" {
+  value = <<EOF
+
+azure_storage_account_name: ${azurerm_storage_account.gitlab_backups.name}
+azure_storage_access_key: ${azurerm_storage_account.gitlab_backups.primary_access_key}
+
+EOF
+}

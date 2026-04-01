@@ -84,3 +84,34 @@ resource "azurerm_storage_container" "gitlab_storage_container" {
   container_access_type = "private"
 }
 
+
+# Storage account for the backups
+resource "azurerm_storage_account" "gitlab_backups" {
+  name                     = var.backups_storage_name
+  resource_group_name      = var.name
+  location                 = var.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+
+  blob_properties {
+    last_access_time_enabled = true
+    delete_retention_policy {
+      days = 7
+    }
+    container_delete_retention_policy {
+      days = 7
+    }
+  }
+
+  tags = {
+    environment = "gitlab"
+  }
+}
+
+
+resource "azurerm_storage_container" "gitlab_backup_container" {
+  count                 = length(var.backups_storage_containers)
+  name                  = var.backups_storage_containers[count.index]
+  storage_account_name  = azurerm_storage_account.gitlab_backups.name
+  container_access_type = "private"
+}

@@ -23,6 +23,17 @@ variable "blob_storage_containers" {
   ]
 }
 
+variable "backups_storage_name" {
+  description = "Blob backups name. lower case, only letters and numbers"
+  type        = string
+}
+
+variable "backups_storage_containers" {
+  description = "Blob storage containers to create on the storage account"
+  type        = list(string)
+  default     = ["backups", "tmp"]
+}
+
 variable "kubernetes_version" {
   description = "The kubernetes version to use, must match https://docs.gitlab.com/operator/installation.html#kubernetes"
   type        = string
