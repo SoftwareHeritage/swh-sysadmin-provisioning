@@ -106,9 +106,8 @@ variable "admin_user_names" {
   default = [
     "olasd",
     "ardumont",
-    "vsellier",
-    "thibaultd",
-    "athiam"
+    "athiam",
+    "tbastian"
   ]
 }
 
