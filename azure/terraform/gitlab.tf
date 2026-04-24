@@ -42,9 +42,11 @@ module "gitlab-staging" {
   name                 = "euwest-gitlab-staging"
   blob_storage_name    = "swheuwestgitlabstaging"
   backups_storage_name = "swhgitlabstgbackups" #can only consist of lowercase letters and numbers, and must be between 3 and 24 characters long
-  kubernetes_version   = "1.32.4"
+  kubernetes_version   = "1.33.8"
   container_insights   = false
-  maximal_pool_count   = 5
+  maximal_pool_count   = 3
+  pool_node_type       = "Standard_F4as_v7"
+  pool_name            = "newer"
 }
 
 output "gitlab-staging_aks_summary" {
