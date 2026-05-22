@@ -227,6 +227,15 @@ alertmanager:
       type: None
     configSecret: alertmanager-rancher-monitoring-alertmanager
     useExistingSecret: true
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: swh/prometheus
+              operator: In
+              values:
+              - "true"
 defaultRules:
   disabled:
     KubeHpaMaxedOut: true
@@ -238,6 +247,15 @@ prometheus:
       domain: production
       environment: production
       infrastructure: kubernetes
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: swh/prometheus
+              operator: In
+              values:
+              - "true"
     resources:
       limits:
         cpu: 4
