@@ -92,7 +92,7 @@ module "rancher-node-production-rke2-mgmt1" {
 
   ram = {
     dedicated = 16384
-    floating  = 16384
+    floating  = 0
   }
 
   network = {
@@ -133,7 +133,7 @@ module "rancher-node-production-rke2-mgmt2" {
 
   ram = {
     dedicated = 16384
-    floating  = 16384
+    floating  = 0
   }
 
   network = {
@@ -174,7 +174,7 @@ module "rancher-node-production-rke2-mgmt3" {
 
   ram = {
     dedicated = 16384
-    floating  = 16384
+    floating  = 0
   }
 
   network = {
