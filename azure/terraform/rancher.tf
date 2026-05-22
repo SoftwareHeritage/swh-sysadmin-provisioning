@@ -13,9 +13,11 @@ module "rancher_aks_cluster" {
   cluster_name   = "euwest-rancher"
   resource_group = azurerm_resource_group.rancher_rg.name
 
-  minimal_pool_count     = 3
-  maximal_pool_count     = 5
-  node_type              = "Standard_B2ms"
+  minimal_pool_count     = 1
+  maximal_pool_count     = 3
+  node_type              = "Standard_E2as_v7"
+  node_pool_name         = "newer"
+  kubernetes_version     = "1.33.8"
   public_ip_provisioning = false
 
   depends_on = [
