@@ -20,7 +20,7 @@ module "rancher_aks_cluster" {
   node_labels            = {
     "vault-secrets-operator" = "true"
   }
-  kubernetes_version     = "1.33.8"
+  kubernetes_version     = "1.34.8"
   public_ip_provisioning = false
 
   depends_on = [
