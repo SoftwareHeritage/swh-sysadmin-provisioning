@@ -16,6 +16,8 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
     min_count            = var.minimal_pool_count
     orchestrator_version = var.kubernetes_version
 
+    node_labels          = var.node_labels
+
     # not supported for all vm types
     # os_disk_type        = "Ephemeral"
 

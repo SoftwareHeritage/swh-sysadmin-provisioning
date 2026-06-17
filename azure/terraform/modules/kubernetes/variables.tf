@@ -14,6 +14,12 @@ variable "node_pool_name" {
   type        = string
 }
 
+variable "node_labels" {
+  description = "Labels to set on the default node pool"
+  default     = {}
+  type        = map
+}
+
 variable "node_type" {
   description = "Type of vms in the default node pool"
   default     = "Standard_B2ms"

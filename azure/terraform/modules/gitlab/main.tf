@@ -43,6 +43,10 @@ module "gitlab_aks_cluster" {
   node_type          = var.pool_node_type
   node_pool_name     = var.pool_name
 
+  node_labels        = {
+    "vault-secrets-operator" = "true"
+  }
+
   kubernetes_version = var.kubernetes_version
 
   log_analytics_workspace_id = var.container_insights ? azurerm_log_analytics_workspace.k8s_workspace[0].id : null

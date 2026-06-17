@@ -17,6 +17,9 @@ module "rancher_aks_cluster" {
   maximal_pool_count     = 3
   node_type              = "Standard_E2as_v7"
   node_pool_name         = "newer"
+  node_labels            = {
+    "vault-secrets-operator" = "true"
+  }
   kubernetes_version     = "1.33.8"
   public_ip_provisioning = false
 
