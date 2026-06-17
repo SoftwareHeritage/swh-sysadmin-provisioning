@@ -11,7 +11,7 @@ module "gitlab-production" {
   name                 = "euwest-gitlab-production"
   blob_storage_name    = "swheuwestgitlabprod"  #can only consist of lowercase letters and numbers, and must be between 3 and 24 characters long
   backups_storage_name = "swhgitlabprodbackups" #can only consist of lowercase letters and numbers, and must be between 3 and 24 characters long
-  kubernetes_version   = "1.32.4"
+  kubernetes_version   = "1.33.8"
   container_insights   = false
   minimal_pool_count   = 2
   maximal_pool_count   = 4
