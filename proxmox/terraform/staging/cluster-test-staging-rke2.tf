@@ -97,6 +97,10 @@ module "rancher-node-test-rke2-mgmt1" {
   description = "test rke2 management node"
   tags        = ["test-staging-rke2"]
 
+  cpu = {
+    type = "x86-64-v2"
+  }
+
   ram = {
     dedicated = 16384
     floating  = 16384
@@ -138,6 +142,10 @@ module "rancher-node-test-rke2-mgmt2" {
   description = "test rke2 management node"
   tags        = ["test-staging-rke2"]
 
+  cpu = {
+    type = "x86-64-v2"
+  }
+
   ram = {
     dedicated = 16384
     floating  = 16384
@@ -178,6 +186,10 @@ module "rancher-node-test-rke2-mgmt3" {
   hostname    = "rancher-node-test-rke2-mgmt3"
   description = "test rke2 management node"
   tags        = ["test-staging-rke2"]
+
+  cpu = {
+    type = "x86-64-v2"
+  }
 
   ram = {
     dedicated = 16384

@@ -99,9 +99,13 @@ module "rancher-node-staging-rke2-mgmt1" {
   vmid        = 112
   tags        = ["archive-staging-rke2"]
 
+  cpu = {
+    type = "x86-64-v3"
+  }
+
   ram = {
-    dedicated = 16384
-    floating  = 16384
+    dedicated = 32768
+    floating  = 0
   }
 
   network = {
@@ -140,9 +144,13 @@ module "rancher-node-staging-rke2-mgmt2" {
   vmid        = 142
   tags        = ["archive-staging-rke2"]
 
+  cpu = {
+    type = "x86-64-v3"
+  }
+
   ram = {
-    dedicated = 16384
-    floating  = 16384
+    dedicated = 32768
+    floating  = 0
   }
 
   network = {
@@ -181,9 +189,13 @@ module "rancher-node-staging-rke2-mgmt3" {
   vmid        = 149
   tags        = ["archive-staging-rke2"]
 
+  cpu = {
+    type = "x86-64-v3"
+  }
+
   ram = {
-    dedicated = 16384
-    floating  = 16384
+    dedicated = 32768
+    floating  = 0
   }
 
   network = {

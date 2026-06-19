@@ -10,6 +10,10 @@ module "scheduler0" {
   # to match the real vm configuration in proxmox to remove
   kvm_args    = "-device virtio-rng-pci"
 
+  cpu = {
+    type = "x86-64-v3"
+  }
+
   ram = {
     dedicated = 8192
   }
@@ -38,6 +42,7 @@ module "rp0" {
   description = "Node to host the reverse proxy"
 
   cpu = {
+    type = "x86-64-v3"
     cores = 2
   }
 
@@ -65,6 +70,10 @@ module "counters0" {
   hostname    = "counters0"
   description = "Counters server"
 
+  cpu = {
+    type = "x86-64-v3"
+  }
+
   ram = {
     dedicated = 6096
     floating  = 2048
@@ -90,6 +99,10 @@ module "runner0" {
   vmid        = 148
   hostname    = "runner0"
   description = "Gitlab runner to process add-forge-now requests"
+
+  cpu = {
+    type = "x86-64-v3"
+  }
 
   cdrom = {
     interface = "ide2"
@@ -129,6 +142,10 @@ module "runner1" {
   description = "Gitlab runner for code-commons wp1 ci"
 
   template = "bookworm-zfs"
+
+  cpu = {
+    type = "x86-64-v3"
+  }
 
   network = {
     ip          = "192.168.130.220"

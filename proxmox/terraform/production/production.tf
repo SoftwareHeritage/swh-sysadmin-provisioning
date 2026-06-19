@@ -13,7 +13,7 @@ module "kelvingrove" {
   }
 
   cpu = {
-    type = "host"
+    type = "x86-64-v3"
     numa = true
   }
 
@@ -35,6 +35,10 @@ module "counters1" {
   vmid        = 139
   hostname    = "counters1"
   description = "swh-counters node"
+
+  cpu = {
+    type = "x86-64-v3"
+  }
 
   ram = {
     dedicated = 2048

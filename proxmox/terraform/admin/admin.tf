@@ -8,6 +8,7 @@ module "bardo" {
   description = "Hedgedoc instance"
 
   cpu = {
+    type = "x86-64-v3"
     cores = 2
   }
 
@@ -40,6 +41,7 @@ module "rp1" {
   description = "reverse-proxy"
 
   cpu = {
+    type = "x86-64-v3"
     cores = 2
   }
 
@@ -66,6 +68,10 @@ module "dali" {
   vmid        = 144
   hostname    = "dali"
   description = "admin databases host"
+
+  cpu = {
+    type = "x86-64-v3"
+  }
 
   ram = {
     dedicated = 16384
@@ -100,6 +106,10 @@ module "grafana0" {
   hostname    = "grafana0"
   description = "Grafana server"
 
+  cpu = {
+    type = "x86-64-v3"
+  }
+
   ram = {
     floating = 2048
   }
@@ -130,6 +140,7 @@ module "bojimans" {
   started     = false
 
   cpu = {
+    type = "x86-64-v3"
     cores   = 1
     sockets = 2
   }
@@ -164,6 +175,11 @@ module "thanos" {
   vmid        = 158
   hostname    = "thanos"
   description = "Thanos query service"
+
+  cpu = {
+    type  = "x86-64-v3"
+    cores = 16
+  }
 
   ram = {
     dedicated = 32768

@@ -77,6 +77,10 @@ module "rancher-node-admin-rke2-mgmt1" {
   description = "Admin rke2 management node 1"
   tags        = ["cluster-admin-rke2"]
 
+  cpu = {
+    type = "x86-64-v3"
+  }
+
   ram = {
     dedicated = 16384
     floating  = 16384
@@ -117,6 +121,10 @@ module "rancher-node-admin-rke2-mgmt2" {
   description = "Admin rke2 management node 2"
   tags        = ["cluster-admin-rke2"]
 
+  cpu = {
+    type = "x86-64-v3"
+  }
+
   ram = {
     dedicated = 16384
     floating  = 16384
@@ -156,6 +164,10 @@ module "rancher-node-admin-rke2-mgmt3" {
   hostname    = "rancher-node-admin-rke2-mgmt3"
   description = "Admin rke2 management node 3"
   tags        = ["cluster-admin-rke2"]
+
+  cpu = {
+    type = "x86-64-v3"
+  }
 
   ram = {
     dedicated = 16384

@@ -90,6 +90,10 @@ module "rancher-node-production-rke2-mgmt1" {
   description = "production rke2 management node"
   tags        = ["archive-production-rke2"]
 
+  cpu = {
+    type = "x86-64-v3"
+  }
+
   ram = {
     dedicated = 16384
     floating  = 0
@@ -131,6 +135,10 @@ module "rancher-node-production-rke2-mgmt2" {
   description = "production rke2 management node"
   tags        = ["archive-production-rke2"]
 
+  cpu = {
+    type = "x86-64-v3"
+  }
+
   ram = {
     dedicated = 16384
     floating  = 0
@@ -171,6 +179,10 @@ module "rancher-node-production-rke2-mgmt3" {
   hostname    = "rancher-node-production-rke2-mgmt3"
   description = "production rke2 management node"
   tags        = ["archive-production-rke2"]
+
+  cpu = {
+    type = "x86-64-v3"
+  }
 
   ram = {
     dedicated = 16384
