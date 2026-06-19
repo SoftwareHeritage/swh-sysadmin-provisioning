@@ -1,6 +1,6 @@
 resource "rancher2_cluster_v2" "cluster-admin-rke2" {
   name               = "cluster-admin-rke2"
-  kubernetes_version = "v1.32.5+rke2r1"
+  kubernetes_version = "v1.33.12+rke2r2"
   rke_config {
     upgrade_strategy {
       worker_drain_options {
@@ -337,7 +337,7 @@ resource "rancher2_app_v2" "cluster-admin-rke2-rancher-monitoring" {
   namespace     = "cattle-monitoring-system"
   repo_name     = "rancher-charts"
   chart_name    = "rancher-monitoring"
-  chart_version = "106.1.2+up69.8.2-rancher.7"
+  chart_version = "108.0.5+up77.9.1-rancher.16"
   values        = <<EOF
 global:
   cattle:
