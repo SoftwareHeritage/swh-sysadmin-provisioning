@@ -105,6 +105,16 @@ resource "rancher2_role_template" "reader" {
     resources  = ["namespaces"]
     verbs      = ["get", "list"]
   }
+  rules {
+    api_groups = ["apiextensions.k8s.io"]
+    resources  = ["customresourcedefinitions"]
+    verbs      = ["get", "list"]
+  }
+  rules {
+    api_groups = ["admissionregistration.k8s.io"]
+    resources  = ["mutatingwebhookconfigurations", "validatingwebhookconfigurations"]
+    verbs      = ["get", "list"]
+  }
 }
 
 locals {
