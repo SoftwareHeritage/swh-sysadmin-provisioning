@@ -129,6 +129,7 @@ variable "dev_user_names" {
     "martin",
     "rboyer",
     "ukuchler",
+    "felixwanders",
     "ddouard"  # Move to lead_dev_user_names later
   ]
 }
