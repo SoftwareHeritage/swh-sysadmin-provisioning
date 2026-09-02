@@ -27,6 +27,10 @@ locals {
         "read-only" = local.developers
         "project-owner" = local.lead_developers
       }
+      "OSPO-RADAR" = {
+        "project-owner" = ["olasd", "ardumont"]
+        "project-member" = ["rboyer", "felixwanders"]
+      }
     }
     "test-staging" = {
       "Default" = {
