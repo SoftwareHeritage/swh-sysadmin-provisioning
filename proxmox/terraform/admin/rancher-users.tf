@@ -12,6 +12,9 @@ locals {
         "read-only" = local.all_users
         "project-owner" = []
       }
+      "Benchmarks" = {
+        "project-member" = ["vlorentz"]
+      }
     }
     "admin" = {
       "Default" = {
