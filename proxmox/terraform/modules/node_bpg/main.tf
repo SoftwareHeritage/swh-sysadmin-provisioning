@@ -108,7 +108,7 @@ resource "proxmox_virtual_environment_vm" "node" {
         # concurrency on apt
         "cloud-init status -w",
         # so puppet agent installs the node's role
-        "puppet agent --server ${var.config["puppet_master"]} --environment=${var.config["puppet_environment"]} --vardir=/var/lib/puppet --waitforcert 60 --test && echo 'Node provisioned!'",
+        "puppet agent --server ${var.config["puppet_master"]} --environment=${var.config["puppet_environment"]} --vardir=/var/lib/puppet --waitforcert 60 --test; if [ $? -eq 2 ]; then echo 'Node provisioned!'; else exit $?; fi",
       ],
       var.post_provision_steps,
     )
